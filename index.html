@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Dane z produkcji </title>
+  <title>Dashboard OEE</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -65,14 +65,14 @@
       </select>
       <button class="refresh-button" onclick="loadData()">Odśwież</button>
     </div>
-    <div> *******    Piasecki jest najlepszy  **************</div>
+    <div>**************   Piasecki jest najlepszy  **********************</div>
   </header>
 
   <main>
     <table>
       <thead>
         <tr>
-          <th></th>
+          <th>WYNIKI</th>
           <th>TOTAL</th>
           <th>I</th>
           <th>II</th>
@@ -87,16 +87,13 @@
         <tr><td>ILOŚCI OK</td><td id="TOTAL_C12"></td><td id="I_D12"></td><td id="II_E12"></td><td id="III_F12"></td></tr>
         <tr><td>ILOŚCI NOK</td><td id="TOTAL_C13"></td><td id="I_D13"></td><td id="II_E13"></td><td id="III_F13"></td></tr>
       </tbody>
-      <tfoot>
-        <tr><td>WYNIKI</td><td id="TOTAL_C4"></td><td id="I_D4"></td><td id="II_E4"></td><td id="III_F4"></td></tr>
-      </tfoot>
     </table>
   </main>
 
   <script>
     const sheetId = "1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc";
     const apiKey = "AIzaSyDl6HIz3qk94UeCo6sbKLO9TnTdEHRbvNQ";
-    const cells = [4, 6, 7, 8, 11, 12, 13];
+    const cells = [6, 7, 8, 11, 12, 13];
 
     async function loadData() {
       const sheet = document.getElementById("lineSelect").value;
