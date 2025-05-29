@@ -2,55 +2,125 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Dane OEE</title>
+  <title>Dashboard OEE</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+      color: #333;
     }
-    button {
+    header {
+      background: #2c3e50;
+      color: white;
       padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    #output {
+    select, button {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: none;
+    }
+    main {
+      display: flex;
+      justify-content: center;
       margin-top: 30px;
-      font-size: 24px;
+    }
+    table {
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 20px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background: #3498db;
+      color: white;
+    }
+    .refresh-button {
+      background: #2ecc71;
+      color: white;
+      cursor: pointer;
+      margin-left: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Wybierz linię</h1>
-  <button onclick="getOEE('NHL')">NHL</button>
-  <button onclick="getOEE('MP4')">MP4</button>
-  <button onclick="getOEE('M4')">M4</button>
+  <header>
+    <div>
+      <label for="lineSelect">Wybierz linię:</label>
+      <select id="lineSelect">
+        <option value="NHL">NHL</option>
+        <option value="MP4">MP4</option>
+        <option value="M4">M4</option>
+      </select>
+      <button class="refresh-button" onclick="loadData()">Odśwież</button>
+    </div>
+    <div>Dashboard OEE</div>
+  </header>
 
-  <div id="output">Wybierz zakładkę powyżej</div>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>TOTAL</th>
+          <th>I</th>
+          <th>II</th>
+          <th>III</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>WYNIKI</td><td id="TOTAL_C4"></td><td id="I_D4"></td><td id="II_E4"></td><td id="III_F4"></td></tr>
+        <tr><td>OEE</td><td id="TOTAL_C6"></td><td id="I_D6"></td><td id="II_E6"></td><td id="III_F6"></td></tr>
+        <tr><td>SCRAP</td><td id="TOTAL_C7"></td><td id="I_D7"></td><td id="II_E7"></td><td id="III_F7"></td></tr>
+        <tr><td>WYDAJNOŚĆ</td><td id="TOTAL_C8"></td><td id="I_D8"></td><td id="II_E8"></td><td id="III_F8"></td></tr>
+        <tr><td>DOSTĘPNOŚĆ</td><td id="TOTAL_C11"></td><td id="I_D11"></td><td id="II_E11"></td><td id="III_F11"></td></tr>
+        <tr><td>ILOŚCI OK</td><td id="TOTAL_C12"></td><td id="I_D12"></td><td id="II_E12"></td><td id="III_F12"></td></tr>
+        <tr><td>ILOŚCI NOK</td><td id="TOTAL_C13"></td><td id="I_D13"></td><td id="II_E13"></td><td id="III_F13"></td></tr>
+      </tbody>
+    </table>
+  </main>
 
   <script>
     const sheetId = "1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc";
+    const apiKey = "AIzaSyDl6HIz3qk94UeCo6sbKLO9TnTdEHRbvNQ";
+    const cells = [4, 6, 7, 8, 11, 12, 13];
 
-    async function getOEE(sheetName) {
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}!C4?key=AIzaSyDl6HIz3qk94UeCo6sbKLO9TnTdEHRbvNQ`;
+    async function loadData() {
+      const sheet = document.getElementById("lineSelect").value;
+      for (let row of cells) {
+        for (let col of ['C', 'D', 'E', 'F']) {
+          const colLabel = { C: 'TOTAL', D: 'I', E: 'II', F: 'III' }[col];
+          const id = `${colLabel}_${col}${row}`;
+          const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}!${col}${row}?key=${apiKey}`;
 
-      const output = document.getElementById("output");
-      output.textContent = "Ładowanie...";
-
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.values && data.values[0] && data.values[0][0]) {
-          output.textContent = `OEE z linii ${sheetName}: ${data.values[0][0]}`;
-        } else {
-          output.textContent = `Brak danych w komórce C4 zakładki ${sheetName}`;
+          try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const value = (data.values && data.values[0][0]) || '-';
+            document.getElementById(id).textContent = value;
+          } catch (e) {
+            document.getElementById(id).textContent = 'Błąd';
+          }
         }
-      } catch (error) {
-        output.textContent = "Błąd w pobieraniu danych.";
-        console.error(error);
       }
     }
+
+    // Odświeżanie co 5 minut
+    setInterval(loadData, 5 * 60 * 1000);
+
+    // Automatyczne ładowanie po starcie
+    window.onload = loadData;
   </script>
 </body>
 </html>
