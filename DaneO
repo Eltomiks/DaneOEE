@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>OEE z linii</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f5f5f5;
+    }
+    select, .output {
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+    .output {
+      margin-top: 30px;
+      font-weight: bold;
+      font-size: 1.4em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wybierz linię produkcyjną</h1>
+  
+  <select id="sheetSelector">
+    <option value="NHL">NHL</option>
+    <option value="MP4">MP4</option>
+    <option value="M4">M4</option>
+  </select>
+
+  <div class="output" id="output">Wybierz zakładkę...</div>
+
+  <script>
+    const apiKey = "AIzaSyDl6HIz3qk94UeCo6sbKLO9TnTdEHRbvNQ";
+    const spreadsheetId = "1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc";
+
+    async function fetchC4(sheetName) {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!C4?key=${apiKey}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const value = data?.values?.[0]?.[0] || "Brak danych";
+      document.getElementById("output").innerText = `OEE z linii ${sheetName}: ${value}`;
+    }
+
+    document.getElementById("sheetSelector").addEventListener("change", (event) => {
+      const selectedSheet = event.target.value;
+      fetchC4(selectedSheet);
+    });
+
+    // Domyślna wartość przy otwarciu strony
+    window.onload = () => {
+      fetchC4("NHL");
+      document.getElementById("sheetSelector").value = "NHL";
+    };
+  </script>
+</body>
+</html>
