@@ -2,10 +2,55 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Test OEE</title>
+  <title>Dane OEE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    #output {
+      margin-top: 30px;
+      font-size: 24px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Działa!</h1>
-  <p>Twoja strona GitHub Pages jest poprawnie opublikowana 🚀</p>
+  <h1>Wybierz linię</h1>
+  <button onclick="getOEE('NHL')">NHL</button>
+  <button onclick="getOEE('MP4')">MP4</button>
+  <button onclick="getOEE('M4')">M4</button>
+
+  <div id="output">Wybierz zakładkę powyżej</div>
+
+  <script>
+    const sheetId = "1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc";
+
+    async function getOEE(sheetName) {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}!C4?key=AIzaSyDl6HIz3qk94UeCo6sbKLO9TnTdEHRbvNQ`;
+
+      const output = document.getElementById("output");
+      output.textContent = "Ładowanie...";
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.values && data.values[0] && data.values[0][0]) {
+          output.textContent = `OEE z linii ${sheetName}: ${data.values[0][0]}`;
+        } else {
+          output.textContent = `Brak danych w komórce C4 zakładki ${sheetName}`;
+        }
+      } catch (error) {
+        output.textContent = "Błąd w pobieraniu danych.";
+        console.error(error);
+      }
+    }
+  </script>
 </body>
 </html>
