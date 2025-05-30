@@ -171,7 +171,7 @@
     // Funkcja pobierająca dane z Twojego API
     function loadDataFromAPI() {
       const sheetName = document.getElementById("sheet-selector").value;
-      const apiUrl = "TU_WSTAW_SWOJE_API"; // Tutaj wklej URL Twojego API (np. Google Apps Script)
+      const apiUrl = "AIzaSyDl6HIz3qk94UeCo6sbKLO9TnTdEHRbvNQ"; // Tutaj wklej URL Twojego API (np. Google Apps Script)
 
       fetch(`${apiUrl}?sheet=${encodeURIComponent(sheetName)}`)
         .then(response => response.text())
