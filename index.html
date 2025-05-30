@@ -58,11 +58,21 @@
       color: #333;
     }
 
-    /* Style dla kolorowania OEE */
-    .oee-red { background-color: #ffcccc; color: #cc0000; font-weight: bold; } /* Jasnoczerwony */
-    .oee-orange { background-color: #ffe0b3; color: #e68a00; font-weight: bold; } /* Jasnopomarańczowy */
-    .oee-yellow { background-color: #ffffcc; color: #ccaa00; font-weight: bold; } /* Jasnożółty */
-    .oee-green { background-color: #ccffcc; color: #008000; font-weight: bold; } /* Jasnozielony */
+    /* Style dla kolorowania OEE i innych wartości */
+    .oee-red { background-color: #ffcccc; color: #cc0000; font-weight: bold; }
+    .oee-orange { background-color: #ffe0b3; color: #e68a00; font-weight: bold; }
+    .oee-yellow { background-color: #ffffcc; color: #ccaa00; font-weight: bold; }
+    .oee-green { background-color: #ccffcc; color: #008000; font-weight: bold; }
+
+    /* Ogólne style dla komórek z wartościami */
+    .value-cell {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .oee-cell {
+        font-size: 16px;
+        font-weight: bold;
+    }
 
     .time-block {
       margin-bottom: 20px;
@@ -83,6 +93,7 @@
       padding: 10px;
       height: 30px;
       background-color: #fff;
+      font-size: 12px; /* Domyślny rozmiar dla komórek czasowych */
     }
     .time-header th {
       text-align: center;
@@ -102,6 +113,12 @@
       }
       #dataValueCell {
         font-size: 16px;
+      }
+      .oee-cell {
+          font-size: 14px;
+      }
+      .value-cell {
+          font-size: 12px;
       }
     }
   </style>
@@ -138,15 +155,23 @@
       </tr>
       <tr>
         <td><strong>OEE</strong></td>
-        <td></td><td></td><td></td>
-        <td id="oeeTotalCell"></td> </tr>
+        <td id="cell_D4_OEE" class="oee-cell"></td>
+        <td id="cell_E4_OEE" class="oee-cell"></td>
+        <td id="cell_F4_OEE" class="oee-cell"></td>
+        <td id="oeeTotalCell" class="oee-cell"></td> </tr>
       <tr>
         <td><strong>OK</strong></td>
-        <td></td><td></td><td></td><td></td>
+        <td id="cell_D5_OK" class="value-cell"></td>
+        <td id="cell_E5_OK" class="value-cell"></td>
+        <td id="cell_F5_OK" class="value-cell"></td>
+        <td id="cell_G5_OK" class="value-cell"></td>
       </tr>
       <tr>
         <td class="red">NOK</td>
-        <td></td><td></td><td></td><td></td>
+        <td id="cell_D6_NOK" class="value-cell"></td>
+        <td id="cell_E6_NOK" class="value-cell"></td>
+        <td id="cell_F6_NOK" class="value-cell"></td>
+        <td id="cell_G6_NOK" class="value-cell"></td>
       </tr>
     </table>
 
@@ -156,8 +181,14 @@
           <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
           <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
         </tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr>
+          <td id="time_row1_col1"></td><td id="time_row1_col2"></td><td id="time_row1_col3"></td><td id="time_row1_col4"></td>
+          <td id="time_row1_col5"></td><td id="time_row1_col6"></td><td id="time_row1_col7"></td><td id="time_row1_col8"></td>
+        </tr>
+        <tr>
+          <td id="time_row2_col1"></td><td id="time_row2_col2"></td><td id="time_row2_col3"></td><td id="time_row2_col4"></td>
+          <td id="time_row2_col5"></td><td id="time_row2_col6"></td><td id="time_row2_col7"></td><td id="time_row2_col8"></td>
+        </tr>
       </table>
     </div>
 
@@ -167,8 +198,14 @@
           <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
           <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
         </tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr>
+          <td id="time_row1_col9"></td><td id="time_row1_col10"></td><td id="time_row1_col11"></td><td id="time_row1_col12"></td>
+          <td id="time_row1_col13"></td><td id="time_row1_col14"></td><td id="time_row1_col15"></td><td id="time_row1_col16"></td>
+        </tr>
+        <tr>
+          <td id="time_row2_col9"></td><td id="time_row2_col10"></td><td id="time_row2_col11"></td><td id="time_row2_col12"></td>
+          <td id="time_row2_col13"></td><td id="time_row2_col14"></td><td id="time_row2_col15"></td><td id="time_row2_col16"></td>
+        </tr>
       </table>
     </div>
 
@@ -178,8 +215,14 @@
           <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
           <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
         </tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr>
+          <td id="time_row1_col17"></td><td id="time_row1_col18"></td><td id="time_row1_col19"></td><td id="time_row1_col20"></td>
+          <td id="time_row1_col21"></td><td id="time_row1_col22"></td><td id="time_row1_col23"></td><td id="time_row1_col24"></td>
+        </tr>
+        <tr>
+          <td id="time_row2_col17"></td><td id="time_row2_col18"></td><td id="time_row2_col19"></td><td id="time_row2_col20"></td>
+          <td id="time_row2_col21"></td><td id="time_row2_col22"></td><td id="time_row2_col23"></td><td id="time_row2_col24"></td>
+        </tr>
       </table>
     </div>
   </div>
@@ -187,16 +230,40 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
-    const dataCell = document.getElementById('dataValueCell');
-    const oeeTotalCell = document.getElementById('oeeTotalCell');
+    const dataCell = document.getElementById('dataValueCell'); // C1 - data
+
+    // Referencje do komórek OEE (wiersz 4)
+    const cell_D4_OEE = document.getElementById('cell_D4_OEE');
+    const cell_E4_OEE = document.getElementById('cell_E4_OEE');
+    const cell_F4_OEE = document.getElementById('cell_F4_OEE');
+    const oeeTotalCell = document.getElementById('oeeTotalCell'); // cell_G4_OEE
+
+    // Referencje do komórek OK (wiersz 5)
+    const cell_D5_OK = document.getElementById('cell_D5_OK');
+    const cell_E5_OK = document.getElementById('cell_E5_OK');
+    const cell_F5_OK = document.getElementById('cell_F5_OK');
+    const cell_G5_OK = document.getElementById('cell_G5_OK');
+
+    // Referencje do komórek NOK (wiersz 6)
+    const cell_D6_NOK = document.getElementById('cell_D6_NOK');
+    const cell_E6_NOK = document.getElementById('cell_E6_NOK');
+    const cell_F6_NOK = document.getElementById('cell_F6_NOK');
+    const cell_G6_NOK = document.getElementById('cell_G6_NOK');
+
+    // Referencje do komórek czasowych (wiersze 9 i 10 - zakładam, że arkusz ma puste wiersze 7 i 8)
+    const timeCellsRow1 = [];
+    const timeCellsRow2 = [];
+    for (let i = 1; i <= 24; i++) {
+        timeCellsRow1.push(document.getElementById(`time_row1_col${i}`));
+        timeCellsRow2.push(document.getElementById(`time_row2_col${i}`));
+    }
+    
     const selectElement = document.getElementById('sheetSelector');
 
     // Funkcja pomocnicza do parsowania CSV (prosta implementacja dla pojedynczych wartości)
-    // Jeśli masz dane z przecinkami w środku komórki lub cudzysłowami, to może być potrzebna bardziej złożona biblioteka CSV.
     function parseCsv(csvString) {
         const lines = csvString.trim().split('\n');
         return lines.map(line => {
-            // Usuń otaczające cudzysłowy i podwójne cudzysłowy wewnątrz
             return line.split(',').map(cell => {
                 let cleanedCell = cell.trim();
                 if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
@@ -209,7 +276,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Funkcja do formatowania daty
     function formatAsDDMMYYYY(dateString) {
-        // Spróbuj utworzyć obiekt Date z samej części daty (np. "2025-05-30")
         const datePart = dateString.split(' ')[0]; 
         const dateObject = new Date(datePart); 
 
@@ -219,43 +285,75 @@ document.addEventListener('DOMContentLoaded', function() {
             const year = dateObject.getFullYear();
             return `${day}.${month}.${year}`;
         }
-        return dateString; // Zwróć oryginalny string, jeśli nie da się sparsować
+        return dateString;
     }
 
-    // Funkcja do stosowania kolorów OEE
+    // Funkcja do stosowania kolorów OEE i wyświetlania wartości procentowej
     function applyOEEColor(cellElement, value) {
-        cellElement.className = ''; // Usuń wszystkie poprzednie klasy
+        if (!cellElement) return; // Upewnij się, że element istnieje
+        cellElement.className = 'oee-cell'; // Resetuj do podstawowej klasy OEE
 
-        if (isNaN(value) || value === 0) {
+        const numValue = parseFloat(value);
+
+        if (isNaN(numValue) || numValue === 0) {
             cellElement.textContent = '';
         } else {
-            cellElement.textContent = `${value.toFixed(2)}%`;
-            if (value > 0 && value <= 60) {
+            cellElement.textContent = `${numValue.toFixed(2)}%`;
+            if (numValue > 0 && numValue <= 60) {
                 cellElement.classList.add('oee-red');
-            } else if (value > 60 && value <= 70) {
+            } else if (numValue > 60 && numValue <= 70) {
                 cellElement.classList.add('oee-orange');
-            } else if (value > 70 && value <= 80) {
+            } else if (numValue > 70 && numValue <= 80) {
                 cellElement.classList.add('oee-yellow');
-            } else if (value > 80) {
+            } else if (numValue > 80) {
                 cellElement.classList.add('oee-green');
             }
         }
     }
 
+    // Funkcja do ustawiania tekstu w zwykłych komórkach (nie kolorowanych)
+    function setTextToCell(cellElement, value) {
+        if (!cellElement) return;
+        cellElement.className = 'value-cell'; // Ustaw podstawową klasę dla wartości
+        if (value === '' || value === null || value === undefined) {
+             cellElement.textContent = '';
+        } else {
+            cellElement.textContent = value;
+        }
+    }
+
+
     function fetchDataForSheet(sheetName) {
-        if (!dataCell || !sheetName || !oeeTotalCell) {
-            if (dataCell) dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
-            if (oeeTotalCell) oeeTotalCell.textContent = '';
-            oeeTotalCell.className = '';
+        // Ustawia stany ładowania/czyszczenia na początku
+        dataCell.innerHTML = '<strong>Ładowanie...</strong>';
+        oeeTotalCell.textContent = 'Ładowanie...';
+        oeeTotalCell.className = 'oee-cell'; // Utrzymaj podstawową klasę OEE
+        
+        // Wyczyść wszystkie komórki przy ładowaniu
+        [
+            cell_D4_OEE, cell_E4_OEE, cell_F4_OEE, oeeTotalCell,
+            cell_D5_OK, cell_E5_OK, cell_F5_OK, cell_G5_OK,
+            cell_D6_NOK, cell_E6_NOK, cell_F6_NOK, cell_G6_NOK,
+            ...timeCellsRow1, ...timeCellsRow2
+        ].forEach(cell => {
+            if (cell) {
+                cell.textContent = '';
+                cell.className = cell.id.includes('OEE') ? 'oee-cell' : 'value-cell'; // Resetuj klasy kolorów
+            }
+        });
+
+
+        if (!sheetName) {
+            dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
             return;
         }
 
-        dataCell.innerHTML = '<strong>Ładowanie...</strong>';
-        oeeTotalCell.textContent = 'Ładowanie...';
-        oeeTotalCell.className = '';
-
-        // Zmieniamy zakres na cały arkusz lub większy zakres, np. A1:Z100
-        const fullRange = 'A1:F100'; // Przykładowy zakres, dostosuj do swoich potrzeb
+        // Zmieniamy zakres na cały arkusz lub większy zakres.
+        // Zakładam, że potrzebujesz dane od A1 do G (dla tabeli głównej)
+        // i do H (dla komórek czasowych, jeśli są np. 24 kolumny) oraz do wiersza 10.
+        // Jeśli masz więcej danych, dostosuj zakres!
+        const fullRange = 'A1:AA100'; // Przykładowy zakres, aby objąć również 24 kolumny i więcej wierszy.
+                                    // A to indeks 0, B to 1, ..., Z to 25, AA to 26
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=${encodeURIComponent(fullRange)}`;
 
         fetch(url)
@@ -268,40 +366,94 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(csvText => {
                 const data = parseCsv(csvText);
                 
+                // --- Wypełnianie danych głównych tabel ---
                 // UWAGA: Indeksy tablicowe są oparte na zerze (0-indexed).
-                // Kolumna C to indeks 2 (A=0, B=1, C=2).
-                // Wiersz 1 to indeks 0, wiersz 4 to indeks 3.
+                // Kolumny: A=0, B=1, C=2, D=3, E=4, F=5, G=6
+                // Wiersze: 1=0, 2=1, 3=2, 4=3, 5=4, 6=5, 7=6, 8=7, 9=8, 10=9
 
                 // Wartość z C1 (data)
-                // Sprawdź, czy istnieje wiersz 0 i kolumna 2
+                // Wiersz 1 to indeks 0, Kolumna C to indeks 2
                 if (data[0] && data[0][2] !== undefined) {
                     dataCell.textContent = formatAsDDMMYYYY(data[0][2]);
                 } else {
                     dataCell.innerHTML = '<strong>Brak daty (C1)</strong>';
                 }
 
-                // Wartość z C4 (OEE)
-                // Sprawdź, czy istnieje wiersz 3 i kolumna 2
-                if (data[3] && data[3][2] !== undefined) {
-                    const oeeValue = parseFloat(data[3][2]);
-                    applyOEEColor(oeeTotalCell, oeeValue);
+                // Wiersz OEE (Wiersz 4 w arkuszu -> indeks 3 w JS)
+                // Kolumny D, E, F, G -> indeksy 3, 4, 5, 6
+                if (data[3]) {
+                    applyOEEColor(cell_D4_OEE, data[3][3]);
+                    applyOEEColor(cell_E4_OEE, data[3][4]);
+                    applyOEEColor(cell_F4_OEE, data[3][5]);
+                    applyOEEColor(oeeTotalCell, data[3][6]); // Total OEE z G4
                 } else {
-                    oeeTotalCell.innerHTML = '<strong>Brak OEE (C4)</strong>';
-                    oeeTotalCell.className = ''; // Usuń wszelkie klasy, jeśli danych brak
+                    console.warn('Brak danych dla wiersza OEE (Wiersz 4).');
                 }
 
-                // Tutaj możesz dodać więcej logiki do wypełniania innych pól
-                // np. data[wiersz_indeks][kolumna_indeks]
-                // Przykład: Wiersz "OK", kolumna "I" (z arkusza D6) to w JS data[5][3]
-                // document.getElementById('okI_cell').textContent = data[5][3]; 
-                // Musiałbyś dodać id="okI_cell" do odpowiedniej komórki w HTML.
+                // Wiersz OK (Wiersz 5 w arkuszu -> indeks 4 w JS)
+                // Kolumny D, E, F, G -> indeksy 3, 4, 5, 6
+                if (data[4]) {
+                    setTextToCell(cell_D5_OK, data[4][3]);
+                    setTextToCell(cell_E5_OK, data[4][4]);
+                    setTextToCell(cell_F5_OK, data[4][5]);
+                    setTextToCell(cell_G5_OK, data[4][6]);
+                } else {
+                     console.warn('Brak danych dla wiersza OK (Wiersz 5).');
+                }
+
+                // Wiersz NOK (Wiersz 6 w arkuszu -> indeks 5 w JS)
+                // Kolumny D, E, F, G -> indeksy 3, 4, 5, 6
+                if (data[5]) {
+                    setTextToCell(cell_D6_NOK, data[5][3]);
+                    setTextToCell(cell_E6_NOK, data[5][4]);
+                    setTextToCell(cell_F6_NOK, data[5][5]);
+                    setTextToCell(cell_G6_NOK, data[5][6]);
+                } else {
+                     console.warn('Brak danych dla wiersza NOK (Wiersz 6).');
+                }
+
+                // --- Wypełnianie danych dla bloków czasowych ---
+                // Zakładam, że dane zaczynają się od kolumny H (indeks 7)
+                // i wierszy 9 (indeks 8) oraz 10 (indeks 9)
+                // 24 kolumny czasowe od H do AE (H=7, I=8, ..., AE=30)
+                const startColIndex = 7; // Kolumna H
+                const timeRow1Index = 8; // Wiersz 9
+                const timeRow2Index = 9; // Wiersz 10
+
+                if (data[timeRow1Index]) {
+                    for (let i = 0; i < 24; i++) {
+                        setTextToCell(timeCellsRow1[i], data[timeRow1Index][startColIndex + i]);
+                    }
+                } else {
+                    console.warn('Brak danych dla pierwszego rzędu czasowego (Wiersz 9).');
+                }
+
+                if (data[timeRow2Index]) {
+                    for (let i = 0; i < 24; i++) {
+                        setTextToCell(timeCellsRow2[i], data[timeRow2Index][startColIndex + i]);
+                    }
+                } else {
+                    console.warn('Brak danych dla drugiego rzędu czasowego (Wiersz 10).');
+                }
 
             })
             .catch(error => {
-                console.error('Błąd podczas pobierania danych z Google Sheets:', error);
+                console.error('Globalny błąd podczas pobierania danych z Google Sheets:', error);
                 dataCell.innerHTML = '<strong>Błąd danych</strong>';
                 oeeTotalCell.innerHTML = '<strong>Błąd danych</strong>';
-                oeeTotalCell.className = 'oee-red';
+                oeeTotalCell.className = 'oee-red'; // Podświetl błąd
+                // Wyczyść również pozostałe komórki
+                [
+                    cell_D4_OEE, cell_E4_OEE, cell_F4_OEE,
+                    cell_D5_OK, cell_E5_OK, cell_F5_OK, cell_G5_OK,
+                    cell_D6_NOK, cell_E6_NOK, cell_F6_NOK, cell_G6_NOK,
+                    ...timeCellsRow1, ...timeCellsRow2
+                ].forEach(cell => {
+                    if (cell) {
+                        cell.textContent = '';
+                        cell.className = cell.id.includes('OEE') ? 'oee-cell' : 'value-cell';
+                    }
+                });
             });
     }
 
@@ -313,9 +465,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectElement.value) {
             fetchDataForSheet(selectElement.value);
         } else {
-            if (dataCell) dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
-            if (oeeTotalCell) oeeTotalCell.textContent = '';
-            oeeTotalCell.className = '';
+            // Wyczyść wszystkie komórki, jeśli nie wybrano arkusza
+            dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            [
+                cell_D4_OEE, cell_E4_OEE, cell_F4_OEE, oeeTotalCell,
+                cell_D5_OK, cell_E5_OK, cell_F5_OK, cell_G5_OK,
+                cell_D6_NOK, cell_E6_NOK, cell_F6_NOK, cell_G6_NOK,
+                ...timeCellsRow1, ...timeCellsRow2
+            ].forEach(cell => {
+                if (cell) {
+                    cell.textContent = '';
+                    cell.className = cell.id.includes('OEE') ? 'oee-cell' : 'value-cell';
+                }
+            });
         }
     }
 });
