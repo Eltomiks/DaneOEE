@@ -39,11 +39,6 @@
       padding: 6px;
       text-align: center;
     }
-    #dataValueCell {
-  font-size: 16px; /* Zwiększ rozmiar czcionki, możesz dostosować */
-  font-weight: bold; /* Opcjonalnie: pogrubienie */
-  color: #070808; /* Opcjonalnie: zmiana koloru */
-    }
     .red {
       color: red;
       font-weight: bold;
@@ -54,8 +49,22 @@
       border-radius: 4px;
       border: 1px solid #ccc;
       width: 100%;
-      max-width: 200px; /* Możesz dostosować lub usunąć, jeśli chcesz pełną szerokość komórki */
+      max-width: 200px;
     }
+
+    #dataValueCell {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* --- Nowe style dla kolorowania OEE --- */
+    .oee-red { background-color: #ffcccc; color: #cc0000; font-weight: bold; } /* Jasnoczerwony */
+    .oee-orange { background-color: #ffe0b3; color: #e68a00; font-weight: bold; } /* Jasnopomarańczowy */
+    .oee-yellow { background-color: #ffffcc; color: #ccaa00; font-weight: bold; } /* Jasnożółty */
+    .oee-green { background-color: #ccffcc; color: #008000; font-weight: bold; } /* Jasnozielony */
+    /* --- Koniec nowych stylów --- */
+
     .time-block {
       margin-bottom: 20px;
     }
@@ -90,14 +99,17 @@
         font-size: 10px;
       }
       select {
-        max-width: 100%; /* Pełna szerokość na małych ekranach */
+        max-width: 100%;
+      }
+      #dataValueCell {
+        font-size: 16px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="           Tu będize zajebiste logo ... Piasecki jest the best ;) ">
+    <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Tu będize zajebiste logo ... Piasecki jest the best ;) ">
 
     <table>
       <tr>
@@ -127,8 +139,8 @@
       </tr>
       <tr>
         <td><strong>OEE</strong></td>
-        <td></td><td></td><td></td><td></td>
-      </tr>
+        <td></td><td></td><td></td>
+        <td id="oeeTotalCell"></td> </tr>
       <tr>
         <td><strong>OK</strong></td>
         <td></td><td></td><td></td><td></td>
@@ -177,74 +189,111 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
     const dataCell = document.getElementById('dataValueCell');
+    const oeeTotalCell = document.getElementById('oeeTotalCell'); // Nowa referencja do komórki OEE
     const selectElement = document.getElementById('sheetSelector');
 
     function fetchDataForSheet(sheetName) {
-        if (!dataCell || !sheetName) {
+        if (!dataCell || !sheetName || !oeeTotalCell) {
             if (dataCell) dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            if (oeeTotalCell) oeeTotalCell.textContent = ''; // Wyczyść, jeśli nie wybrano arkusza
             return;
         }
-        dataCell.innerHTML = '<strong>Ładowanie...</strong>'; // Informacja o ładowaniu
 
-        // Konstrukcja URL do pobrania komórki C1 z wybranego arkusza jako CSV
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=C1`;
+        dataCell.innerHTML = '<strong>Ładowanie...</strong>';
+        oeeTotalCell.textContent = 'Ładowanie...'; // Informacja o ładowaniu OEE
+        oeeTotalCell.className = ''; // Usuń poprzednie klasy kolorów
 
-        fetch(url)
+        // URL do pobrania komórki C1 (data)
+        const urlC1 = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=C1`;
+        // URL do pobrania komórki C4 (OEE)
+        const urlC4 = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=C4`;
+
+        // --- Pobieranie daty z C1 ---
+        fetch(urlC1)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Błąd sieci lub nie można uzyskać dostępu do arkusza/zakładki.');
-                }
+                if (!response.ok) throw new Error('Błąd sieci lub nie można uzyskać dostępu do daty (C1).');
                 return response.text();
             })
             .then(text => {
-                let cleanedText = text.trim(); // Usuwa białe znaki z początku i końca (np. \n)
-                
-                // Usuwa cudzysłowy otaczające, jeśli istnieją
+                let cleanedText = text.trim();
                 if (cleanedText.startsWith('"') && cleanedText.endsWith('"')) {
                     cleanedText = cleanedText.substring(1, cleanedText.length - 1);
                 }
-                // Zamienia podwójne cudzysłowy wewnątrz tekstu (escapowane jako "") na pojedyncze
                 cleanedText = cleanedText.replace(/""/g, '"');
 
-                let displayedValue = 'Brak daty'; // Domyślna wartość w przypadku błędu
-
-                // Odcięcie części czasowej " HH:MM:SS" ze stringa
+                let displayedValue = 'Brak daty';
                 const datePart = cleanedText.split(' ')[0]; 
-
-                // Spróbuj utworzyć obiekt Date z samej części daty (np. "2025-05-30")
                 const dateObject = new Date(datePart); 
 
-                // Sprawdź, czy obiekt Date jest prawidłowy (nie "Invalid Date")
                 if (!isNaN(dateObject.getTime())) {
                     const day = String(dateObject.getDate()).padStart(2, '0');
-                    const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Miesiące są od 0-11
+                    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
                     const year = dateObject.getFullYear();
                     displayedValue = `${day}.${month}.${year}`;
                 } else {
-                    // Jeśli data nie jest prawidłowa, możesz wyświetlić oryginalny tekst lub komunikat o błędzie.
                     console.warn(`Nie udało się sparsować daty z tekstu: "${cleanedText}". Wyświetlam oryginalny tekst.`);
                     displayedValue = cleanedText;
                 }
-
-                dataCell.textContent = displayedValue; // Wyświetla sformatowaną datę lub oryginalny tekst
+                dataCell.textContent = displayedValue;
             })
             .catch(error => {
-                console.error('Błąd podczas pobierania danych z Google Sheets:', error);
-                dataCell.innerHTML = '<strong>Błąd danych</strong>';
+                console.error('Błąd podczas pobierania daty z Google Sheets:', error);
+                dataCell.innerHTML = '<strong>Błąd daty</strong>';
+            });
+
+        // --- Pobieranie wartości OEE z C4 ---
+        fetch(urlC4)
+            .then(response => {
+                if (!response.ok) throw new Error('Błąd sieci lub nie można uzyskać dostępu do OEE (C4).');
+                return response.text();
+            })
+            .then(text => {
+                let cleanedText = text.trim();
+                if (cleanedText.startsWith('"') && cleanedText.endsWith('"')) {
+                    cleanedText = cleanedText.substring(1, cleanedText.length - 1);
+                }
+                cleanedText = cleanedText.replace(/""/g, '"');
+
+                // Konwersja na liczbę zmiennoprzecinkową
+                const oeeValue = parseFloat(cleanedText);
+
+                // Usuń wszystkie poprzednie klasy stylów
+                oeeTotalCell.className = ''; 
+
+                if (isNaN(oeeValue) || oeeValue === 0) {
+                    oeeTotalCell.textContent = ''; // Nic nie pokazuj, jeśli 0 lub nie jest liczbą
+                } else {
+                    oeeTotalCell.textContent = `${oeeValue.toFixed(2)}%`; // Pokaż z dwoma miejscami po przecinku i znakiem %
+
+                    // Logika kolorowania
+                    if (oeeValue > 0 && oeeValue <= 60) {
+                        oeeTotalCell.classList.add('oee-red');
+                    } else if (oeeValue > 60 && oeeValue <= 70) {
+                        oeeTotalCell.classList.add('oee-orange');
+                    } else if (oeeValue > 70 && oeeValue <= 80) {
+                        oeeTotalCell.classList.add('oee-yellow');
+                    } else if (oeeValue > 80) { // Powyżej 80%
+                        oeeTotalCell.classList.add('oee-green');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Błąd podczas pobierania OEE z Google Sheets:', error);
+                oeeTotalCell.innerHTML = '<strong>Błąd OEE</strong>';
+                oeeTotalCell.className = 'oee-red'; // Opcjonalnie, podświetl na czerwono błąd
             });
     }
 
-    // Dodaje nasłuchiwanie na zmianę wartości w liście rozwijanej
     if (selectElement) {
         selectElement.addEventListener('change', function() {
             fetchDataForSheet(this.value);
         });
 
-        // Pobranie danych dla domyślnie wybranego arkusza po załadowaniu strony
         if (selectElement.value) {
             fetchDataForSheet(selectElement.value);
-        } else if (dataCell) {
-            dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
+        } else {
+            if (dataCell) dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            if (oeeTotalCell) oeeTotalCell.textContent = '';
         }
     }
 });
