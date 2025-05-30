@@ -58,12 +58,11 @@
       color: #333;
     }
 
-    /* --- Nowe style dla kolorowania OEE --- */
+    /* Style dla kolorowania OEE */
     .oee-red { background-color: #ffcccc; color: #cc0000; font-weight: bold; } /* Jasnoczerwony */
     .oee-orange { background-color: #ffe0b3; color: #e68a00; font-weight: bold; } /* Jasnopomarańczowy */
     .oee-yellow { background-color: #ffffcc; color: #ccaa00; font-weight: bold; } /* Jasnożółty */
     .oee-green { background-color: #ccffcc; color: #008000; font-weight: bold; } /* Jasnozielony */
-    /* --- Koniec nowych stylów --- */
 
     .time-block {
       margin-bottom: 20px;
@@ -189,98 +188,120 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
     const dataCell = document.getElementById('dataValueCell');
-    const oeeTotalCell = document.getElementById('oeeTotalCell'); // Nowa referencja do komórki OEE
+    const oeeTotalCell = document.getElementById('oeeTotalCell');
     const selectElement = document.getElementById('sheetSelector');
+
+    // Funkcja pomocnicza do parsowania CSV (prosta implementacja dla pojedynczych wartości)
+    // Jeśli masz dane z przecinkami w środku komórki lub cudzysłowami, to może być potrzebna bardziej złożona biblioteka CSV.
+    function parseCsv(csvString) {
+        const lines = csvString.trim().split('\n');
+        return lines.map(line => {
+            // Usuń otaczające cudzysłowy i podwójne cudzysłowy wewnątrz
+            return line.split(',').map(cell => {
+                let cleanedCell = cell.trim();
+                if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
+                    cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
+                }
+                return cleanedCell.replace(/""/g, '"');
+            });
+        });
+    }
+
+    // Funkcja do formatowania daty
+    function formatAsDDMMYYYY(dateString) {
+        // Spróbuj utworzyć obiekt Date z samej części daty (np. "2025-05-30")
+        const datePart = dateString.split(' ')[0]; 
+        const dateObject = new Date(datePart); 
+
+        if (!isNaN(dateObject.getTime())) {
+            const day = String(dateObject.getDate()).padStart(2, '0');
+            const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+            const year = dateObject.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+        return dateString; // Zwróć oryginalny string, jeśli nie da się sparsować
+    }
+
+    // Funkcja do stosowania kolorów OEE
+    function applyOEEColor(cellElement, value) {
+        cellElement.className = ''; // Usuń wszystkie poprzednie klasy
+
+        if (isNaN(value) || value === 0) {
+            cellElement.textContent = '';
+        } else {
+            cellElement.textContent = `${value.toFixed(2)}%`;
+            if (value > 0 && value <= 60) {
+                cellElement.classList.add('oee-red');
+            } else if (value > 60 && value <= 70) {
+                cellElement.classList.add('oee-orange');
+            } else if (value > 70 && value <= 80) {
+                cellElement.classList.add('oee-yellow');
+            } else if (value > 80) {
+                cellElement.classList.add('oee-green');
+            }
+        }
+    }
 
     function fetchDataForSheet(sheetName) {
         if (!dataCell || !sheetName || !oeeTotalCell) {
             if (dataCell) dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
-            if (oeeTotalCell) oeeTotalCell.textContent = ''; // Wyczyść, jeśli nie wybrano arkusza
+            if (oeeTotalCell) oeeTotalCell.textContent = '';
+            oeeTotalCell.className = '';
             return;
         }
 
         dataCell.innerHTML = '<strong>Ładowanie...</strong>';
-        oeeTotalCell.textContent = 'Ładowanie...'; // Informacja o ładowaniu OEE
-        oeeTotalCell.className = ''; // Usuń poprzednie klasy kolorów
+        oeeTotalCell.textContent = 'Ładowanie...';
+        oeeTotalCell.className = '';
 
-        // URL do pobrania komórki C1 (data)
-        const urlC1 = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=C1`;
-        // URL do pobrania komórki C4 (OEE)
-        const urlC4 = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=C4`;
+        // Zmieniamy zakres na cały arkusz lub większy zakres, np. A1:Z100
+        const fullRange = 'A1:F100'; // Przykładowy zakres, dostosuj do swoich potrzeb
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=${encodeURIComponent(fullRange)}`;
 
-        // --- Pobieranie daty z C1 ---
-        fetch(urlC1)
+        fetch(url)
             .then(response => {
-                if (!response.ok) throw new Error('Błąd sieci lub nie można uzyskać dostępu do daty (C1).');
+                if (!response.ok) {
+                    throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza/zakładki (${sheetName}).`);
+                }
                 return response.text();
             })
-            .then(text => {
-                let cleanedText = text.trim();
-                if (cleanedText.startsWith('"') && cleanedText.endsWith('"')) {
-                    cleanedText = cleanedText.substring(1, cleanedText.length - 1);
-                }
-                cleanedText = cleanedText.replace(/""/g, '"');
+            .then(csvText => {
+                const data = parseCsv(csvText);
+                
+                // UWAGA: Indeksy tablicowe są oparte na zerze (0-indexed).
+                // Kolumna C to indeks 2 (A=0, B=1, C=2).
+                // Wiersz 1 to indeks 0, wiersz 4 to indeks 3.
 
-                let displayedValue = 'Brak daty';
-                const datePart = cleanedText.split(' ')[0]; 
-                const dateObject = new Date(datePart); 
-
-                if (!isNaN(dateObject.getTime())) {
-                    const day = String(dateObject.getDate()).padStart(2, '0');
-                    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
-                    const year = dateObject.getFullYear();
-                    displayedValue = `${day}.${month}.${year}`;
+                // Wartość z C1 (data)
+                // Sprawdź, czy istnieje wiersz 0 i kolumna 2
+                if (data[0] && data[0][2] !== undefined) {
+                    dataCell.textContent = formatAsDDMMYYYY(data[0][2]);
                 } else {
-                    console.warn(`Nie udało się sparsować daty z tekstu: "${cleanedText}". Wyświetlam oryginalny tekst.`);
-                    displayedValue = cleanedText;
+                    dataCell.innerHTML = '<strong>Brak daty (C1)</strong>';
                 }
-                dataCell.textContent = displayedValue;
+
+                // Wartość z C4 (OEE)
+                // Sprawdź, czy istnieje wiersz 3 i kolumna 2
+                if (data[3] && data[3][2] !== undefined) {
+                    const oeeValue = parseFloat(data[3][2]);
+                    applyOEEColor(oeeTotalCell, oeeValue);
+                } else {
+                    oeeTotalCell.innerHTML = '<strong>Brak OEE (C4)</strong>';
+                    oeeTotalCell.className = ''; // Usuń wszelkie klasy, jeśli danych brak
+                }
+
+                // Tutaj możesz dodać więcej logiki do wypełniania innych pól
+                // np. data[wiersz_indeks][kolumna_indeks]
+                // Przykład: Wiersz "OK", kolumna "I" (z arkusza D6) to w JS data[5][3]
+                // document.getElementById('okI_cell').textContent = data[5][3]; 
+                // Musiałbyś dodać id="okI_cell" do odpowiedniej komórki w HTML.
+
             })
             .catch(error => {
-                console.error('Błąd podczas pobierania daty z Google Sheets:', error);
-                dataCell.innerHTML = '<strong>Błąd daty</strong>';
-            });
-
-        // --- Pobieranie wartości OEE z C4 ---
-        fetch(urlC4)
-            .then(response => {
-                if (!response.ok) throw new Error('Błąd sieci lub nie można uzyskać dostępu do OEE (C4).');
-                return response.text();
-            })
-            .then(text => {
-                let cleanedText = text.trim();
-                if (cleanedText.startsWith('"') && cleanedText.endsWith('"')) {
-                    cleanedText = cleanedText.substring(1, cleanedText.length - 1);
-                }
-                cleanedText = cleanedText.replace(/""/g, '"');
-
-                // Konwersja na liczbę zmiennoprzecinkową
-                const oeeValue = parseFloat(cleanedText);
-
-                // Usuń wszystkie poprzednie klasy stylów
-                oeeTotalCell.className = ''; 
-
-                if (isNaN(oeeValue) || oeeValue === 0) {
-                    oeeTotalCell.textContent = ''; // Nic nie pokazuj, jeśli 0 lub nie jest liczbą
-                } else {
-                    oeeTotalCell.textContent = `${oeeValue.toFixed(2)}%`; // Pokaż z dwoma miejscami po przecinku i znakiem %
-
-                    // Logika kolorowania
-                    if (oeeValue > 0 && oeeValue <= 60) {
-                        oeeTotalCell.classList.add('oee-red');
-                    } else if (oeeValue > 60 && oeeValue <= 70) {
-                        oeeTotalCell.classList.add('oee-orange');
-                    } else if (oeeValue > 70 && oeeValue <= 80) {
-                        oeeTotalCell.classList.add('oee-yellow');
-                    } else if (oeeValue > 80) { // Powyżej 80%
-                        oeeTotalCell.classList.add('oee-green');
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Błąd podczas pobierania OEE z Google Sheets:', error);
-                oeeTotalCell.innerHTML = '<strong>Błąd OEE</strong>';
-                oeeTotalCell.className = 'oee-red'; // Opcjonalnie, podświetl na czerwono błąd
+                console.error('Błąd podczas pobierania danych z Google Sheets:', error);
+                dataCell.innerHTML = '<strong>Błąd danych</strong>';
+                oeeTotalCell.innerHTML = '<strong>Błąd danych</strong>';
+                oeeTotalCell.className = 'oee-red';
             });
     }
 
@@ -294,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             if (dataCell) dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
             if (oeeTotalCell) oeeTotalCell.textContent = '';
+            oeeTotalCell.className = '';
         }
     }
 });
