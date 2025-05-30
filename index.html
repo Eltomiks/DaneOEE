@@ -12,7 +12,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: auto;
       background: white;
       padding: 20px;
@@ -51,29 +51,30 @@
     }
 
     .time-block {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
-    .time-header {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      font-weight: bold;
-      margin-bottom: 5px;
+    .time-table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    .time-grid {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 5px;
+    .time-table th {
+      background: #3498db;
+      color: white;
+      padding: 8px;
     }
 
-    .cell {
-      background: #e0f7e9;
+    .time-table td {
       border: 1px solid #ccc;
-      padding: 10px;
+      padding: 15px;
+      background-color: #e0f7e9;
+      height: 40px;
+    }
+
+    .time-header th {
       text-align: center;
-      border-radius: 4px;
-      min-height: 30px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -82,15 +83,17 @@
     <!-- Główna tabela -->
     <table>
       <tr>
-        <td><strong>Lista rozwijana</strong></td>
+        <td><strong>DATA</strong></td>
         <td colspan="4">
           <select>
-            <option class="green">1</option>
+            <option>I</option>
+            <option>II</option>
+            <option>III</option>
           </select>
         </td>
       </tr>
       <tr>
-        <td><strong>DATA</strong></td>
+        <td><strong>zm</strong></td>
         <td class="green">I</td>
         <td class="green">II</td>
         <td class="green">III</td>
@@ -110,40 +113,56 @@
       </tr>
     </table>
 
-    <!-- Blok godzinowy 6–14 -->
+    <!-- Blok godzinowy -->
     <div class="time-block">
-      <div class="time-header">
-        <div>6–7</div><div>7–8</div><div>8–9</div><div>9–10</div>
-        <div>10–11</div><div>11–12</div><div>12–13</div><div>13–14</div>
-      </div>
-      <div class="time-grid">
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-      </div>
+      <table class="time-table">
+        <tr class="time-header">
+          <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
+          <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
+        </tr>
+        <tr>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+        </tr>
+        <tr>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+        </tr>
+      </table>
     </div>
 
-    <!-- Blok godzinowy 14–22 -->
     <div class="time-block">
-      <div class="time-header">
-        <div>14–15</div><div>15–16</div><div>16–17</div><div>17–18</div>
-        <div>18–19</div><div>19–20</div><div>20–21</div><div>21–22</div>
-      </div>
-      <div class="time-grid">
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-      </div>
+      <table class="time-table">
+        <tr class="time-header">
+          <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
+          <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
+        </tr>
+        <tr>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+        </tr>
+        <tr>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+        </tr>
+      </table>
     </div>
 
-    <!-- Blok godzinowy 22–06 -->
     <div class="time-block">
-      <div class="time-header">
-        <div>22–23</div><div>23–00</div><div>00–01</div><div>01–02</div>
-        <div>02–03</div><div>03–04</div><div>04–05</div><div>05–06</div>
-      </div>
-      <div class="time-grid">
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
-      </div>
+      <table class="time-table">
+        <tr class="time-header">
+          <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
+          <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
+        </tr>
+        <tr>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+        </tr>
+        <tr>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+          <td class="green"></td><td class="green"></td><td class="green"></td><td class="green"></td>
+        </tr>
+      </table>
     </div>
   </div>
 </body>
