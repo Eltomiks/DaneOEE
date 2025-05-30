@@ -92,7 +92,7 @@
 </head>
 <body>
   <div class="container">
-    <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Tu będize zajebiste logo ... Piasecki jest the best ;)  ">
+    <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="           Tu będize zajebiste logo ... Piasecki jest the best ;) ">
 
     <table>
       <tr>
@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dataCell.innerHTML = '<strong>Ładowanie...</strong>'; // Informacja o ładowaniu
 
         // Konstrukcja URL do pobrania komórki C1 z wybranego arkusza jako CSV
-        // Używamy `gviz/tq` API, które pozwala na eksport danych
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=C1`;
 
         fetch(url)
@@ -193,8 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.text();
             })
             .then(text => {
-                // Odpowiedź CSV dla pojedynczej komórki może zawierać cudzysłowy i znak nowej linii, np. "Wartość Komórki"\n
-                // Lub Wartość Komórki\n jeśli nie jest cytowana (np. liczby)
                 let cleanedText = text.trim(); // Usuwa białe znaki z początku i końca (np. \n)
                 
                 // Usuwa cudzysłowy otaczające, jeśli istnieją
@@ -204,7 +201,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Zamienia podwójne cudzysłowy wewnątrz tekstu (escapowane jako "") na pojedyncze
                 cleanedText = cleanedText.replace(/""/g, '"');
 
-                dataCell.textContent = cleanedText; // Wyświetla oczyszczone dane
+                let displayedValue = 'Brak daty'; // Domyślna wartość w przypadku błędu
+
+                // Odcięcie części czasowej " HH:MM:SS" ze stringa
+                const datePart = cleanedText.split(' ')[0]; 
+
+                // Spróbuj utworzyć obiekt Date z samej części daty (np. "2025-05-30")
+                const dateObject = new Date(datePart); 
+
+                // Sprawdź, czy obiekt Date jest prawidłowy (nie "Invalid Date")
+                if (!isNaN(dateObject.getTime())) {
+                    const day = String(dateObject.getDate()).padStart(2, '0');
+                    const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Miesiące są od 0-11
+                    const year = dateObject.getFullYear();
+                    displayedValue = `${day}.${month}.${year}`;
+                } else {
+                    // Jeśli data nie jest prawidłowa, możesz wyświetlić oryginalny tekst lub komunikat o błędzie.
+                    console.warn(`Nie udało się sparsować daty z tekstu: "${cleanedText}". Wyświetlam oryginalny tekst.`);
+                    displayedValue = cleanedText;
+                }
+
+                dataCell.textContent = displayedValue; // Wyświetla sformatowaną datę lub oryginalny tekst
             })
             .catch(error => {
                 console.error('Błąd podczas pobierania danych z Google Sheets:', error);
@@ -222,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectElement.value) {
             fetchDataForSheet(selectElement.value);
         } else if (dataCell) {
-             dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
         }
     }
 });
