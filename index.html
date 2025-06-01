@@ -163,17 +163,17 @@
       </tr>
       <tr>
         <td><strong>OK</strong></td>
-        <td id="D5" class="value-cell"></td>
-        <td id="E5" class="value-cell"></td>
-        <td id="F5" class="value-cell"></td>
-        <td id="C5" class="value-cell"></td>
+        <td id="D11" class="value-cell"></td>
+        <td id="E11" class="value-cell"></td>
+        <td id="F11" class="value-cell"></td>
+        <td id="C11" class="value-cell"></td>
       </tr>
       <tr>
         <td class="red">NOK</td>
-        <td id="D6" class="value-cell"></td>
-        <td id="E6" class="value-cell"></td>
-        <td id="F6" class="value-cell"></td>
-        <td id="C6" class="value-cell"></td>
+        <td id="D12" class="value-cell"></td>
+        <td id="E12" class="value-cell"></td>
+        <td id="F12" class="value-cell"></td>
+        <td id="C12" class="value-cell"></td>
       </tr>
     </table>
 
@@ -362,9 +362,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Lista wszystkich komórek, które mają być wyczyszczone/zresetowane
         const allCellsToReset = [
             C1_cell,
-            D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, G4_OEE_cell,
-            D5_OK_cell, E5_OK_cell, F5_OK_cell, G5_OK_cell,
-            D6_NOK_cell, E6_NOK_cell, F6_NOK_cell, G6_NOK_cell,
+            D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, C4_OEE_cell,
+            D11_OK_cell, E11_OK_cell, F11_OK_cell, C11_OK_cell,
+            D12_NOK_cell, E12_NOK_cell, F12_NOK_cell, C12_NOK_cell,
             ...timeCellsRow1, ...timeCellsRow2
         ];
 
@@ -428,10 +428,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Wiersz OK (wiersz 5 w arkuszu, indeks 4 w danych)
                 const row5_idx = 4;
                 if (data[row5_idx]) {
-                    setTextToCell(D5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('D')]);
-                    setTextToCell(E5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('E')]);
-                    setTextToCell(F5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('F')]);
-                    setTextToCell(G5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('G')]);
+                    setTextToCell(D11_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('D')]);
+                    setTextToCell(E11_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('E')]);
+                    setTextToCell(F11_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('F')]);
+                    setTextToCell(C11_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('G')]);
                 } else {
                     console.warn('Brak danych dla wiersza OK (Wiersz 5 w arkuszu).');
                 }
@@ -439,10 +439,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Wiersz NOK (wiersz 6 w arkuszu, indeks 5 w danych)
                 const row6_idx = 5;
                 if (data[row6_idx]) {
-                    setTextToCell(D6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('D')]);
-                    setTextToCell(E6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('E')]);
-                    setTextToCell(F6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('F')]);
-                    setTextToCell(G6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('G')]);
+                    setTextToCell(D12_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('D')]);
+                    setTextToCell(E12_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('E')]);
+                    setTextToCell(F12_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('F')]);
+                    setTextToCell(C12_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('G')]);
                 } else {
                     console.warn('Brak danych dla wiersza NOK (Wiersz 6 w arkuszu).');
                 }
@@ -503,9 +503,9 @@ document.addEventListener('DOMContentLoaded', function() {
             C1_cell.innerHTML = '<strong>Wybierz arkusz</strong>';
             // Wyczyść wszystkie komórki, jeśli nie wybrano arkusza na starcie
             [
-                D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, G4_OEE_cell,
-                D5_OK_cell, E5_OK_cell, F5_OK_cell, G5_OK_cell,
-                D6_NOK_cell, E6_NOK_cell, F6_NOK_cell, G6_NOK_cell,
+                D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, C4_OEE_cell,
+                D11_OK_cell, E11_OK_cell, F11_OK_cell, C11_OK_cell,
+                D12_NOK_cell, E12_NOK_cell, F12_NOK_cell, C12_NOK_cell,
                 ...timeCellsRow1, ...timeCellsRow2
             ].forEach(cell => {
                 if (cell) {
