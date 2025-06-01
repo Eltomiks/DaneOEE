@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard OEE - Uproszczony</title>
+  <title>Dashboard OEE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -52,17 +52,27 @@
       max-width: 200px;
     }
 
-    /* Styl dla komórki daty */
-    #dataDisplayField {
+    /* Styl dla komórki daty (C1) */
+    #C1 {
       font-size: 20px;
       font-weight: bold;
       color: #333;
     }
 
-    /* Ogólny styl dla pól danych */
-    .data-field {
-      font-size: 14px;
-      font-weight: 500;
+    /* Style dla kolorowania OEE i innych wartości */
+    .oee-red { background-color: #ffcccc; color: #cc0000; font-weight: normal; }
+    .oee-orange { background-color: #ffe0b3; color: #000000; font-weight: normal; }
+    .oee-yellow { background-color: #ffffcc; color: #000000; font-weight: normal; }
+    .oee-green { background-color: #ccffcc; color: #000000; font-weight: normal; }
+
+    /* Ogólne style dla komórek z wartościami */
+    .value-cell {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .oee-cell {
+        font-size: 16px;
+        font-weight: bold;
     }
 
     .time-block {
@@ -102,11 +112,14 @@
       select {
         max-width: 100%;
       }
-      #dataDisplayField {
+      #C1 { /* Zmieniono selektor */
         font-size: 16px;
       }
-      .data-field {
-        font-size: 12px;
+      .oee-cell {
+          font-size: 14px;
+      }
+      .value-cell {
+          font-size: 12px;
       }
     }
   </style>
@@ -117,10 +130,10 @@
 
     <table>
       <tr>
-        <td id="dataDisplayField"><strong>Ładowanie...</strong></td>
+        <td id="C1"><strong>Ładowanie...</strong></td>
         <td colspan="4">
           <select id="sheetSelector">
-            <option value="">Wybierz arkusz</option> <option>NHL</option>
+            <option>NHL</option>
             <option>MP4</option>
             <option>Hood Latch</option>
             <option>M4</option>
@@ -143,24 +156,24 @@
       </tr>
       <tr>
         <td><strong>OEE</strong></td>
-        <td id="oeeShift1" class="data-field"></td>
-        <td id="oeeShift2" class="data-field"></td>
-        <td id="oeeShift3" class="data-field"></td>
-        <td id="oeeTotal" class="data-field"></td>
+        <td id="D4" class="oee-cell"></td>
+        <td id="E4" class="oee-cell"></td>
+        <td id="F4" class="oee-cell"></td>
+        <td id="G4" class="oee-cell"></td>
       </tr>
       <tr>
         <td><strong>OK</strong></td>
-        <td id="okShift1" class="data-field"></td>
-        <td id="okShift2" class="data-field"></td>
-        <td id="okShift3" class="data-field"></td>
-        <td id="okTotal" class="data-field"></td>
+        <td id="D5" class="value-cell"></td>
+        <td id="E5" class="value-cell"></td>
+        <td id="F5" class="value-cell"></td>
+        <td id="G5" class="value-cell"></td>
       </tr>
       <tr>
         <td class="red">NOK</td>
-        <td id="nokShift1" class="data-field"></td>
-        <td id="nokShift2" class="data-field"></td>
-        <td id="nokShift3" class="data-field"></td>
-        <td id="nokTotal" class="data-field"></td>
+        <td id="D6" class="value-cell"></td>
+        <td id="E6" class="value-cell"></td>
+        <td id="F6" class="value-cell"></td>
+        <td id="G6" class="value-cell"></td>
       </tr>
     </table>
 
@@ -171,24 +184,12 @@
           <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
         </tr>
         <tr>
-          <td id="hour1_row1"></td>
-          <td id="hour2_row1"></td>
-          <td id="hour3_row1"></td>
-          <td id="hour4_row1"></td>
-          <td id="hour5_row1"></td>
-          <td id="hour6_row1"></td>
-          <td id="hour7_row1"></td>
-          <td id="hour8_row1"></td>
+          <td id="H9"></td><td id="I9"></td><td id="J9"></td><td id="K9"></td>
+          <td id="L9"></td><td id="M9"></td><td id="N9"></td><td id="O9"></td>
         </tr>
         <tr>
-          <td id="hour1_row2"></td>
-          <td id="hour2_row2"></td>
-          <td id="hour3_row2"></td>
-          <td id="hour4_row2"></td>
-          <td id="hour5_row2"></td>
-          <td id="hour6_row2"></td>
-          <td id="hour7_row2"></td>
-          <td id="hour8_row2"></td>
+          <td id="H10"></td><td id="I10"></td><td id="J10"></td><td id="K10"></td>
+          <td id="L10"></td><td id="M10"></td><td id="N10"></td><td id="O10"></td>
         </tr>
       </table>
     </div>
@@ -200,24 +201,12 @@
           <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
         </tr>
         <tr>
-          <td id="hour9_row1"></td>
-          <td id="hour10_row1"></td>
-          <td id="hour11_row1"></td>
-          <td id="hour12_row1"></td>
-          <td id="hour13_row1"></td>
-          <td id="hour14_row1"></td>
-          <td id="hour15_row1"></td>
-          <td id="hour16_row1"></td>
+          <td id="P9"></td><td id="Q9"></td><td id="R9"></td><td id="S9"></td>
+          <td id="T9"></td><td id="U9"></td><td id="V9"></td><td id="W9"></td>
         </tr>
         <tr>
-          <td id="hour9_row2"></td>
-          <td id="hour10_row2"></td>
-          <td id="hour11_row2"></td>
-          <td id="hour12_row2"></td>
-          <td id="hour13_row2"></td>
-          <td id="hour14_row2"></td>
-          <td id="hour15_row2"></td>
-          <td id="hour16_row2"></td>
+          <td id="P10"></td><td id="Q10"></td><td id="R10"></td><td id="S10"></td>
+          <td id="T10"></td><td id="U10"></td><td id="V10"></td><td id="W10"></td>
         </tr>
       </table>
     </div>
@@ -229,40 +218,21 @@
           <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
         </tr>
         <tr>
-          <td id="hour17_row1"></td>
-          <td id="hour18_row1"></td>
-          <td id="hour19_row1"></td>
-          <td id="hour20_row1"></td>
-          <td id="hour21_row1"></td>
-          <td id="hour22_row1"></td>
-          <td id="hour23_row1"></td>
-          <td id="hour24_row1"></td>
+          <td id="X9"></td><td id="Y9"></td><td id="Z9"></td><td id="AA9"></td>
+          <td id="AB9"></td><td id="AC9"></td><td id="AD9"></td><td id="AE9"></td>
         </tr>
         <tr>
-          <td id="hour17_row2"></td>
-          <td id="hour18_row2"></td>
-          <td id="hour19_row2"></td>
-          <td id="hour20_row2"></td>
-          <td id="hour21_row2"></td>
-          <td id="hour22_row2"></td>
-          <td id="hour23_row2"></td>
-          <td id="hour24_row2"></td>
+          <td id="X10"></td><td id="Y10"></td><td id="Z10"></td><td id="AA10"></td>
+          <td id="AB10"></td><td id="AC10"></td><td id="AD10"></td><td id="AE10"></td>
         </tr>
       </table>
     </div>
   </div>
 
----
-
-## Uproszczony Kod JavaScript
-
-Ten kod JavaScript jest teraz znacznie prostszy. Posiada jedną główną funkcję `updateDashboard()` odpowiedzialną za pobieranie danych i ich przypisywanie do pól. Kluczowe jest, że używa obiektu `cellMappings` do łatwego przypisywania wartości.
-
-```javascript
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <--- WSTAW TUTAJ ID SWOJEGO ARKUSZA GOOGLE
-    const sheetSelector = document.getElementById('sheetSelector');
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // ID Twojego arkusza Google
+    const C1_cell = document.getElementById('C1'); // Odpowiada C1 w arkuszu
 
     // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     // Np. 'A' -> 0, 'B' -> 1, 'AA' -> 26
@@ -273,6 +243,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return colIndex - 1; // Zwróć indeks 0-bazowy
     }
+
+    // Pomocnicza funkcja do pobierania elementu HTML po ID
+    function getCellElement(id) {
+        return document.getElementById(id);
+    }
+
+    // Odwołania do komórek OEE (wiersz 4 w arkuszu Google, co odpowiada indeksowi 3 w danych JS)
+    const D4_OEE_cell = getCellElement('D4');
+    const E4_OEE_cell = getCellElement('E4');
+    const F4_OEE_cell = getCellElement('F4');
+    const G4_OEE_cell = getCellElement('G4'); // TOTAL OEE
+
+    // Odwołania do komórek OK (wiersz 5 w arkuszu Google, indeks 4 w danych JS)
+    const D5_OK_cell = getCellElement('D5');
+    const E5_OK_cell = getCellElement('E5');
+    const F5_OK_cell = getCellElement('F5');
+    const G5_OK_cell = getCellElement('G5');
+
+    // Odwołania do komórek NOK (wiersz 6 w arkuszu Google, indeks 5 w danych JS)
+    const D6_NOK_cell = getCellElement('D6');
+    const E6_NOK_cell = getCellElement('E6');
+    const F6_NOK_cell = getCellElement('F6');
+    const G6_NOK_cell = getCellElement('G6');
+
+    // Referencje do komórek czasowych
+    const timeCellsRow1 = [];
+    const timeCellsRow2 = [];
+
+    // Mapowanie liter kolumn dla 24 godzin (od H do AE)
+    const timeColumnLetters = [
+        'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', // 8 kolumn
+        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', // 8 kolumn
+        'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE' // 8 kolumn
+    ];
+
+    // Indeksy wierszy dla danych czasowych w arkuszu (pamiętaj, że w JS to indeks -1)
+    const timeRow1GoogleSheet = 9; // Odpowiada wierszowi 9 w arkuszu Google
+    const timeRow2GoogleSheet = 10; // Odpowiada wierszowi 10 w arkuszu Google
+
+    // Wypełnij tablice referencjami do elementów HTML komórek czasowych
+    for (let i = 0; i < timeColumnLetters.length; i++) {
+        timeCellsRow1.push(getCellElement(`${timeColumnLetters[i]}${timeRow1GoogleSheet}`)); // np. H9
+        timeCellsRow2.push(getCellElement(`${timeColumnLetters[i]}${timeRow2GoogleSheet}`)); // np. H10
+    }
+
+    const selectElement = document.getElementById('sheetSelector');
 
     // Funkcja pomocnicza do parsowania CSV
     function parseCsv(csvString) {
@@ -290,189 +306,221 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Funkcja do ustawiania tekstu w danej komórce HTML
-    function setFieldValue(elementId, value) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.textContent = (value === '' || value === null || value === undefined) ? '' : value;
+    // Funkcja do formatowania daty na DD.MM.RRRR
+    function formatAsDDMMYYYY(dateString) {
+        const datePart = dateString.split(' ')[0]; // Weź tylko część daty, ignorując czas
+        const dateObject = new Date(datePart);
+
+        if (!isNaN(dateObject.getTime())) { // Sprawdź, czy data jest prawidłowa
+            const day = String(dateObject.getDate()).padStart(2, '0');
+            const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Miesiące są 0-11
+            const year = dateObject.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+        return dateString; // Zwróć oryginalny string, jeśli formatowanie się nie powiodło
+    }
+
+    // Funkcja do stosowania kolorów OEE i wyświetlania wartości procentowej
+    function applyOEEColor(cellElement, value) {
+        if (!cellElement) return; // Upewnij się, że element istnieje
+        cellElement.className = 'oee-cell'; // Resetuj do podstawowej klasy OEE
+
+        const numValue = parseFloat(value);
+
+        if (isNaN(numValue) || numValue === 0) {
+            cellElement.textContent = ''; // Wyczyść, jeśli nie ma wartości lub jest 0
         } else {
-            console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`);
+            cellElement.textContent = `${numValue.toFixed(2)}%`; // Wyświetl jako procent
+            if (numValue > 0 && numValue <= 60) {
+                cellElement.classList.add('oee-red');
+            } else if (numValue > 60 && numValue <= 70) {
+                cellElement.classList.add('oee-orange');
+            } else if (numValue > 70 && numValue <= 80) {
+                cellElement.classList.add('oee-yellow');
+            } else if (numValue > 80) {
+                cellElement.classList.add('oee-green');
+            }
         }
     }
 
-    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
-    // Kluczem jest ID elementu HTML, wartością jest obiekt { row: numer_wiersza_arkusza, col: "litera_kolumny_arkusza" }
-    // UWAGA: Numery wierszy w arkuszu (np. 1, 4, 5) są takie same jak w arkuszu Google.
-    //        Litery kolumn (np. "C", "D", "G") są takie same jak w arkuszu Google.
-    const cellMappings = {
-        // Główna data/wskaźnik
-        'dataDisplayField': { row: 1, col: 'C' }, // Przykładowo: C1 w arkuszu
-
-        // OEE
-        'oeeShift1': { row: 4, col: 'D' }, // OEE Zmiana I -> D4 w arkuszu
-        'oeeShift2': { row: 4, col: 'E' }, // OEE Zmiana II -> E4 w arkuszu
-        'oeeShift3': { row: 4, col: 'F' }, // OEE Zmiana III -> F4 w arkuszu
-        'oeeTotal': { row: 4, col: 'G' },  // OEE TOTAL -> G4 w arkuszu
-
-        // OK
-        'okShift1': { row: 5, col: 'D' }, // OK Zmiana I -> D5 w arkuszu
-        'okShift2': { row: 5, col: 'E' }, // OK Zmiana II -> E5 w arkuszu
-        'okShift3': { row: 5, col: 'F' }, // OK Zmiana III -> F5 w arkuszu
-        'okTotal': { row: 5, col: 'G' },  // OK TOTAL -> G5 w arkuszu
-
-        // NOK
-        'nokShift1': { row: 6, col: 'D' }, // NOK Zmiana I -> D6 w arkuszu
-        'nokShift2': { row: 6, col: 'E' }, // NOK Zmiana II -> E6 w arkuszu
-        'nokShift3': { row: 6, col: 'F' }, // NOK Zmiana III -> F6 w arkuszu
-        'nokTotal': { row: 6, col: 'G' },  // NOK TOTAL -> G6 w arkuszu
-
-        // GODZINY - WIERSZ 1 (przykładowo wiersz 9 w arkuszu)
-        'hour1_row1': { row: 9, col: 'H' },
-        'hour2_row1': { row: 9, col: 'I' },
-        'hour3_row1': { row: 9, col: 'J' },
-        'hour4_row1': { row: 9, col: 'K' },
-        'hour5_row1': { row: 9, col: 'L' },
-        'hour6_row1': { row: 9, col: 'M' },
-        'hour7_row1': { row: 9, col: 'N' },
-        'hour8_row1': { row: 9, col: 'O' },
-
-        // GODZINY - WIERSZ 2 (przykładowo wiersz 10 w arkuszu)
-        'hour9_row1': { row: 9, col: 'P' }, // Kontynuacja, ale wciąż "row1" w HTML
-        'hour10_row1': { row: 9, col: 'Q' },
-        'hour11_row1': { row: 9, col: 'R' },
-        'hour12_row1': { row: 9, col: 'S' },
-        'hour13_row1': { row: 9, col: 'T' },
-        'hour14_row1': { row: 9, col: 'U' },
-        'hour15_row1': { row: 9, col: 'V' },
-        'hour16_row1': { row: 9, col: 'W' },
-
-        // GODZINY - WIERSZ 3 (przykładowo wiersz 9 w arkuszu)
-        'hour17_row1': { row: 9, col: 'X' }, // Kontynuacja, ale wciąż "row1" w HTML
-        'hour18_row1': { row: 9, col: 'Y' },
-        'hour19_row1': { row: 9, col: 'Z' },
-        'hour20_row1': { row: 9, col: 'AA' },
-        'hour21_row1': { row: 9, col: 'AB' },
-        'hour22_row1': { row: 9, col: 'AC' },
-        'hour23_row1': { row: 9, col: 'AD' },
-        'hour24_row1': { row: 9, col: 'AE' },
-
-        // GODZINY - WIERSZ 2 (przykładowo wiersz 10 w arkuszu)
-        'hour1_row2': { row: 10, col: 'H' },
-        'hour2_row2': { row: 10, col: 'I' },
-        'hour3_row2': { row: 10, col: 'J' },
-        'hour4_row2': { row: 10, col: 'K' },
-        'hour5_row2': { row: 10, col: 'L' },
-        'hour6_row2': { row: 10, col: 'M' },
-        'hour7_row2': { row: 10, col: 'N' },
-        'hour8_row2': { row: 10, col: 'O' },
-
-        'hour9_row2': { row: 10, col: 'P' },
-        'hour10_row2': { row: 10, col: 'Q' },
-        'hour11_row2': { row: 10, col: 'R' },
-        'hour12_row2': { row: 10, col: 'S' },
-        'hour13_row2': { row: 10, col: 'T' },
-        'hour14_row2': { row: 10, col: 'U' },
-        'hour15_row2': { row: 10, col: 'V' },
-        'hour16_row2': { row: 10, col: 'W' },
-
-        'hour17_row2': { row: 10, col: 'X' },
-        'hour18_row2': { row: 10, col: 'Y' },
-        'hour19_row2': { row: 10, col: 'Z' },
-        'hour20_row2': { row: 10, col: 'AA' },
-        'hour21_row2': { row: 10, col: 'AB' },
-        'hour22_row2': { row: 10, col: 'AC' },
-        'hour23_row2': { row: 10, col: 'AD' },
-        'hour24_row2': { row: 10, col: 'AE' },
-    };
-
-    // Główna funkcja do pobierania i aktualizowania danych
-    async function updateDashboard() {
-        const selectedSheetName = sheetSelector.value;
-        setFieldValue('dataDisplayField', '<strong>Ładowanie...</strong>');
-
-        // Wyczyść wszystkie pola przed wczytaniem nowych danych
-        for (const htmlId in cellMappings) {
-            setFieldValue(htmlId, '');
+    // Funkcja do ustawiania tekstu w zwykłych komórkach (nie kolorowanych)
+    function setTextToCell(cellElement, value) {
+        if (!cellElement) return;
+        cellElement.className = 'value-cell'; // Ustaw podstawową klasę dla wartości
+        if (value === '' || value === null || value === undefined) {
+               cellElement.textContent = '';
+        } else {
+            cellElement.textContent = value;
         }
+    }
 
-        if (!selectedSheetName) {
-            setFieldValue('dataDisplayField', '<strong>Wybierz arkusz</strong>');
+    // Główna funkcja do pobierania i wyświetlania danych z arkusza
+    function fetchDataForSheet(sheetName) {
+        // Ustaw stan ładowania i wyczyść komórki
+        C1_cell.innerHTML = '<strong>Ładowanie...</strong>';
+
+        // Lista wszystkich komórek, które mają być wyczyszczone/zresetowane
+        const allCellsToReset = [
+            C1_cell,
+            D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, G4_OEE_cell,
+            D5_OK_cell, E5_OK_cell, F5_OK_cell, G5_OK_cell,
+            D6_NOK_cell, E6_NOK_cell, F6_NOK_cell, G6_NOK_cell,
+            ...timeCellsRow1, ...timeCellsRow2
+        ];
+
+        allCellsToReset.forEach(cell => {
+            if (cell) {
+                cell.textContent = ''; // Wyczyść zawartość
+                // Resetuj klasy CSS, dopasowując do oryginalnych typów komórek
+                if (cell.id === 'C1') {
+                    // Nic nie rób, styl dla C1 jest domyślny
+                } else if (cell.classList.contains('oee-cell')) {
+                    cell.className = 'oee-cell'; // Resetuj do podstawowej klasy OEE
+                } else if (cell.classList.contains('value-cell')) {
+                    cell.className = 'value-cell'; // Resetuj do podstawowej klasy value-cell
+                }
+            }
+        });
+
+
+        if (!sheetName) {
+            C1_cell.innerHTML = '<strong>Wybierz arkusz</strong>';
             return;
         }
 
-        // Określ maksymalny wiersz i kolumnę, aby pobrać tylko potrzebny zakres
-        let maxRow = 0;
-        let maxColIndex = 0;
-        for (const htmlId in cellMappings) {
-            const map = cellMappings[htmlId];
-            if (map.row > maxRow) maxRow = map.row;
-            const currentColIndex = getGoogleSheetColumnIndex(map.col);
-            if (currentColIndex > maxColIndex) maxColIndex = currentColIndex;
-        }
+        // Zakres danych do pobrania z arkusza Google.
+        // Od A1 do AE10 (aby objąć wszystkie kolumny i wiersze, w tym dane czasowe).
+        // WAŻNE: Dostosuj ten zakres, jeśli Twoje dane zajmują więcej wierszy/kolumn!
+        const fullRange = 'A1:AE10';
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=${encodeURIComponent(fullRange)}`;
 
-        // Przekształć maksymalny indeks kolumny na literę (dla zakresu)
-        function getColumnLetterFromIndex(index) {
-            let letter = '';
-            let temp = index;
-            while (temp >= 0) {
-                letter = String.fromCharCode(65 + (temp % 26)) + letter;
-                temp = Math.floor(temp / 26) - 1;
-            }
-            return letter;
-        }
-        const maxColLetter = getColumnLetterFromIndex(maxColIndex);
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza/zakładki (${sheetName}). Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(csvText => {
+                const data = parseCsv(csvText);
 
-        const range = `A1:${maxColLetter}${maxRow}`; // Dynamicznie ustawiony zakres
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
-            }
-            const csvText = await response.text();
-            const data = parseCsv(csvText);
-
-            // Ustaw dane w polach HTML zgodnie z mapowaniem
-            for (const htmlId in cellMappings) {
-                const map = cellMappings[htmlId];
-                // Wiersz w danych JS to numer wiersza w arkuszu minus 1 (bo tablice są 0-indexed)
-                const rowIndexInData = map.row - 1;
-                // Kolumna w danych JS to indeks pobrany przez getGoogleSheetColumnIndex
-                const colIndexInData = getGoogleSheetColumnIndex(map.col);
-
-                if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
-                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData]);
+                // --- Wypełnianie danych głównych tabel ---
+                // C1 (data) - wiersz 1, kolumna C
+                const row1_idx = 0; // Wiersz 1 w arkuszu to indeks 0 w tablicy
+                const colC_idx = getGoogleSheetColumnIndex('C');
+                if (data[row1_idx] && data[row1_idx][colC_idx] !== undefined) {
+                    C1_cell.textContent = formatAsDDMMYYYY(data[row1_idx][colC_idx]);
                 } else {
-                    setFieldValue(htmlId, ''); // Ustaw puste, jeśli brak danych
-                    console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`);
+                    C1_cell.innerHTML = '<strong>Brak daty (C1)</strong>';
                 }
-            }
 
-        } catch (error) {
-            console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            setFieldValue('dataDisplayField', '<strong>Błąd danych!</strong>');
-            // Opcjonalnie, wyczyść inne pola w przypadku błędu
-            for (const htmlId in cellMappings) {
-                if (htmlId !== 'dataDisplayField') {
-                    setFieldValue(htmlId, '');
+                // Wiersz OEE (wiersz 4 w arkuszu, indeks 3 w danych)
+                const row4_idx = 3;
+                if (data[row4_idx]) {
+                    applyOEEColor(D4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('D')]);
+                    applyOEEColor(E4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('E')]);
+                    applyOEEColor(F4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('F')]);
+                    applyOEEColor(G4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('G')]); // TOTAL OEE
+                } else {
+                    console.warn('Brak danych dla wiersza OEE (Wiersz 4 w arkuszu).');
                 }
-            }
-        }
+
+                // Wiersz OK (wiersz 5 w arkuszu, indeks 4 w danych)
+                const row5_idx = 4;
+                if (data[row5_idx]) {
+                    setTextToCell(D5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('D')]);
+                    setTextToCell(E5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('E')]);
+                    setTextToCell(F5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('F')]);
+                    setTextToCell(G5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('G')]);
+                } else {
+                    console.warn('Brak danych dla wiersza OK (Wiersz 5 w arkuszu).');
+                }
+
+                // Wiersz NOK (wiersz 6 w arkuszu, indeks 5 w danych)
+                const row6_idx = 5;
+                if (data[row6_idx]) {
+                    setTextToCell(D6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('D')]);
+                    setTextToCell(E6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('E')]);
+                    setTextToCell(F6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('F')]);
+                    setTextToCell(G6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('G')]);
+                } else {
+                    console.warn('Brak danych dla wiersza NOK (Wiersz 6 w arkuszu).');
+                }
+
+                // --- Wypełnianie danych dla bloków czasowych ---
+                // Wiersz 9 w arkuszu (indeks 8 w JS)
+                const dataTimeRow1_idx = timeRow1GoogleSheet - 1;
+                if (data[dataTimeRow1_idx]) {
+                    for (let i = 0; i < timeColumnLetters.length; i++) {
+                        const colIndex = getGoogleSheetColumnIndex(timeColumnLetters[i]);
+                        setTextToCell(timeCellsRow1[i], data[dataTimeRow1_idx][colIndex]);
+                    }
+                } else {
+                    console.warn(`Brak danych dla pierwszego rzędu czasowego (Wiersz ${timeRow1GoogleSheet} w arkuszu).`);
+                }
+
+                // Wiersz 10 w arkuszu (indeks 9 w JS)
+                const dataTimeRow2_idx = timeRow2GoogleSheet - 1;
+                if (data[dataTimeRow2_idx]) {
+                    for (let i = 0; i < timeColumnLetters.length; i++) {
+                        const colIndex = getGoogleSheetColumnIndex(timeColumnLetters[i]);
+                        setTextToCell(timeCellsRow2[i], data[dataTimeRow2_idx][colIndex]);
+                    }
+                } else {
+                    console.warn(`Brak danych dla drugiego rzędu czasowego (Wiersz ${timeRow2GoogleSheet} w arkuszu).`);
+                }
+
+            })
+            .catch(error => {
+                console.error('Globalny błąd podczas pobierania danych z Google Sheets:', error);
+                C1_cell.innerHTML = '<strong>Błąd danych!</strong>';
+                // Wyczyść pozostałe komórki i zresetuj ich style w przypadku błędu
+                allCellsToReset.forEach(cell => {
+                    if (cell && cell !== C1_cell) { // Nie resetuj C1, bo już ma status błędu
+                        cell.textContent = '';
+                        // OEE cells should retain their specific OEE class if they had it
+                        if (cell.classList.contains('oee-cell')) {
+                            cell.className = 'oee-cell';
+                        } else {
+                            cell.className = 'value-cell';
+                        }
+                    }
+                });
+            });
     }
 
-    // Nasłuchuj zmian w rozwijanej liście i odświeżaj dashboard
-    sheetSelector.addEventListener('change', updateDashboard);
+    if (selectElement) {
+        // Po zmianie wyboru arkusza, pobierz dane
+        selectElement.addEventListener('change', function() {
+            fetchDataForSheet(this.value);
+        });
 
-    // Wczytaj dashboard po załadowaniu strony
-    // Sprawdź, czy jakaś opcja jest już wybrana (np. domyślna z HTML)
-    if (sheetSelector.value) {
-        updateDashboard();
-    } else {
-        // Jeśli nie wybrano nic, ustaw komunikat
-        setFieldValue('dataDisplayField', '<strong>Wybierz arkusz</strong>');
+        // Wczytaj dane dla domyślnego wyboru po załadowaniu strony
+        if (selectElement.value) {
+            fetchDataForSheet(selectElement.value);
+        } else {
+            // Jeśli nie ma domyślnego wyboru, ustaw "Wybierz arkusz"
+            C1_cell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            // Wyczyść wszystkie komórki, jeśli nie wybrano arkusza na starcie
+            [
+                D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, G4_OEE_cell,
+                D5_OK_cell, E5_OK_cell, F5_OK_cell, G5_OK_cell,
+                D6_NOK_cell, E6_NOK_cell, F6_NOK_cell, G6_NOK_cell,
+                ...timeCellsRow1, ...timeCellsRow2
+            ].forEach(cell => {
+                if (cell) {
+                    cell.textContent = '';
+                    if (cell.classList.contains('oee-cell')) {
+                        cell.className = 'oee-cell';
+                    } else {
+                        cell.className = 'value-cell';
+                    }
+                }
+            });
+        }
     }
 });
 </script>
+
 </body>
 </html>
