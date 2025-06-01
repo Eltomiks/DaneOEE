@@ -159,21 +159,21 @@
         <td id="D4" class="oee-cell"></td>
         <td id="E4" class="oee-cell"></td>
         <td id="F4" class="oee-cell"></td>
-        <td id="G4" class="oee-cell"></td>
+        <td id="C4" class="oee-cell"></td>
       </tr>
       <tr>
         <td><strong>OK</strong></td>
         <td id="D5" class="value-cell"></td>
         <td id="E5" class="value-cell"></td>
         <td id="F5" class="value-cell"></td>
-        <td id="G5" class="value-cell"></td>
+        <td id="C5" class="value-cell"></td>
       </tr>
       <tr>
         <td class="red">NOK</td>
         <td id="D6" class="value-cell"></td>
         <td id="E6" class="value-cell"></td>
         <td id="F6" class="value-cell"></td>
-        <td id="G6" class="value-cell"></td>
+        <td id="C6" class="value-cell"></td>
       </tr>
     </table>
 
@@ -253,19 +253,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const D4_OEE_cell = getCellElement('D4');
     const E4_OEE_cell = getCellElement('E4');
     const F4_OEE_cell = getCellElement('F4');
-    const G4_OEE_cell = getCellElement('G4'); // TOTAL OEE
+    const G4_OEE_cell = getCellElement('C4'); // TOTAL OEE
 
     // Odwołania do komórek OK (wiersz 5 w arkuszu Google, indeks 4 w danych JS)
     const D5_OK_cell = getCellElement('D5');
     const E5_OK_cell = getCellElement('E5');
     const F5_OK_cell = getCellElement('F5');
-    const G5_OK_cell = getCellElement('G5');
+    const G5_OK_cell = getCellElement('C5');
 
     // Odwołania do komórek NOK (wiersz 6 w arkuszu Google, indeks 5 w danych JS)
     const D6_NOK_cell = getCellElement('D6');
     const E6_NOK_cell = getCellElement('E6');
     const F6_NOK_cell = getCellElement('F6');
-    const G6_NOK_cell = getCellElement('G6');
+    const G6_NOK_cell = getCellElement('C6');
 
     // Referencje do komórek czasowych
     const timeCellsRow1 = [];
