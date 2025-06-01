@@ -52,7 +52,8 @@
       max-width: 200px;
     }
 
-    #dataValueCell {
+    /* Styl dla komórki daty (C1) */
+    #C1 {
       font-size: 20px;
       font-weight: bold;
       color: #333;
@@ -111,7 +112,7 @@
       select {
         max-width: 100%;
       }
-      #dataValueCell {
+      #C1 { /* Zmieniono selektor */
         font-size: 16px;
       }
       .oee-cell {
@@ -129,7 +130,7 @@
 
     <table>
       <tr>
-        <td id="dataValueCell"><strong>Ładowanie...</strong></td>
+        <td id="C1"><strong>Ładowanie...</strong></td>
         <td colspan="4">
           <select id="sheetSelector">
             <option>NHL</option>
@@ -155,23 +156,24 @@
       </tr>
       <tr>
         <td><strong>OEE</strong></td>
-        <td id="cell_D4_OEE" class="oee-cell"></td>
-        <td id="cell_E4_OEE" class="oee-cell"></td>
-        <td id="cell_F4_OEE" class="oee-cell"></td>
-        <td id="cell_C4_OEE" class="oee-cell"></td> </tr>
+        <td id="D4" class="oee-cell"></td>
+        <td id="E4" class="oee-cell"></td>
+        <td id="F4" class="oee-cell"></td>
+        <td id="G4" class="oee-cell"></td>
+      </tr>
       <tr>
         <td><strong>OK</strong></td>
-        <td id="cell_D5_OK" class="value-cell"></td>
-        <td id="cell_E5_OK" class="value-cell"></td>
-        <td id="cell_F5_OK" class="value-cell"></td>
-        <td id="cell_G5_OK" class="value-cell"></td>
+        <td id="D5" class="value-cell"></td>
+        <td id="E5" class="value-cell"></td>
+        <td id="F5" class="value-cell"></td>
+        <td id="G5" class="value-cell"></td>
       </tr>
       <tr>
         <td class="red">NOK</td>
-        <td id="cell_D6_NOK" class="value-cell"></td>
-        <td id="cell_E6_NOK" class="value-cell"></td>
-        <td id="cell_F6_NOK" class="value-cell"></td>
-        <td id="cell_G6_NOK" class="value-cell"></td>
+        <td id="D6" class="value-cell"></td>
+        <td id="E6" class="value-cell"></td>
+        <td id="F6" class="value-cell"></td>
+        <td id="G6" class="value-cell"></td>
       </tr>
     </table>
 
@@ -182,12 +184,12 @@
           <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
         </tr>
         <tr>
-          <td id="time_row1_col1"></td><td id="time_row1_col2"></td><td id="time_row1_col3"></td><td id="time_row1_col4"></td>
-          <td id="time_row1_col5"></td><td id="time_row1_col6"></td><td id="time_row1_col7"></td><td id="time_row1_col8"></td>
+          <td id="H9"></td><td id="I9"></td><td id="J9"></td><td id="K9"></td>
+          <td id="L9"></td><td id="M9"></td><td id="N9"></td><td id="O9"></td>
         </tr>
         <tr>
-          <td id="time_row2_col1"></td><td id="time_row2_col2"></td><td id="time_row2_col3"></td><td id="time_row2_col4"></td>
-          <td id="time_row2_col5"></td><td id="time_row2_col6"></td><td id="time_row2_col7"></td><td id="time_row2_col8"></td>
+          <td id="H10"></td><td id="I10"></td><td id="J10"></td><td id="K10"></td>
+          <td id="L10"></td><td id="M10"></td><td id="N10"></td><td id="O10"></td>
         </tr>
       </table>
     </div>
@@ -199,12 +201,12 @@
           <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
         </tr>
         <tr>
-          <td id="time_row1_col9"></td><td id="time_row1_col10"></td><td id="time_row1_col11"></td><td id="time_row1_col12"></td>
-          <td id="time_row1_col13"></td><td id="time_row1_col14"></td><td id="time_row1_col15"></td><td id="time_row1_col16"></td>
+          <td id="P9"></td><td id="Q9"></td><td id="R9"></td><td id="S9"></td>
+          <td id="T9"></td><td id="U9"></td><td id="V9"></td><td id="W9"></td>
         </tr>
         <tr>
-          <td id="time_row2_col9"></td><td id="time_row2_col10"></td><td id="time_row2_col11"></td><td id="time_row2_col12"></td>
-          <td id="time_row2_col13"></td><td id="time_row2_col14"></td><td id="time_row2_col15"></td><td id="time_row2_col16"></td>
+          <td id="P10"></td><td id="Q10"></td><td id="R10"></td><td id="S10"></td>
+          <td id="T10"></td><td id="U10"></td><td id="V10"></td><td id="W10"></td>
         </tr>
       </table>
     </div>
@@ -216,12 +218,12 @@
           <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
         </tr>
         <tr>
-          <td id="time_row1_col17"></td><td id="time_row1_col18"></td><td id="time_row1_col19"></td><td id="time_row1_col20"></td>
-          <td id="time_row1_col21"></td><td id="time_row1_col22"></td><td id="time_row1_col23"></td><td id="time_row1_col24"></td>
+          <td id="X9"></td><td id="Y9"></td><td id="Z9"></td><td id="AA9"></td>
+          <td id="AB9"></td><td id="AC9"></td><td id="AD9"></td><td id="AE9"></td>
         </tr>
         <tr>
-          <td id="time_row2_col17"></td><td id="time_row2_col18"></td><td id="time_row2_col19"></td><td id="time_row2_col20"></td>
-          <td id="time_row2_col21"></td><td id="time_row2_col22"></td><td id="time_row2_col23"></td><td id="time_row2_col24"></td>
+          <td id="X10"></td><td id="Y10"></td><td id="Z10"></td><td id="AA10"></td>
+          <td id="AB10"></td><td id="AC10"></td><td id="AD10"></td><td id="AE10"></td>
         </tr>
       </table>
     </div>
@@ -229,63 +231,93 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
-    const dataCell = document.getElementById('dataValueCell'); // C1 - data
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // ID Twojego arkusza Google
+    const C1_cell = document.getElementById('C1'); // Odpowiada C1 w arkuszu
 
-    // Referencje do komórek OEE (wiersz 4)
-    const cell_D4_OEE = document.getElementById('cell_D4_OEE');
-    const cell_E4_OEE = document.getElementById('cell_E4_OEE');
-    const cell_F4_OEE = document.getElementById('cell_F4_OEE');
-    const oeeTotalCell = document.getElementById('oeeTotalCell'); // cell_G4_OEE
+    // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
+    // Np. 'A' -> 0, 'B' -> 1, 'AA' -> 26
+    function getGoogleSheetColumnIndex(colLetter) {
+        let colIndex = 0;
+        for (let i = 0; i < colLetter.length; i++) {
+            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+        }
+        return colIndex - 1; // Zwróć indeks 0-bazowy
+    }
 
-    // Referencje do komórek OK (wiersz 5)
-    const cell_D5_OK = document.getElementById('cell_D5_OK');
-    const cell_E5_OK = document.getElementById('cell_E5_OK');
-    const cell_F5_OK = document.getElementById('cell_F5_OK');
-    const cell_G5_OK = document.getElementById('cell_G5_OK');
+    // Pomocnicza funkcja do pobierania elementu HTML po ID
+    function getCellElement(id) {
+        return document.getElementById(id);
+    }
 
-    // Referencje do komórek NOK (wiersz 6)
-    const cell_D6_NOK = document.getElementById('cell_D6_NOK');
-    const cell_E6_NOK = document.getElementById('cell_E6_NOK');
-    const cell_F6_NOK = document.getElementById('cell_F6_NOK');
-    const cell_G6_NOK = document.getElementById('cell_G6_NOK');
+    // Odwołania do komórek OEE (wiersz 4 w arkuszu Google, co odpowiada indeksowi 3 w danych JS)
+    const D4_OEE_cell = getCellElement('D4');
+    const E4_OEE_cell = getCellElement('E4');
+    const F4_OEE_cell = getCellElement('F4');
+    const G4_OEE_cell = getCellElement('G4'); // TOTAL OEE
 
-    // Referencje do komórek czasowych (wiersze 9 i 10 - zakładam, że arkusz ma puste wiersze 7 i 8)
+    // Odwołania do komórek OK (wiersz 5 w arkuszu Google, indeks 4 w danych JS)
+    const D5_OK_cell = getCellElement('D5');
+    const E5_OK_cell = getCellElement('E5');
+    const F5_OK_cell = getCellElement('F5');
+    const G5_OK_cell = getCellElement('G5');
+
+    // Odwołania do komórek NOK (wiersz 6 w arkuszu Google, indeks 5 w danych JS)
+    const D6_NOK_cell = getCellElement('D6');
+    const E6_NOK_cell = getCellElement('E6');
+    const F6_NOK_cell = getCellElement('F6');
+    const G6_NOK_cell = getCellElement('G6');
+
+    // Referencje do komórek czasowych
     const timeCellsRow1 = [];
     const timeCellsRow2 = [];
-    for (let i = 1; i <= 24; i++) {
-        timeCellsRow1.push(document.getElementById(`time_row1_col${i}`));
-        timeCellsRow2.push(document.getElementById(`time_row2_col${i}`));
+
+    // Mapowanie liter kolumn dla 24 godzin (od H do AE)
+    const timeColumnLetters = [
+        'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', // 8 kolumn
+        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', // 8 kolumn
+        'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE' // 8 kolumn
+    ];
+
+    // Indeksy wierszy dla danych czasowych w arkuszu (pamiętaj, że w JS to indeks -1)
+    const timeRow1GoogleSheet = 9; // Odpowiada wierszowi 9 w arkuszu Google
+    const timeRow2GoogleSheet = 10; // Odpowiada wierszowi 10 w arkuszu Google
+
+    // Wypełnij tablice referencjami do elementów HTML komórek czasowych
+    for (let i = 0; i < timeColumnLetters.length; i++) {
+        timeCellsRow1.push(getCellElement(`${timeColumnLetters[i]}${timeRow1GoogleSheet}`)); // np. H9
+        timeCellsRow2.push(getCellElement(`${timeColumnLetters[i]}${timeRow2GoogleSheet}`)); // np. H10
     }
-    
+
     const selectElement = document.getElementById('sheetSelector');
 
-    // Funkcja pomocnicza do parsowania CSV (prosta implementacja dla pojedynczych wartości)
+    // Funkcja pomocnicza do parsowania CSV
     function parseCsv(csvString) {
         const lines = csvString.trim().split('\n');
         return lines.map(line => {
             return line.split(',').map(cell => {
                 let cleanedCell = cell.trim();
+                // Usuń cudzysłowy jeśli są na początku i końcu
                 if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
                     cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
                 }
+                // Obsłuż podwójne cudzysłowy w środku (escapowanie)
                 return cleanedCell.replace(/""/g, '"');
             });
         });
     }
 
-    // Funkcja do formatowania daty
+    // Funkcja do formatowania daty na DD.MM.RRRR
     function formatAsDDMMYYYY(dateString) {
-        const datePart = dateString.split(' ')[0]; 
-        const dateObject = new Date(datePart); 
+        const datePart = dateString.split(' ')[0]; // Weź tylko część daty, ignorując czas
+        const dateObject = new Date(datePart);
 
-        if (!isNaN(dateObject.getTime())) {
+        if (!isNaN(dateObject.getTime())) { // Sprawdź, czy data jest prawidłowa
             const day = String(dateObject.getDate()).padStart(2, '0');
-            const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+            const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Miesiące są 0-11
             const year = dateObject.getFullYear();
             return `${day}.${month}.${year}`;
         }
-        return dateString;
+        return dateString; // Zwróć oryginalny string, jeśli formatowanie się nie powiodło
     }
 
     // Funkcja do stosowania kolorów OEE i wyświetlania wartości procentowej
@@ -296,9 +328,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const numValue = parseFloat(value);
 
         if (isNaN(numValue) || numValue === 0) {
-            cellElement.textContent = '';
+            cellElement.textContent = ''; // Wyczyść, jeśli nie ma wartości lub jest 0
         } else {
-            cellElement.textContent = `${numValue.toFixed(2)}%`;
+            cellElement.textContent = `${numValue.toFixed(2)}%`; // Wyświetl jako procent
             if (numValue > 0 && numValue <= 60) {
                 cellElement.classList.add('oee-red');
             } else if (numValue > 60 && numValue <= 70) {
@@ -316,166 +348,173 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!cellElement) return;
         cellElement.className = 'value-cell'; // Ustaw podstawową klasę dla wartości
         if (value === '' || value === null || value === undefined) {
-             cellElement.textContent = '';
+               cellElement.textContent = '';
         } else {
             cellElement.textContent = value;
         }
     }
 
-
+    // Główna funkcja do pobierania i wyświetlania danych z arkusza
     function fetchDataForSheet(sheetName) {
-        // Ustawia stany ładowania/czyszczenia na początku
-        dataCell.innerHTML = '<strong>Ładowanie...</strong>';
-        oeeTotalCell.textContent = 'Ładowanie...';
-        oeeTotalCell.className = 'oee-cell'; // Utrzymaj podstawową klasę OEE
-        
-        // Wyczyść wszystkie komórki przy ładowaniu
-        [
-            cell_D4_OEE, cell_E4_OEE, cell_F4_OEE, oeeTotalCell,
-            cell_D5_OK, cell_E5_OK, cell_F5_OK, cell_G5_OK,
-            cell_D6_NOK, cell_E6_NOK, cell_F6_NOK, cell_G6_NOK,
+        // Ustaw stan ładowania i wyczyść komórki
+        C1_cell.innerHTML = '<strong>Ładowanie...</strong>';
+
+        // Lista wszystkich komórek, które mają być wyczyszczone/zresetowane
+        const allCellsToReset = [
+            C1_cell,
+            D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, G4_OEE_cell,
+            D5_OK_cell, E5_OK_cell, F5_OK_cell, G5_OK_cell,
+            D6_NOK_cell, E6_NOK_cell, F6_NOK_cell, G6_NOK_cell,
             ...timeCellsRow1, ...timeCellsRow2
-        ].forEach(cell => {
+        ];
+
+        allCellsToReset.forEach(cell => {
             if (cell) {
-                cell.textContent = '';
-                cell.className = cell.id.includes('OEE') ? 'oee-cell' : 'value-cell'; // Resetuj klasy kolorów
+                cell.textContent = ''; // Wyczyść zawartość
+                // Resetuj klasy CSS, dopasowując do oryginalnych typów komórek
+                if (cell.id === 'C1') {
+                    // Nic nie rób, styl dla C1 jest domyślny
+                } else if (cell.classList.contains('oee-cell')) {
+                    cell.className = 'oee-cell'; // Resetuj do podstawowej klasy OEE
+                } else if (cell.classList.contains('value-cell')) {
+                    cell.className = 'value-cell'; // Resetuj do podstawowej klasy value-cell
+                }
             }
         });
 
 
         if (!sheetName) {
-            dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            C1_cell.innerHTML = '<strong>Wybierz arkusz</strong>';
             return;
         }
 
-        // Zmieniamy zakres na cały arkusz lub większy zakres.
-        // Zakładam, że potrzebujesz dane od A1 do G (dla tabeli głównej)
-        // i do H (dla komórek czasowych, jeśli są np. 24 kolumny) oraz do wiersza 10.
-        // Jeśli masz więcej danych, dostosuj zakres!
-        const fullRange = 'A1:AA100'; // Przykładowy zakres, aby objąć również 24 kolumny i więcej wierszy.
-                                    // A to indeks 0, B to 1, ..., Z to 25, AA to 26
+        // Zakres danych do pobrania z arkusza Google.
+        // Od A1 do AE10 (aby objąć wszystkie kolumny i wiersze, w tym dane czasowe).
+        // WAŻNE: Dostosuj ten zakres, jeśli Twoje dane zajmują więcej wierszy/kolumn!
+        const fullRange = 'A1:AE10';
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&range=${encodeURIComponent(fullRange)}`;
 
         fetch(url)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza/zakładki (${sheetName}).`);
+                    throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza/zakładki (${sheetName}). Status: ${response.status}`);
                 }
                 return response.text();
             })
             .then(csvText => {
                 const data = parseCsv(csvText);
-                
+
                 // --- Wypełnianie danych głównych tabel ---
-                // UWAGA: Indeksy tablicowe są oparte na zerze (0-indexed).
-                // Kolumny: A=0, B=1, C=2, D=3, E=4, F=5, G=6
-                // Wiersze: 1=0, 2=1, 3=2, 4=3, 5=4, 6=5, 7=6, 8=7, 9=8, 10=9
-
-                // Wartość z C1 (data)
-                // Wiersz 1 to indeks 0, Kolumna C to indeks 2
-                if (data[0] && data[0][2] !== undefined) {
-                    dataCell.textContent = formatAsDDMMYYYY(data[0][2]);
+                // C1 (data) - wiersz 1, kolumna C
+                const row1_idx = 0; // Wiersz 1 w arkuszu to indeks 0 w tablicy
+                const colC_idx = getGoogleSheetColumnIndex('C');
+                if (data[row1_idx] && data[row1_idx][colC_idx] !== undefined) {
+                    C1_cell.textContent = formatAsDDMMYYYY(data[row1_idx][colC_idx]);
                 } else {
-                    dataCell.innerHTML = '<strong>Brak daty (C1)</strong>';
+                    C1_cell.innerHTML = '<strong>Brak daty (C1)</strong>';
                 }
 
-                // Wiersz OEE (Wiersz 4 w arkuszu -> indeks 3 w JS)
-                // Kolumny D, E, F, G -> indeksy 3, 4, 5, 6
-                if (data[3]) {
-                    applyOEEColor(cell_D4_OEE, data[3][3]);
-                    applyOEEColor(cell_E4_OEE, data[3][4]);
-                    applyOEEColor(cell_F4_OEE, data[3][5]);
-                    applyOEEColor(oeeTotalCell, data[3][6]); // Total OEE z G4
+                // Wiersz OEE (wiersz 4 w arkuszu, indeks 3 w danych)
+                const row4_idx = 3;
+                if (data[row4_idx]) {
+                    applyOEEColor(D4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('D')]);
+                    applyOEEColor(E4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('E')]);
+                    applyOEEColor(F4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('F')]);
+                    applyOEEColor(G4_OEE_cell, data[row4_idx][getGoogleSheetColumnIndex('G')]); // TOTAL OEE
                 } else {
-                    console.warn('Brak danych dla wiersza OEE (Wiersz 4).');
+                    console.warn('Brak danych dla wiersza OEE (Wiersz 4 w arkuszu).');
                 }
 
-                // Wiersz OK (Wiersz 5 w arkuszu -> indeks 4 w JS)
-                // Kolumny D, E, F, G -> indeksy 3, 4, 5, 6
-                if (data[4]) {
-                    setTextToCell(cell_D5_OK, data[4][3]);
-                    setTextToCell(cell_E5_OK, data[4][4]);
-                    setTextToCell(cell_F5_OK, data[4][5]);
-                    setTextToCell(cell_G5_OK, data[4][6]);
+                // Wiersz OK (wiersz 5 w arkuszu, indeks 4 w danych)
+                const row5_idx = 4;
+                if (data[row5_idx]) {
+                    setTextToCell(D5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('D')]);
+                    setTextToCell(E5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('E')]);
+                    setTextToCell(F5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('F')]);
+                    setTextToCell(G5_OK_cell, data[row5_idx][getGoogleSheetColumnIndex('G')]);
                 } else {
-                     console.warn('Brak danych dla wiersza OK (Wiersz 5).');
+                    console.warn('Brak danych dla wiersza OK (Wiersz 5 w arkuszu).');
                 }
 
-                // Wiersz NOK (Wiersz 6 w arkuszu -> indeks 5 w JS)
-                // Kolumny D, E, F, G -> indeksy 3, 4, 5, 6
-                if (data[5]) {
-                    setTextToCell(cell_D6_NOK, data[5][3]);
-                    setTextToCell(cell_E6_NOK, data[5][4]);
-                    setTextToCell(cell_F6_NOK, data[5][5]);
-                    setTextToCell(cell_G6_NOK, data[5][6]);
+                // Wiersz NOK (wiersz 6 w arkuszu, indeks 5 w danych)
+                const row6_idx = 5;
+                if (data[row6_idx]) {
+                    setTextToCell(D6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('D')]);
+                    setTextToCell(E6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('E')]);
+                    setTextToCell(F6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('F')]);
+                    setTextToCell(G6_NOK_cell, data[row6_idx][getGoogleSheetColumnIndex('G')]);
                 } else {
-                     console.warn('Brak danych dla wiersza NOK (Wiersz 6).');
+                    console.warn('Brak danych dla wiersza NOK (Wiersz 6 w arkuszu).');
                 }
 
                 // --- Wypełnianie danych dla bloków czasowych ---
-                // Zakładam, że dane zaczynają się od kolumny H (indeks 7)
-                // i wierszy 9 (indeks 8) oraz 10 (indeks 9)
-                // 24 kolumny czasowe od H do AE (H=7, I=8, ..., AE=30)
-                const startColIndex = 7; // Kolumna H
-                const timeRow1Index = 8; // Wiersz 9
-                const timeRow2Index = 9; // Wiersz 10
-
-                if (data[timeRow1Index]) {
-                    for (let i = 0; i < 24; i++) {
-                        setTextToCell(timeCellsRow1[i], data[timeRow1Index][startColIndex + i]);
+                // Wiersz 9 w arkuszu (indeks 8 w JS)
+                const dataTimeRow1_idx = timeRow1GoogleSheet - 1;
+                if (data[dataTimeRow1_idx]) {
+                    for (let i = 0; i < timeColumnLetters.length; i++) {
+                        const colIndex = getGoogleSheetColumnIndex(timeColumnLetters[i]);
+                        setTextToCell(timeCellsRow1[i], data[dataTimeRow1_idx][colIndex]);
                     }
                 } else {
-                    console.warn('Brak danych dla pierwszego rzędu czasowego (Wiersz 9).');
+                    console.warn(`Brak danych dla pierwszego rzędu czasowego (Wiersz ${timeRow1GoogleSheet} w arkuszu).`);
                 }
 
-                if (data[timeRow2Index]) {
-                    for (let i = 0; i < 24; i++) {
-                        setTextToCell(timeCellsRow2[i], data[timeRow2Index][startColIndex + i]);
+                // Wiersz 10 w arkuszu (indeks 9 w JS)
+                const dataTimeRow2_idx = timeRow2GoogleSheet - 1;
+                if (data[dataTimeRow2_idx]) {
+                    for (let i = 0; i < timeColumnLetters.length; i++) {
+                        const colIndex = getGoogleSheetColumnIndex(timeColumnLetters[i]);
+                        setTextToCell(timeCellsRow2[i], data[dataTimeRow2_idx][colIndex]);
                     }
                 } else {
-                    console.warn('Brak danych dla drugiego rzędu czasowego (Wiersz 10).');
+                    console.warn(`Brak danych dla drugiego rzędu czasowego (Wiersz ${timeRow2GoogleSheet} w arkuszu).`);
                 }
 
             })
             .catch(error => {
                 console.error('Globalny błąd podczas pobierania danych z Google Sheets:', error);
-                dataCell.innerHTML = '<strong>Błąd danych</strong>';
-                oeeTotalCell.innerHTML = '<strong>Błąd danych</strong>';
-                oeeTotalCell.className = 'oee-red'; // Podświetl błąd
-                // Wyczyść również pozostałe komórki
-                [
-                    cell_D4_OEE, cell_E4_OEE, cell_F4_OEE,
-                    cell_D5_OK, cell_E5_OK, cell_F5_OK, cell_G5_OK,
-                    cell_D6_NOK, cell_E6_NOK, cell_F6_NOK, cell_G6_NOK,
-                    ...timeCellsRow1, ...timeCellsRow2
-                ].forEach(cell => {
-                    if (cell) {
+                C1_cell.innerHTML = '<strong>Błąd danych!</strong>';
+                // Wyczyść pozostałe komórki i zresetuj ich style w przypadku błędu
+                allCellsToReset.forEach(cell => {
+                    if (cell && cell !== C1_cell) { // Nie resetuj C1, bo już ma status błędu
                         cell.textContent = '';
-                        cell.className = cell.id.includes('OEE') ? 'oee-cell' : 'value-cell';
+                        // OEE cells should retain their specific OEE class if they had it
+                        if (cell.classList.contains('oee-cell')) {
+                            cell.className = 'oee-cell';
+                        } else {
+                            cell.className = 'value-cell';
+                        }
                     }
                 });
             });
     }
 
     if (selectElement) {
+        // Po zmianie wyboru arkusza, pobierz dane
         selectElement.addEventListener('change', function() {
             fetchDataForSheet(this.value);
         });
 
+        // Wczytaj dane dla domyślnego wyboru po załadowaniu strony
         if (selectElement.value) {
             fetchDataForSheet(selectElement.value);
         } else {
-            // Wyczyść wszystkie komórki, jeśli nie wybrano arkusza
-            dataCell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            // Jeśli nie ma domyślnego wyboru, ustaw "Wybierz arkusz"
+            C1_cell.innerHTML = '<strong>Wybierz arkusz</strong>';
+            // Wyczyść wszystkie komórki, jeśli nie wybrano arkusza na starcie
             [
-                cell_D4_OEE, cell_E4_OEE, cell_F4_OEE, oeeTotalCell,
-                cell_D5_OK, cell_E5_OK, cell_F5_OK, cell_G5_OK,
-                cell_D6_NOK, cell_E6_NOK, cell_F6_NOK, cell_G6_NOK,
+                D4_OEE_cell, E4_OEE_cell, F4_OEE_cell, G4_OEE_cell,
+                D5_OK_cell, E5_OK_cell, F5_OK_cell, G5_OK_cell,
+                D6_NOK_cell, E6_NOK_cell, F6_NOK_cell, G6_NOK_cell,
                 ...timeCellsRow1, ...timeCellsRow2
             ].forEach(cell => {
                 if (cell) {
                     cell.textContent = '';
-                    cell.className = cell.id.includes('OEE') ? 'oee-cell' : 'value-cell';
+                    if (cell.classList.contains('oee-cell')) {
+                        cell.className = 'oee-cell';
+                    } else {
+                        cell.className = 'value-cell';
+                    }
                 }
             });
         }
