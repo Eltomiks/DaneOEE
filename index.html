@@ -326,39 +326,35 @@ document.addEventListener('DOMContentLoaded', function() {
         element.style.backgroundColor = '';
         element.style.color = '';
 
-        // Konwertuj wartość na liczbę, jeśli jest to oczekiwane (np. dla procentów, liczb)
         // Sprawdź, czy wartość jest pusta, null, undefined, pustym stringiem lub liczbowym zerem.
-        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '') {
+        // Używamy trim() na String(rawValue), aby poprawnie obsłużyć puste komórki lub tylko spacje
+        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '' || parseFloat(rawValue) === 0) {
             element.textContent = ''; // Ustaw puste
             return; 
-        }
-
-        let numValue = parseFloat(rawValue);
-
-        // Specjalne traktowanie dla 0, aby nie wyświetlać "0%" lub "0"
-        if (numValue === 0) {
-            element.textContent = '';
-            return;
         }
 
         if (options.isDate) {
             displayValue = formatGoogleSheetDate(rawValue);
         } else if (options.isPercentage) {
+            const numValue = parseFloat(rawValue);
             if (!isNaN(numValue)) {
-                // Jeśli wartość z arkusza to np. "74%" (czyli 0.74 po parsowaniu), to mnożymy przez 100
-                // Jeśli arkusz wysyła "74", to też jest ok. Sprawdzimy, czy jest między 0 a 1, żeby zdecydować.
-                if (numValue < 1.0 && numValue > 0) { // Traktujemy jako ułamek procentu (np. 0.74)
-                    displayValue = `${(numValue * 100).toFixed(0)}%`; 
-                } else { // Traktujemy jako już pomnożony procent (np. 74)
-                    displayValue = `${numValue.toFixed(0)}%`;
+                // Jeśli wartość z arkusza to np. "0.74" (czyli 74%), to mnożymy przez 100
+                // Jeśli arkusz wysyła "74" (czyli 74%), to nie mnożymy.
+                // Sprawdzimy, czy numValue jest między 0 a 1 (nie włącznie z 1), aby zdecydować.
+                let percentageValue = numValue;
+                if (numValue > 0 && numValue < 1.0) { 
+                    percentageValue = numValue * 100;
                 }
+                displayValue = `${percentageValue.toFixed(0)}%`; 
                 
-                // Warunkowe formatowanie kolorystyczne, bazujemy na numValue
-                if (numValue < 0.60) {
+                // Warunkowe formatowanie kolorystyczne, bazujemy na numValue (znormalizowanym do 0-1)
+                const normalizedValue = (percentageValue / 100); // Normalizujemy do zakresu 0-1 dla porównania
+
+                if (normalizedValue < 0.60) {
                     element.classList.add('oee-below-60');
-                } else if (numValue >= 0.60 && numValue < 0.70) {
+                } else if (normalizedValue >= 0.60 && normalizedValue < 0.70) {
                     element.classList.add('oee-60-70');
-                } else if (numValue >= 0.70 && numValue < 0.80) {
+                } else if (normalizedValue >= 0.70 && normalizedValue < 0.80) {
                     element.classList.add('oee-70-80');
                 } else { // >= 0.80
                     element.classList.add('oee-above-80');
