@@ -284,11 +284,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Funkcja do formatowania daty z numeru seryjnego Google Sheets
+    function formatGoogleSheetDate(serial) {
+        // Sprawdź, czy wartość jest numerem i nie jest zerem.
+        // Google Sheets często zwraca "0" dla pustych komórek z formatowaniem daty.
+        if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
+            return ''; // Zwróć pusty string dla nieprawidłowych wartości lub zera
+        }
+        // Data zerowa w Google Sheets to 30.12.1899
+        // Liczba milisekund od 1 stycznia 1970 do 30.12.1899
+        const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
+        // 86400000 milisekund w dobie
+        const date = new Date(excelEpoch + (parseFloat(serial) * 86400000));
+
+        // Formatowanie do DD.MM.RRRR
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Miesiące są 0-11
+        const year = date.getFullYear();
+
+        return `${day}.${month}.${year}`;
+    }
+
     // Funkcja do ustawiania tekstu w danej komórce HTML
-    function setFieldValue(elementId, value) {
+    function setFieldValue(elementId, value, isDate = false) {
         const element = document.getElementById(elementId);
         if (element) {
-            element.textContent = (value === '' || value === null || value === undefined) ? '' : value;
+            let displayValue = '';
+            // Sprawdź, czy wartość nie jest pusta ani nie jest stringiem "0"
+            if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
+                if (isDate) {
+                    displayValue = formatGoogleSheetDate(value);
+                } else {
+                    displayValue = value;
+                }
+            }
+            element.textContent = displayValue;
         } else {
             console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`);
         }
@@ -300,25 +330,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dostosuj te wartości do faktycznego rozmieszczenia danych w Twoim arkuszu Google (zakres A1:M50).
     const cellMappings = {
         // Główny wskaźnik / data
-        'mainDisplayField': { row: 1, col: 'C' }, // Przykładowo: C1 w arkuszu
+        'mainDisplayField': { row: 1, col: 'C', isDate: true }, // C1 jako data
 
         // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
         'oeeShift1': { row: 2, col: 'D' },
         'oeeShift2': { row: 2, col: 'E' },
         'oeeShift3': { row: 2, col: 'F' },
-        'oeeTotal': { row: 2, col: 'C' },
+        'oeeTotal': { row: 2, col: 'C' }, // Zakładam C2 dla total OEE
 
         // OK (przykładowe mapowanie, dostosuj do swojego arkusza)
         'okShift1': { row: 9, col: 'D' },
         'okShift2': { row: 9, col: 'E' },
         'okShift3': { row: 9, col: 'F' },
-        'okTotal': { row: 9, col: 'C' },
+        'okTotal': { row: 9, col: 'C' }, // Zakładam C9 dla total OK
 
         // NOK (przykładowe mapowanie, dostosuj do swojego arkusza)
         'nokShift1': { row: 10, col: 'D' },
         'nokShift2': { row: 10, col: 'E' },
         'nokShift3': { row: 10, col: 'F' },
-        'nokTotal': { row: 10, col: 'C' },
+        'nokTotal': { row: 10, col: 'C' }, // Zakładam C10 dla total NOK
 
         // GODZINY - WIERSZ 1 (przykładowe mapowanie, dostosuj do swojego arkusza)
         'h6_r1': { row: 14, col: 'E' },
@@ -414,19 +444,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ustaw dane w polach HTML zgodnie z mapowaniem
             for (const htmlId in cellMappings) {
                 const map = cellMappings[htmlId];
-                // Wiersz w danych JS to numer wiersza w arkuszu minus 1 (bo tablice są 0-indexed)
                 const rowIndexInData = map.row - 1;
-                // Kolumna w danych JS to indeks pobrany przez getGoogleSheetColumnIndex
                 const colIndexInData = getGoogleSheetColumnIndex(map.col);
 
                 if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
-                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData]);
+                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
                 } else {
                     setFieldValue(htmlId, ''); // Ustaw puste, jeśli brak danych
-                    console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`);
+                    // console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`); // Możesz odkomentować dla debugowania
                 }
             }
-            mainDisplayField.innerHTML = `<strong>Dane dla: ${selectedSheetName}</strong>`;
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
