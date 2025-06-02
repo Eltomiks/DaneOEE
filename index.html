@@ -1,470 +1,295 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard OEE - Poprawiony i Uproszczony</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 10px;
-      color: #333;
-    }
-    .container {
-      max-width: 100%;
-      margin: auto;
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .header-image {
-      width: 100%;
-      height: auto;
-      display: block;
-      margin-bottom: 10px;
-      border-radius: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 15px;
-      font-size: 12px;
-      table-layout: fixed;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: center;
-    }
-    .red {
-      color: red;
-      font-weight: bold;
-    }
-    select {
-      font-size: 14px;
-      padding: 4px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      width: 100%;
-      max-width: 200px;
-    }
+    <meta charset="UTF-8">
+    <title>Dashboard OEE - Poprawiony i Uproszczony</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 10px;
+            color: #333;
+        }
+        .container {
+            max-width: 100%;
+            margin: auto;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        .red {
+            color: red;
+            font-weight: bold;
+        }
+        select {
+            font-size: 14px;
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 200px;
+        }
 
-    /* Styl dla głównego pola daty/wskaźnika */
-    #mainDisplayField { /* Zmienione ID */
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-    }
+        /* Styl dla głównego pola daty/wskaźnika */
+        #mainDisplayField {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
 
-    /* Ogólny styl dla wszystkich pól danych */
-    .data-field {
-      font-size: 14px;
-      font-weight: 500;
-    }
+        /* Ogólny styl dla wszystkich pól danych */
+        .data-field {
+            font-size: 14px;
+            font-weight: 500;
+        }
 
-    .time-block {
-      margin-bottom: 20px;
-    }
-    .time-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
-    .time-table th {
-      background: #3498db;
-      color: white;
-      padding: 6px;
-      font-size: 11px;
-    }
-    .time-table td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      height: 30px;
-      background-color: #fff;
-      font-size: 12px; /* Domyślny rozmiar dla komórek czasowych */
-    }
-    .time-header th {
-      text-align: center;
-      font-weight: bold;
-    }
-    @media (max-width: 600px) {
-      th, td {
-        padding: 4px;
-        font-size: 11px;
-      }
-      .time-table th, .time-table td {
-        padding: 6px;
-        font-size: 10px;
-      }
-      select {
-        max-width: 100%;
-      }
-      #mainDisplayField {
-        font-size: 16px;
-      }
-      .data-field {
-        font-size: 12px;
-      }
-    }
-  </style>
+        .time-block {
+            margin-bottom: 20px;
+        }
+        .time-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .time-table th {
+            background: #3498db;
+            color: white;
+            padding: 6px;
+            font-size: 11px;
+        }
+        .time-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 30px;
+            background-color: #fff;
+            font-size: 12px; /* Domyślny rozmiar dla komórek czasowych */
+        }
+        .time-header th {
+            text-align: center;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            th, td {
+                padding: 4px;
+                font-size: 11px;
+            }
+            .time-table th, .time-table td {
+                padding: 6px;
+                font-size: 10px;
+            }
+            select {
+                max-width: 100%;
+            }
+            #mainDisplayField {
+                font-size: 16px;
+            }
+            .data-field {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Tu będize zajebiste logo ... Piasecki jest the best ;) ">
+    <div class="container">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Tu będize zajebiste logo ... Piasecki jest the best ;) ">
 
-    <table>
-      <tr>
-        <td id="mainDisplayField"><strong>Ładowanie...</strong></td>
-        <td colspan="4">
-          <select id="sheetSelector">
-            <option value="">Wybierz linie</option> <option>NHL</option>
-            <option>MP4</option>
-            <option>Hood Latch</option>
-            <option>M4</option>
-            <option>H-Latch GŁÓWNA</option>
-            <option>H-Latch PIANA</option>
-            <option>139 P</option>
-            <option>139 T</option>
-            <option>SV3 A9</option>
-            <option>Pokrywki</option>
-            <option>Cardrige</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td><strong>zm</strong></td>
-        <td>I</td>
-        <td>II</td>
-        <td>III</td>
-        <td><strong>TOTAL</strong></td>
-      </tr>
-      <tr>
-        <td><strong>OEE</strong></td>
-        <td id="oeeShift1" class="data-field"></td>
-        <td id="oeeShift2" class="data-field"></td>
-        <td id="oeeShift3" class="data-field"></td>
-        <td id="oeeTotal" class="data-field"></td>
-      </tr>
-      <tr>
-        <td><strong>OK</strong></td>
-        <td id="okShift1" class="data-field"></td>
-        <td id="okShift2" class="data-field"></td>
-        <td id="okShift3" class="data-field"></td>
-        <td id="okTotal" class="data-field"></td>
-      </tr>
-      <tr>
-        <td class="red">NOK</td>
-        <td id="nokShift1" class="data-field"></td>
-        <td id="nokShift2" class="data-field"></td>
-        <td id="nokShift3" class="data-field"></td>
-        <td id="nokTotal" class="data-field"></td>
-      </tr>
-    </table>
+        <table>
+            <tr>
+                <td id="mainDisplayField"><strong>Wybierz linię</strong></td>
+                <td colspan="4">
+                    <select id="sheetSelector">
+                        <option value="">Wybierz linię</option>
+                        <option>NHL</option>
+                        <option>MP4</option>
+                        <option>Hood Latch</option>
+                        <option>M4</option>
+                        <option>H-Latch GŁÓWNA</option>
+                        <option>H-Latch PIANA</option>
+                        <option>139 P</option>
+                        <option>139 T</option>
+                        <option>SV3 A9</option>
+                        <option>Pokrywki</option>
+                        <option>Cardrige</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>zm</strong></td>
+                <td>I</td>
+                <td>II</td>
+                <td>III</td>
+                <td><strong>TOTAL</strong></td>
+            </tr>
+            <tr>
+                <td><strong>OEE</strong></td>
+                <td id="oeeShift1" class="data-field"></td>
+                <td id="oeeShift2" class="data-field"></td>
+                <td id="oeeShift3" class="data-field"></td>
+                <td id="oeeTotal" class="data-field"></td>
+            </tr>
+            <tr>
+                <td><strong>OK</strong></td>
+                <td id="okShift1" class="data-field"></td>
+                <td id="okShift2" class="data-field"></td>
+                <td id="okShift3" class="data-field"></td>
+                <td id="okTotal" class="data-field"></td>
+            </tr>
+            <tr>
+                <td class="red">NOK</td>
+                <td id="nokShift1" class="data-field"></td>
+                <td id="nokShift2" class="data-field"></td>
+                <td id="nokShift3" class="data-field"></td>
+                <td id="nokTotal" class="data-field"></td>
+            </tr>
+        </table>
 
-    <div class="time-block">
-      <table class="time-table">
-        <tr class="time-header">
-          <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
-          <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
-        </tr>
-        <tr>
-          <td id="h6_r1"></td>
-          <td id="h7_r1"></td>
-          <td id="h8_r1"></td>
-          <td id="h9_r1"></td>
-          <td id="h10_r1"></td>
-          <td id="h11_r1"></td>
-          <td id="h12_r1"></td>
-          <td id="h13_r1"></td>
-        </tr>
-        <tr>
-          <td id="h6_r2"></td>
-          <td id="h7_r2"></td>
-          <td id="h8_r2"></td>
-          <td id="h9_r2"></td>
-          <td id="h10_r2"></td>
-          <td id="h11_r2"></td>
-          <td id="h12_r2"></td>
-          <td id="h13_r2"></td>
-        </tr>
-      </table>
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
+                    <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
+                </tr>
+                <tr>
+                    <td id="h6_r1"></td>
+                    <td id="h7_r1"></td>
+                    <td id="h8_r1"></td>
+                    <td id="h9_r1"></td>
+                    <td id="h10_r1"></td>
+                    <td id="h11_r1"></td>
+                    <td id="h12_r1"></td>
+                    <td id="h13_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h6_r2"></td>
+                    <td id="h7_r2"></td>
+                    <td id="h8_r2"></td>
+                    <td id="h9_r2"></td>
+                    <td id="h10_r2"></td>
+                    <td id="h11_r2"></td>
+                    <td id="h12_r2"></td>
+                    <td id="h13_r2"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
+                    <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
+                </tr>
+                <tr>
+                    <td id="h14_r1"></td>
+                    <td id="h15_r1"></td>
+                    <td id="h16_r1"></td>
+                    <td id="h17_r1"></td>
+                    <td id="h18_r1"></td>
+                    <td id="h19_r1"></td>
+                    <td id="h20_r1"></td>
+                    <td id="h21_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h14_r2"></td>
+                    <td id="h15_r2"></td>
+                    <td id="h16_r2"></td>
+                    <td id="h17_r2"></td>
+                    <td id="h18_r2"></td>
+                    <td id="h19_r2"></td>
+                    <td id="h20_r2"></td>
+                    <td id="h21_r2"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
+                    <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
+                </tr>
+                <tr>
+                    <td id="h22_r1"></td>
+                    <td id="h23_r1"></td>
+                    <td id="h0_r1"></td>
+                    <td id="h1_r1"></td>
+                    <td id="h2_r1"></td>
+                    <td id="h3_r1"></td>
+                    <td id="h4_r1"></td>
+                    <td id="h5_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h22_r2"></td>
+                    <td id="h23_r2"></td>
+                    <td id="h0_r2"></td>
+                    <td id="h1_r2"></td>
+                    <td id="h2_r2"></td>
+                    <td id="h3_r2"></td>
+                    <td id="h4_r2"></td>
+                    <td id="h5_r2"></td>
+                </tr>
+            </table>
+        </div>
     </div>
-
-    <div class="time-block">
-      <table class="time-table">
-        <tr class="time-header">
-          <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
-          <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
-        </tr>
-        <tr>
-          <td id="h14_r1"></td>
-          <td id="h15_r1"></td>
-          <td id="h16_r1"></td>
-          <td id="h17_r1"></td>
-          <td id="h18_r1"></td>
-          <td id="h19_r1"></td>
-          <td id="h20_r1"></td>
-          <td id="h21_r1"></td>
-        </tr>
-        <tr>
-          <td id="h14_r2"></td>
-          <td id="h15_r2"></td>
-          <td id="h16_r2"></td>
-          <td id="h17_r2"></td>
-          <td id="h18_r2"></td>
-          <td id="h19_r2"></td>
-          <td id="h20_r2"></td>
-          <td id="h21_r2"></td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="time-block">
-      <table class="time-table">
-        <tr class="time-header">
-          <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
-          <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
-        </tr>
-        <tr>
-          <td id="h22_r1"></td>
-          <td id="h23_r1"></td>
-          <td id="h0_r1"></td>
-          <td id="h1_r1"></td>
-          <td id="h2_r1"></td>
-          <td id="h3_r1"></td>
-          <td id="h4_r1"></td>
-          <td id="h5_r1"></td>
-        </tr>
-        <tr>
-          <td id="h22_r2"></td>
-          <td id="h23_r2"></td>
-          <td id="h0_r2"></td>
-          <td id="h1_r2"></td>
-          <td id="h2_r2"></td>
-          <td id="h3_r2"></td>
-          <td id="h4_r2"></td>
-          <td id="h5_r2"></td>
-        </tr>
-      </table>
-    </div>
-  </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <--- WSTAW TUTAJ ID SWOJEGO ARKUSZA GOOGLE
     const sheetSelector = document.getElementById('sheetSelector');
-    const mainDisplayField = document.getElementById('mainDisplayField'); // Nowe ID dla głównego pola
+    const mainDisplayField = document.getElementById('mainDisplayField');
 
-    // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
-    // Np. 'A' -> 0, 'B' -> 1, 'AA' -> 26
-    function getGoogleSheetColumnIndex(colLetter) {
-        let colIndex = 0;
-        for (let i = 0; i < colLetter.length; i++) {
-            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
-        }
-        return colIndex - 1; // Zwróć indeks 0-bazowy
-    }
-
-    // Funkcja pomocnicza do parsowania CSV
-    function parseCsv(csvString) {
-        const lines = csvString.trim().split('\n');
-        return lines.map(line => {
-            return line.split(',').map(cell => {
-                let cleanedCell = cell.trim();
-                // Usuń cudzysłowy jeśli są na początku i końcu
-                if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
-                    cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
-                }
-                // Obsłuż podwójne cudzysłowy w środku (escapowanie)
-                return cleanedCell.replace(/""/g, '"');
-            });
+    // Wyczyść wszystkie pola danych przy starcie, aby nie było "Ładowanie..." po wyborze "Wybierz linię"
+    function clearAllDataFields() {
+        const dataFields = document.querySelectorAll('.data-field');
+        dataFields.forEach(field => {
+            field.textContent = '';
+        });
+        // Dodatkowo wyczyść wszystkie komórki czasowe
+        const timeCells = document.querySelectorAll('.time-table td');
+        timeCells.forEach(cell => {
+            cell.textContent = '';
         });
     }
 
-    // Funkcja do ustawiania tekstu w danej komórce HTML
-    function setFieldValue(elementId, value) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            // Ustawiamy pusty string, jeśli wartość jest pusta lub null/undefined
-            element.textContent = (value === '' || value === null || value === undefined) ? '' : value;
-        } else {
-            console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML. Sprawdź, czy ID w cellMappings odpowiada ID w HTML.`);
-        }
-    }
-
-    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
-    // Kluczem jest ID elementu HTML, wartością jest obiekt { row: numer_wiersza_arkusza, col: "litera_kolumny_arkusza" }
-    // UWAGA: Numery wierszy i litery kolumn są takie same jak w arkuszu Google.
-    // Dostosuj te wartości do faktycznego rozmieszczenia danych w Twoim arkuszu Google.
-    const cellMappings = {
-        // Główny wskaźnik / data
-        'mainDisplayField': { row: 1, col: 'C' }, // Przykładowo: C1 w arkuszu
-
-        // OEE
-        'oeeShift1': { row: 5, col: 'D' }, // OEE Zmiana I -> D4 w arkuszu
-        'oeeShift2': { row: 5, col: 'E' }, // OEE Zmiana II -> E4 w arkuszu
-        'oeeShift3': { row: 5, col: 'F' }, // OEE Zmiana III -> F4 w arkuszu
-        'oeeTotal': { row: 5, col: 'C' },  // OEE TOTAL -> G4 w arkuszu (poprawione z C4 w Twoim kodzie)
-
-        // OK (dostosuj numery wierszy i kolumn do swojego arkusza)
-        'okShift1': { row: 11, col: 'D' }, // OK Zmiana I -> D5 w arkuszu (poprawione z D11)
-        'okShift2': { row: 11, col: 'E' }, // OK Zmiana II -> E5 w arkuszu (poprawione z E11)
-        'okShift3': { row: 11, col: 'F' }, // OK Zmiana III -> F5 w arkuszu (poprawione z F11)
-        'okTotal': { row: 11, col: 'C' },  // OK TOTAL -> G5 w arkuszu (poprawione z C11)
-
-        // NOK (dostosuj numery wierszy i kolumn do swojego arkusza)
-        'nokShift1': { row: 12, col: 'D' }, // NOK Zmiana I -> D6 w arkuszu (poprawione z D12)
-        'nokShift2': { row: 12, col: 'E' }, // NOK Zmiana II -> E6 w arkuszu (poprawione z E12)
-        'nokShift3': { row: 12, col: 'F' }, // NOK Zmiana III -> F6 w arkuszu (poprawione z F12)
-        'nokTotal': { row: 12, col: 'C' },  // NOK TOTAL -> G6 w arkuszu (poprawione z C12)
-
-        // GODZINY - WIERSZ 1 (przyjmijmy, że to wiersz 9 w arkuszu, od kolumny H)
-        'h6_r1': { row: 9, col: 'H' },
-        'h7_r1': { row: 9, col: 'I' },
-        'h8_r1': { row: 9, col: 'J' },
-        'h9_r1': { row: 9, col: 'K' },
-        'h10_r1': { row: 9, col: 'L' },
-        'h11_r1': { row: 9, col: 'M' },
-        'h12_r1': { row: 9, col: 'N' },
-        'h13_r1': { row: 9, col: 'O' },
-
-        'h14_r1': { row: 9, col: 'P' },
-        'h15_r1': { row: 9, col: 'Q' },
-        'h16_r1': { row: 9, col: 'R' },
-        'h17_r1': { row: 9, col: 'S' },
-        'h18_r1': { row: 9, col: 'T' },
-        'h19_r1': { row: 9, col: 'U' },
-        'h20_r1': { row: 9, col: 'V' },
-        'h21_r1': { row: 9, col: 'W' },
-
-        'h22_r1': { row: 9, col: 'X' },
-        'h23_r1': { row: 9, col: 'Y' },
-        'h0_r1': { row: 9, col: 'Z' },   // Używam Z dla 00-01
-        'h1_r1': { row: 9, col: 'AA' },
-        'h2_r1': { row: 9, col: 'AB' },
-        'h3_r1': { row: 9, col: 'AC' },
-        'h4_r1': { row: 9, col: 'AD' },
-        'h5_r1': { row: 9, col: 'AE' },
-
-        // GODZINY - WIERSZ 2 (przyjmijmy, że to wiersz 10 w arkuszu, od kolumny H)
-        'h6_r2': { row: 10, col: 'H' },
-        'h7_r2': { row: 10, col: 'I' },
-        'h8_r2': { row: 10, col: 'J' },
-        'h9_r2': { row: 10, col: 'K' },
-        'h10_r2': { row: 10, col: 'L' },
-        'h11_r2': { row: 10, col: 'M' },
-        'h12_r2': { row: 10, col: 'N' },
-        'h13_r2': { row: 10, col: 'O' },
-
-        'h14_r2': { row: 10, col: 'P' },
-        'h15_r2': { row: 10, col: 'Q' },
-        'h16_r2': { row: 10, col: 'R' },
-        'h17_r2': { row: 10, col: 'S' },
-        'h18_r2': { row: 10, col: 'T' },
-        'h19_r2': { row: 10, col: 'U' },
-        'h20_r2': { row: 10, col: 'V' },
-        'h21_r2': { row: 10, col: 'W' },
-
-        'h22_r2': { row: 10, col: 'X' },
-        'h23_r2': { row: 10, col: 'Y' },
-        'h0_r2': { row: 10, col: 'Z' },    // Używam Z dla 00-01
-        'h1_r2': { row: 10, col: 'AA' },
-        'h2_r2': { row: 10, col: 'AB' },
-        'h3_r2': { row: 10, col: 'AC' },
-        'h4_r2': { row: 10, col: 'AD' },
-        'h5_r2': { row: 10, col: 'AE' },
-    };
-
-    // Główna funkcja do pobierania i aktualizowania danych
-    async function updateDashboard() {
+    // Funkcja do aktualizacji wyświetlanej daty/wskaźnika
+    function updateMainDisplay() {
         const selectedSheetName = sheetSelector.value;
-        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
-
-        // Wyczyść wszystkie pola przed wczytaniem nowych danych
-        for (const htmlId in cellMappings) {
-            setFieldValue(htmlId, '');
-        }
-
         if (!selectedSheetName) {
-            mainDisplayField.innerHTML = '<strong>Wybierz arkusz</strong>';
-            return;
-        }
-
-        // Określ maksymalny wiersz i kolumnę, aby pobrać tylko potrzebny zakres
-        let maxRow = 0;
-        let maxColIndex = 0;
-        for (const htmlId in cellMappings) {
-            const map = cellMappings[htmlId];
-            if (map.row > maxRow) maxRow = map.row;
-            const currentColIndex = getGoogleSheetColumnIndex(map.col);
-            if (currentColIndex > maxColIndex) maxColIndex = currentColIndex;
-        }
-
-        // Przekształć maksymalny indeks kolumny na literę (dla zakresu)
-        function getColumnLetterFromIndex(index) {
-            let letter = '';
-            let temp = index;
-            while (temp >= 0) {
-                letter = String.fromCharCode(65 + (temp % 26)) + letter;
-                temp = Math.floor(temp / 26) - 1;
-            }
-            return letter;
-        }
-        const maxColLetter = getColumnLetterFromIndex(maxColIndex);
-
-        const range = `A1:${maxColLetter}${maxRow}`; // Dynamicznie ustawiony zakres
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
-            }
-            const csvText = await response.text();
-            const data = parseCsv(csvText);
-
-            // Ustaw dane w polach HTML zgodnie z mapowaniem
-            for (const htmlId in cellMappings) {
-                const map = cellMappings[htmlId];
-                // Wiersz w danych JS to numer wiersza w arkuszu minus 1 (bo tablice są 0-indexed)
-                const rowIndexInData = map.row - 1;
-                // Kolumna w danych JS to indeks pobrany przez getGoogleSheetColumnIndex
-                const colIndexInData = getGoogleSheetColumnIndex(map.col);
-
-                if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
-                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData]);
-                } else {
-                    setFieldValue(htmlId, ''); // Ustaw puste, jeśli brak danych
-                    console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`);
-                }
-            }
-
-        } catch (error) {
-            console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            mainDisplayField.innerHTML = '<strong>Błąd danych!</strong>';
-            // Opcjonalnie, wyczyść inne pola w przypadku błędu
-            for (const htmlId in cellMappings) {
-                if (htmlId !== 'mainDisplayField') {
-                    setFieldValue(htmlId, '');
-                }
-            }
+            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+            clearAllDataFields(); // Wyczyść dane, jeśli nic nie wybrano
+        } else {
+            mainDisplayField.innerHTML = `<strong>Ładowanie danych dla: ${selectedSheetName}...</strong>`;
+            // Tutaj w przyszłości będzie logika do pobierania danych
+            // Na razie po prostu zresetujemy pola
+            clearAllDataFields();
         }
     }
 
-    // Nasłuchuj zmian w rozwijanej liście i odświeżaj dashboard
-    sheetSelector.addEventListener('change', updateDashboard);
+    // Nasłuchuj zmian w rozwijanej liście i odświeżaj wyświetlacz
+    sheetSelector.addEventListener('change', updateMainDisplay);
 
-    // Wczytaj dashboard po załadowaniu strony
-    // Sprawdź, czy jakaś opcja jest już wybrana (np. domyślna z HTML)
-    if (sheetSelector.value) {
-        updateDashboard();
-    } else {
-        // Jeśli nie wybrano nic, ustaw komunikat
-        mainDisplayField.innerHTML = '<strong>Wybierz arkusz</strong>';
-    }
+    // Wywołaj funkcję raz po załadowaniu strony, aby ustawić początkowy stan
+    updateMainDisplay();
 });
 </script>
 </body>
