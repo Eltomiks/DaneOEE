@@ -65,13 +65,6 @@
             font-weight: 500;
         }
 
-        /* Warunkowe style dla OEE i procentów godzinowych */
-        .oee-below-60 { background-color: #ff4d4d; color: white; } /* Czerwony */
-        .oee-60-70 { background-color: #ff9933; color: black; } /* Pomarańczowy */
-        .oee-70-80 { background-color: #ffff66; color: black; } /* Żółty */
-        .oee-above-80 { background-color: #66cc66; color: black; } /* Zielony */
-
-
         .time-block {
             margin-bottom: 20px;
         }
@@ -91,9 +84,7 @@
             padding: 10px;
             height: 30px;
             background-color: #fff;
-            /* Powiększona czcionka dla komórek czasowych */
-            font-size: 16px; 
-            font-weight: bold;
+            font-size: 12px; /* Domyślny rozmiar dla komórek czasowych */
         }
         .time-header th {
             text-align: center;
@@ -106,7 +97,7 @@
             }
             .time-table th, .time-table td {
                 padding: 6px;
-                font-size: 14px; /* Dopasowanie czcionki godzinowej dla mniejszych ekranów */
+                font-size: 10px;
             }
             select {
                 max-width: 100%;
@@ -295,167 +286,144 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Funkcja do formatowania daty z numeru seryjnego Google Sheets
     function formatGoogleSheetDate(serial) {
-        // Sprawdź, czy wartość jest pusta, null, undefined, nie jest liczbą lub jest liczbowym zerem.
-        // Jeśli tak, zwróć pusty string.
-        if (!serial || isNaN(serial) || String(serial).trim() === '' || parseFloat(serial) === 0) {
-            return '';
+        // Sprawdź, czy wartość jest numerem i nie jest zerem.
+        // Google Sheets często zwraca "0" dla pustych komórek z formatowaniem daty.
+        if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
+            return ''; // Zwróć pusty string dla nieprawidłowych wartości lub zera
         }
+        // Data zerowa w Google Sheets to 30.12.1899
+        // Liczba milisekund od 1 stycznia 1970 do 30.12.1899
         const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
+        // 86400000 milisekund w dobie
         const date = new Date(excelEpoch + (parseFloat(serial) * 86400000));
 
+        // Formatowanie do DD.MM.RRRR
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Miesiące są 0-11
         const year = date.getFullYear();
 
         return `${day}.${month}.${year}`;
     }
 
-    // Funkcja do ustawiania tekstu i stylów w danej komórce HTML
-    function setFieldValue(elementId, value, options = {}) {
+    // Funkcja do ustawiania tekstu w danej komórce HTML
+    function setFieldValue(elementId, value, isDate = false) {
         const element = document.getElementById(elementId);
-        if (!element) {
-            // console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`); // Odkomentuj do debugowania
-            return;
-        }
-
-        let displayValue = '';
-        let rawValue = value;
-
-        // Usuń wszystkie poprzednie klasy stylów związanych z kolorowaniem OEE
-        element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
-        // Zresetuj styl inline (np. background-color, color), jeśli były ustawione
-        element.style.backgroundColor = '';
-        element.style.color = '';
-
-        // KROK 1: Czy wartość jest pusta lub jest liczbowym zerem? Jeśli tak, ukryj.
-        // Dotyczy to zarówno zwykłych liczb, jak i procentów (0% powinno być puste)
-        // ALE NIE DAT!
-        if (!options.isDate && (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '' || parseFloat(rawValue) === 0)) {
-            element.textContent = ''; 
-            return; 
-        }
-
-        // KROK 2: Jeśli to data, sformatuj i ustaw.
-        if (options.isDate) {
-            displayValue = formatGoogleSheetDate(rawValue);
-        } 
-        // KROK 3: Jeśli to procent, sformatuj i pokoloruj.
-        else if (options.isPercentage) {
-            const numValue = parseFloat(rawValue);
-            if (!isNaN(numValue)) {
-                let percentageValue = numValue;
-                // Jeśli wartość jest ułamkiem (np. 0.74), to mnożymy przez 100
-                // W przeciwnym razie zakładamy, że to już wartość procentowa (np. 74)
-                if (numValue > 0 && numValue < 1.0) { 
-                    percentageValue = numValue * 100;
+        if (element) {
+            let displayValue = '';
+            // Sprawdź, czy wartość nie jest pusta ani nie jest stringiem "0"
+            if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
+                if (isDate) {
+                    displayValue = formatGoogleSheetDate(value);
+                } else {
+                    displayValue = value;
                 }
-                
-                displayValue = `${percentageValue.toFixed(0)}%`; 
-                
-                // Warunkowe formatowanie kolorystyczne
-                // Normalizujemy wartość do zakresu 0-1 dla porównania
-                const normalizedValue = percentageValue / 100; 
-
-                if (normalizedValue < 0.60) {
-                    element.classList.add('oee-below-60');
-                } else if (normalizedValue >= 0.60 && normalizedValue < 0.70) {
-                    element.classList.add('oee-60-70');
-                } else if (normalizedValue >= 0.70 && normalizedValue < 0.80) {
-                    element.classList.add('oee-70-80');
-                } else { // >= 0.80
-                    element.classList.add('oee-above-80');
-                }
-            } else {
-                displayValue = rawValue; // Jeśli nie jest liczbą, wyświetl jak jest
             }
-        } 
-        // KROK 4: W pozostałych przypadkach, po prostu wyświetl surową wartość.
-        else {
-            displayValue = rawValue;
+            element.textContent = displayValue;
+        } else {
+            console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`);
         }
-        element.textContent = displayValue;
     }
 
     // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
-    // Dodano 'isPercentage: true' dla pól OEE i odpowiednich pól godzinowych
+    // Kluczem jest ID elementu HTML, wartością jest obiekt { row: numer_wiersza_arkusza, col: "litera_kolumny_arkusza" }
+    // UWAGA: Numery wierszy i litery kolumn są takie same jak w arkuszu Google.
+    // Dostosuj te wartości do faktycznego rozmieszczenia danych w Twoim arkuszu Google (zakres A1:M50).
     const cellMappings = {
-        'mainDisplayField': { row: 1, col: 'C', isDate: true },
+        // Główny wskaźnik / data
+        'mainDisplayField': { row: 1, col: 'C', isDate: true }, // C1 jako data
 
-        'oeeShift1': { row: 2, col: 'D', isPercentage: true, cellClass: 'data-field' },
-        'oeeShift2': { row: 2, col: 'E', isPercentage: true, cellClass: 'data-field' },
-        'oeeShift3': { row: 2, col: 'F', isPercentage: true, cellClass: 'data-field' },
-        'oeeTotal': { row: 2, col: 'C', isPercentage: true, cellClass: 'data-field' },
+        // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'oeeShift1': { row: 2, col: 'D' },
+        'oeeShift2': { row: 2, col: 'E' },
+        'oeeShift3': { row: 2, col: 'F' },
+        'oeeTotal': { row: 2, col: 'C' }, // Zakładam C2 dla total OEE
 
-        'okShift1': { row: 9, col: 'D', cellClass: 'data-field' },
-        'okShift2': { row: 9, col: 'E', cellClass: 'data-field' },
-        'okShift3': { row: 9, col: 'F', cellClass: 'data-field' },
-        'okTotal': { row: 9, col: 'C', cellClass: 'data-field' },
+        // OK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'okShift1': { row: 9, col: 'D' },
+        'okShift2': { row: 9, col: 'E' },
+        'okShift3': { row: 9, col: 'F' },
+        'okTotal': { row: 9, col: 'C' }, // Zakładam C9 dla total OK
 
-        'nokShift1': { row: 10, col: 'D', cellClass: 'data-field' },
-        'nokShift2': { row: 10, col: 'E', cellClass: 'data-field' },
-        'nokShift3': { row: 10, col: 'F', cellClass: 'data-field' },
-        'nokTotal': { row: 10, col: 'C', cellClass: 'data-field' },
+        // NOK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'nokShift1': { row: 10, col: 'D' },
+        'nokShift2': { row: 10, col: 'E' },
+        'nokShift3': { row: 10, col: 'F' },
+        'nokTotal': { row: 10, col: 'C' }, // Zakładam C10 dla total NOK
 
-        // GODZINY - WIERSZ 1 (teraz z isPercentage)
-        'h6_r1': { row: 14, col: 'E', isPercentage: true },
-        'h7_r1': { row: 15, col: 'E', isPercentage: true },
-        'h8_r1': { row: 16, col: 'E', isPercentage: true },
-        'h9_r1': { row: 17, col: 'E', isPercentage: true },
-        'h10_r1': { row: 18, col: 'E', isPercentage: true },
-        'h11_r1': { row: 19, col: 'E', isPercentage: true },
-        'h12_r1': { row: 20, col: 'E', isPercentage: true },
-        'h13_r1': { row: 21, col: 'E', isPercentage: true },
+        // GODZINY - WIERSZ 1 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'h6_r1': { row: 14, col: 'E' },
+        'h7_r1': { row: 15, col: 'E' },
+        'h8_r1': { row: 16, col: 'E' },
+        'h9_r1': { row: 17, col: 'E' },
+        'h10_r1': { row: 18, col: 'E' },
+        'h11_r1': { row: 19, col: 'E' },
+        'h12_r1': { row: 20, col: 'E' },
+        'h13_r1': { row: 21, col: 'E' },
 
-        'h14_r1': { row: 22, col: 'E', isPercentage: true },
-        'h15_r1': { row: 23, col: 'E', isPercentage: true },
-        'h16_r1': { row: 24, col: 'E', isPercentage: true },
-        'h17_r1': { row: 25, col: 'E', isPercentage: true },
-        'h18_r1': { row: 26, col: 'E', isPercentage: true },
-        'h19_r1': { row: 27, col: 'E', isPercentage: true },
-        'h20_r1': { row: 28, col: 'E', isPercentage: true },
-        'h21_r1': { row: 29, col: 'E', isPercentage: true },
+        'h14_r1': { row: 22, col: 'E' },
+        'h15_r1': { row: 23, col: 'E' },
+        'h16_r1': { row: 24, col: 'E' },
+        'h17_r1': { row: 25, col: 'E' },
+        'h18_r1': { row: 26, col: 'E' },
+        'h19_r1': { row: 27, col: 'E' },
+        'h20_r1': { row: 28, col: 'E' },
+        'h21_r1': { row: 29, col: 'E' },
 
-        'h22_r1': { row: 30, col: 'E', isPercentage: true },
-        'h23_r1': { row: 31, col: 'E', isPercentage: true },
-        'h0_r1': { row: 32, col: 'E', isPercentage: true },
-        'h1_r1': { row: 33, col: 'E', isPercentage: true },
-        'h2_r1': { row: 34, col: 'E', isPercentage: true },
-        'h3_r1': { row: 35, col: 'E', isPercentage: true },
-        'h4_r1': { row: 36, col: 'E', isPercentage: true },
-        'h5_r1': { row: 37, col: 'E', isPercentage: true },
+        'h22_r1': { row: 30, col: 'E' },
+        'h23_r1': { row: 31, col: 'E' },
+        'h0_r1': { row: 32, col: 'E' },
+        'h1_r1': { row: 33, col: 'E' },
+        'h2_r1': { row: 34, col: 'E' },
+        'h3_r1': { row: 35, col: 'E' },
+        'h4_r1': { row: 36, col: 'E' },
+        'h5_r1': { row: 37, col: 'E' },
 
-        // GODZINY - WIERSZ 2 (nie procentowe, więc bez isPercentage)
-        'h6_r2': { row: 14, col: 'C' }, 'h7_r2': { row: 15, col: 'C' }, 'h8_r2': { row: 16, col: 'C' }, 'h9_r2': { row: 17, col: 'C' },
-        'h10_r2': { row: 18, col: 'C' }, 'h11_r2': { row: 19, col: 'C' }, 'h12_r2': { row: 20, col: 'C' }, 'h13_r2': { row: 21, col: 'C' },
-        'h14_r2': { row: 22, col: 'C' }, 'h15_r2': { row: 23, col: 'C' }, 'h16_r2': { row: 24, col: 'C' }, 'h17_r2': { row: 25, col: 'C' },
-        'h18_r2': { row: 26, col: 'C' }, 'h19_r2': { row: 27, col: 'C' }, 'h20_r2': { row: 28, col: 'C' }, 'h21_r2': { row: 29, col: 'C' },
-        'h22_r2': { row: 30, col: 'C' }, 'h23_r2': { row: 31, col: 'C' }, 'h0_r2': { row: 32, col: 'C' }, 'h1_r2': { row: 33, col: 'C' },
-        'h2_r2': { row: 34, col: 'C' }, 'h3_r2': { row: 35, col: 'C' }, 'h4_r2': { row: 36, col: 'C' }, 'h5_r2': { row: 37, col: 'C' },
+        // GODZINY - WIERSZ 2 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'h6_r2': { row: 14, col: 'C' },
+        'h7_r2': { row: 15, col: 'C' },
+        'h8_r2': { row: 16, col: 'C' },
+        'h9_r2': { row: 17, col: 'C' },
+        'h10_r2': { row: 18, col: 'C' },
+        'h11_r2': { row: 19, col: 'C' },
+        'h12_r2': { row: 20, col: 'C' },
+        'h13_r2': { row: 21, col: 'C' },
+
+        'h14_r2': { row: 22, col: 'C' },
+        'h15_r2': { row: 23, col: 'C' },
+        'h16_r2': { row: 24, col: 'C' },
+        'h17_r2': { row: 25, col: 'C' },
+        'h18_r2': { row: 26, col: 'C' },
+        'h19_r2': { row: 27, col: 'C' },
+        'h20_r2': { row: 28, col: 'C' },
+        'h21_r2': { row: 29, col: 'C' },
+
+        'h22_r2': { row: 30, col: 'C' },
+        'h23_r2': { row: 31, col: 'C' },
+        'h0_r2': { row: 32, col: 'C' },
+        'h1_r2': { row: 33, col: 'C' },
+        'h2_r2': { row: 34, col: 'C' },
+        'h3_r2': { row: 35, col: 'C' },
+        'h4_r2': { row: 36, col: 'C' },
+        'h5_r2': { row: 37, col: 'C' },
     };
 
-    // Funkcja do czyszczenia wszystkich pól danych (w tym stylów)
+    // Funkcja do czyszczenia wszystkich pól danych
     function clearAllDataFields() {
-        // Wszystkie pola danych (w tym te oznaczone jako data-field i komórki tabeli czasu)
-        const allDataElements = document.querySelectorAll('.data-field, .time-table td');
-        allDataElements.forEach(element => {
-            element.textContent = '';
-            // Usuń wszystkie klasy kolorystyczne
-            element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
-            // Resetuj style inline, które mogą być ustawione przez JS
-            element.style.backgroundColor = '';
-            element.style.color = '';
+        const dataFields = document.querySelectorAll('.data-field');
+        dataFields.forEach(field => {
+            field.textContent = '';
         });
-        // Specjalne czyszczenie dla mainDisplayField, które nie ma klasy .data-field
-        mainDisplayField.textContent = '';
-        mainDisplayField.style.backgroundColor = '';
-        mainDisplayField.style.color = '';
+        const timeCells = document.querySelectorAll('.time-table td');
+        timeCells.forEach(cell => {
+            cell.textContent = '';
+        });
     }
 
     // Główna funkcja do pobierania i aktualizowania danych
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
         mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
-        clearAllDataFields(); // Wyczyść wszystko przed ładowaniem
+        clearAllDataFields();
 
         if (!selectedSheetName) {
             mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
@@ -480,16 +448,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const colIndexInData = getGoogleSheetColumnIndex(map.col);
 
                 if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
-                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map);
+                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
                 } else {
-                    setFieldValue(htmlId, '', map); // Ustaw puste, jeśli brak danych
+                    setFieldValue(htmlId, ''); // Ustaw puste, jeśli brak danych
+                    // console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`); // Możesz odkomentować dla debugowania
                 }
             }
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
             mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
-            clearAllDataFields(); // Wyczyść dane nawet po błędzie
+            clearAllDataFields();
         }
     }
 
@@ -497,7 +466,6 @@ document.addEventListener('DOMContentLoaded', function() {
     sheetSelector.addEventListener('change', updateDashboard);
 
     // Wywołaj funkcję raz po załadowaniu strony, aby ustawić początkowy stan
-    // Sprawdź, czy selektor ma już wybraną wartość po załadowaniu (np. z `selected` w opcji)
     if (sheetSelector.value) {
         updateDashboard();
     } else {
