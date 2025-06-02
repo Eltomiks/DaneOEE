@@ -295,12 +295,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Funkcja do formatowania daty z numeru seryjnego Google Sheets
     function formatGoogleSheetDate(serial) {
-        // Sprawdź, czy wartość jest numerem i nie jest zerem.
-        if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
-            return ''; // Zwróć pusty string dla nieprawidłowych wartości lub zera
+        // Jeśli serial jest pusty, null, undefined lub nie jest liczbą, zwróć pusty string
+        if (!serial || isNaN(serial) || String(serial).trim() === '') {
+            return '';
         }
+        const floatSerial = parseFloat(serial);
+        // Jeśli po konwersji na liczbę jest 0, to też może być traktowane jako brak daty
+        if (floatSerial === 0) {
+            return ''; 
+        }
+
         const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-        const date = new Date(excelEpoch + (parseFloat(serial) * 86400000));
+        const date = new Date(excelEpoch + (floatSerial * 86400000));
 
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -326,35 +332,57 @@ document.addEventListener('DOMContentLoaded', function() {
         element.style.backgroundColor = '';
         element.style.color = '';
 
-        // Sprawdź, czy wartość jest pusta, null, undefined, pustym stringiem lub liczbowym zerem.
-        // Używamy trim() na String(rawValue), aby poprawnie obsłużyć puste komórki lub tylko spacje
-        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '' || parseFloat(rawValue) === 0) {
+        // Obsługa daty
+        if (options.isDate) {
+            displayValue = formatGoogleSheetDate(rawValue);
+            element.textContent = displayValue;
+            return; // Zakończ funkcję, jeśli to jest data
+        }
+
+        // Obsługa wartości pustych lub "0" dla innych pól (szczególnie procentów i liczb)
+        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '') {
             element.textContent = ''; // Ustaw puste
             return; 
         }
 
-        if (options.isDate) {
-            displayValue = formatGoogleSheetDate(rawValue);
-        } else if (options.isPercentage) {
-            const numValue = parseFloat(rawValue);
+        let numValue = parseFloat(rawValue);
+
+        // Specjalne traktowanie dla liczbowego 0, aby nie wyświetlać "0" lub "0%"
+        // Tylko jeśli wartość jest dokładnie 0, a nie np. 0.001
+        if (numValue === 0) {
+            element.textContent = '';
+            return;
+        }
+
+        if (options.isPercentage) {
             if (!isNaN(numValue)) {
-                // Jeśli wartość z arkusza to np. "0.74" (czyli 74%), to mnożymy przez 100
-                // Jeśli arkusz wysyła "74" (czyli 74%), to nie mnożymy.
-                // Sprawdzimy, czy numValue jest między 0 a 1 (nie włącznie z 1), aby zdecydować.
                 let percentageValue = numValue;
+                // Jeśli wartość jest ułamkiem (np. 0.74), to mnożymy przez 100
+                // Ale nie, jeśli jest już dużą liczbą (np. 74)
+                // Uważaj na wartości typu 0.0001, które po mnożeniu nadal mogą być bliskie 0
                 if (numValue > 0 && numValue < 1.0) { 
                     percentageValue = numValue * 100;
                 }
+                
+                // Wyświetl jako procent bez miejsc po przecinku
                 displayValue = `${percentageValue.toFixed(0)}%`; 
                 
-                // Warunkowe formatowanie kolorystyczne, bazujemy na numValue (znormalizowanym do 0-1)
-                const normalizedValue = (percentageValue / 100); // Normalizujemy do zakresu 0-1 dla porównania
+                // Warunkowe formatowanie kolorystyczne, bazujemy na oryginalnej wartości numValue
+                // Ważne: porównujemy zawsze z wartością 0-1, jeśli w arkuszu masz 0.74 to jest to numValue
+                // Jeśli w arkuszu masz 74 (jako liczba), to musisz normalizować: numValue / 100
+                // Przyjmujemy, że w arkuszu procenty są jako 0.xx
+                
+                let comparisonValue = numValue;
+                // Dodatkowo zabezpieczenie, jeśli ktoś wpisze "74" zamiast "0.74" w arkuszu
+                if (numValue > 1.0 && numValue <= 100.0) { // Jeśli wartość jest np. 74 (liczba całkowita)
+                    comparisonValue = numValue / 100;
+                }
 
-                if (normalizedValue < 0.60) {
+                if (comparisonValue < 0.60) {
                     element.classList.add('oee-below-60');
-                } else if (normalizedValue >= 0.60 && normalizedValue < 0.70) {
+                } else if (comparisonValue >= 0.60 && comparisonValue < 0.70) {
                     element.classList.add('oee-60-70');
-                } else if (normalizedValue >= 0.70 && normalizedValue < 0.80) {
+                } else if (comparisonValue >= 0.70 && comparisonValue < 0.80) {
                     element.classList.add('oee-70-80');
                 } else { // >= 0.80
                     element.classList.add('oee-above-80');
@@ -363,6 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayValue = rawValue; // Jeśli nie jest liczbą, wyświetl jak jest
             }
         } else {
+            // Dla pól nie-procentowych i nie-datowych, po prostu wyświetl wartość
             displayValue = rawValue;
         }
         element.textContent = displayValue;
