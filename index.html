@@ -120,7 +120,7 @@
         <td id="mainDisplayField"><strong>Ładowanie...</strong></td>
         <td colspan="4">
           <select id="sheetSelector">
-            <option value="">Wybierz arkusz</option> <option>NHL</option>
+            <option value="">Wybierz linie</option> <option>NHL</option>
             <option>MP4</option>
             <option>Hood Latch</option>
             <option>M4</option>
@@ -304,22 +304,22 @@ document.addEventListener('DOMContentLoaded', function() {
         'mainDisplayField': { row: 1, col: 'C' }, // Przykładowo: C1 w arkuszu
 
         // OEE
-        'oeeShift1': { row: 4, col: 'D' }, // OEE Zmiana I -> D4 w arkuszu
-        'oeeShift2': { row: 4, col: 'E' }, // OEE Zmiana II -> E4 w arkuszu
-        'oeeShift3': { row: 4, col: 'F' }, // OEE Zmiana III -> F4 w arkuszu
-        'oeeTotal': { row: 4, col: 'C' },  // OEE TOTAL -> G4 w arkuszu (poprawione z C4 w Twoim kodzie)
+        'oeeShift1': { row: 5, col: 'D' }, // OEE Zmiana I -> D4 w arkuszu
+        'oeeShift2': { row: 5, col: 'E' }, // OEE Zmiana II -> E4 w arkuszu
+        'oeeShift3': { row: 5, col: 'F' }, // OEE Zmiana III -> F4 w arkuszu
+        'oeeTotal': { row: 5, col: 'C' },  // OEE TOTAL -> G4 w arkuszu (poprawione z C4 w Twoim kodzie)
 
         // OK (dostosuj numery wierszy i kolumn do swojego arkusza)
-        'okShift1': { row: 5, col: 'D' }, // OK Zmiana I -> D5 w arkuszu (poprawione z D11)
-        'okShift2': { row: 5, col: 'E' }, // OK Zmiana II -> E5 w arkuszu (poprawione z E11)
-        'okShift3': { row: 5, col: 'F' }, // OK Zmiana III -> F5 w arkuszu (poprawione z F11)
-        'okTotal': { row: 5, col: 'C' },  // OK TOTAL -> G5 w arkuszu (poprawione z C11)
+        'okShift1': { row: 11, col: 'D' }, // OK Zmiana I -> D5 w arkuszu (poprawione z D11)
+        'okShift2': { row: 11, col: 'E' }, // OK Zmiana II -> E5 w arkuszu (poprawione z E11)
+        'okShift3': { row: 11, col: 'F' }, // OK Zmiana III -> F5 w arkuszu (poprawione z F11)
+        'okTotal': { row: 11, col: 'C' },  // OK TOTAL -> G5 w arkuszu (poprawione z C11)
 
         // NOK (dostosuj numery wierszy i kolumn do swojego arkusza)
-        'nokShift1': { row: 6, col: 'D' }, // NOK Zmiana I -> D6 w arkuszu (poprawione z D12)
-        'nokShift2': { row: 6, col: 'E' }, // NOK Zmiana II -> E6 w arkuszu (poprawione z E12)
-        'nokShift3': { row: 6, col: 'F' }, // NOK Zmiana III -> F6 w arkuszu (poprawione z F12)
-        'nokTotal': { row: 6, col: 'C' },  // NOK TOTAL -> G6 w arkuszu (poprawione z C12)
+        'nokShift1': { row: 12, col: 'D' }, // NOK Zmiana I -> D6 w arkuszu (poprawione z D12)
+        'nokShift2': { row: 12, col: 'E' }, // NOK Zmiana II -> E6 w arkuszu (poprawione z E12)
+        'nokShift3': { row: 12, col: 'F' }, // NOK Zmiana III -> F6 w arkuszu (poprawione z F12)
+        'nokTotal': { row: 12, col: 'C' },  // NOK TOTAL -> G6 w arkuszu (poprawione z C12)
 
         // GODZINY - WIERSZ 1 (przyjmijmy, że to wiersz 9 w arkuszu, od kolumny H)
         'h6_r1': { row: 9, col: 'H' },
