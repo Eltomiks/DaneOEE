@@ -295,18 +295,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Funkcja do formatowania daty z numeru seryjnego Google Sheets
     function formatGoogleSheetDate(serial) {
-        // Jeśli serial jest pusty, null, undefined lub nie jest liczbą, zwróć pusty string
-        if (!serial || isNaN(serial) || String(serial).trim() === '') {
+        // Sprawdź, czy wartość jest pusta, null, undefined, nie jest liczbą lub jest liczbowym zerem.
+        // Jeśli tak, zwróć pusty string.
+        if (!serial || isNaN(serial) || String(serial).trim() === '' || parseFloat(serial) === 0) {
             return '';
         }
-        const floatSerial = parseFloat(serial);
-        // Jeśli po konwersji na liczbę jest 0, to też może być traktowane jako brak daty
-        if (floatSerial === 0) {
-            return ''; 
-        }
-
         const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-        const date = new Date(excelEpoch + (floatSerial * 86400000));
+        const date = new Date(excelEpoch + (parseFloat(serial) * 86400000));
 
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -332,57 +327,40 @@ document.addEventListener('DOMContentLoaded', function() {
         element.style.backgroundColor = '';
         element.style.color = '';
 
-        // Obsługa daty
-        if (options.isDate) {
-            displayValue = formatGoogleSheetDate(rawValue);
-            element.textContent = displayValue;
-            return; // Zakończ funkcję, jeśli to jest data
-        }
-
-        // Obsługa wartości pustych lub "0" dla innych pól (szczególnie procentów i liczb)
-        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '') {
-            element.textContent = ''; // Ustaw puste
+        // KROK 1: Czy wartość jest pusta lub jest liczbowym zerem? Jeśli tak, ukryj.
+        // Dotyczy to zarówno zwykłych liczb, jak i procentów (0% powinno być puste)
+        // ALE NIE DAT!
+        if (!options.isDate && (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '' || parseFloat(rawValue) === 0)) {
+            element.textContent = ''; 
             return; 
         }
 
-        let numValue = parseFloat(rawValue);
-
-        // Specjalne traktowanie dla liczbowego 0, aby nie wyświetlać "0" lub "0%"
-        // Tylko jeśli wartość jest dokładnie 0, a nie np. 0.001
-        if (numValue === 0) {
-            element.textContent = '';
-            return;
-        }
-
-        if (options.isPercentage) {
+        // KROK 2: Jeśli to data, sformatuj i ustaw.
+        if (options.isDate) {
+            displayValue = formatGoogleSheetDate(rawValue);
+        } 
+        // KROK 3: Jeśli to procent, sformatuj i pokoloruj.
+        else if (options.isPercentage) {
+            const numValue = parseFloat(rawValue);
             if (!isNaN(numValue)) {
                 let percentageValue = numValue;
                 // Jeśli wartość jest ułamkiem (np. 0.74), to mnożymy przez 100
-                // Ale nie, jeśli jest już dużą liczbą (np. 74)
-                // Uważaj na wartości typu 0.0001, które po mnożeniu nadal mogą być bliskie 0
+                // W przeciwnym razie zakładamy, że to już wartość procentowa (np. 74)
                 if (numValue > 0 && numValue < 1.0) { 
                     percentageValue = numValue * 100;
                 }
                 
-                // Wyświetl jako procent bez miejsc po przecinku
                 displayValue = `${percentageValue.toFixed(0)}%`; 
                 
-                // Warunkowe formatowanie kolorystyczne, bazujemy na oryginalnej wartości numValue
-                // Ważne: porównujemy zawsze z wartością 0-1, jeśli w arkuszu masz 0.74 to jest to numValue
-                // Jeśli w arkuszu masz 74 (jako liczba), to musisz normalizować: numValue / 100
-                // Przyjmujemy, że w arkuszu procenty są jako 0.xx
-                
-                let comparisonValue = numValue;
-                // Dodatkowo zabezpieczenie, jeśli ktoś wpisze "74" zamiast "0.74" w arkuszu
-                if (numValue > 1.0 && numValue <= 100.0) { // Jeśli wartość jest np. 74 (liczba całkowita)
-                    comparisonValue = numValue / 100;
-                }
+                // Warunkowe formatowanie kolorystyczne
+                // Normalizujemy wartość do zakresu 0-1 dla porównania
+                const normalizedValue = percentageValue / 100; 
 
-                if (comparisonValue < 0.60) {
+                if (normalizedValue < 0.60) {
                     element.classList.add('oee-below-60');
-                } else if (comparisonValue >= 0.60 && comparisonValue < 0.70) {
+                } else if (normalizedValue >= 0.60 && normalizedValue < 0.70) {
                     element.classList.add('oee-60-70');
-                } else if (comparisonValue >= 0.70 && comparisonValue < 0.80) {
+                } else if (normalizedValue >= 0.70 && normalizedValue < 0.80) {
                     element.classList.add('oee-70-80');
                 } else { // >= 0.80
                     element.classList.add('oee-above-80');
@@ -390,8 +368,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 displayValue = rawValue; // Jeśli nie jest liczbą, wyświetl jak jest
             }
-        } else {
-            // Dla pól nie-procentowych i nie-datowych, po prostu wyświetl wartość
+        } 
+        // KROK 4: W pozostałych przypadkach, po prostu wyświetl surową wartość.
+        else {
             displayValue = rawValue;
         }
         element.textContent = displayValue;
@@ -402,20 +381,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const cellMappings = {
         'mainDisplayField': { row: 1, col: 'C', isDate: true },
 
-        'oeeShift1': { row: 2, col: 'D', isPercentage: true },
-        'oeeShift2': { row: 2, col: 'E', isPercentage: true },
-        'oeeShift3': { row: 2, col: 'F', isPercentage: true },
-        'oeeTotal': { row: 2, col: 'C', isPercentage: true },
+        'oeeShift1': { row: 2, col: 'D', isPercentage: true, cellClass: 'data-field' },
+        'oeeShift2': { row: 2, col: 'E', isPercentage: true, cellClass: 'data-field' },
+        'oeeShift3': { row: 2, col: 'F', isPercentage: true, cellClass: 'data-field' },
+        'oeeTotal': { row: 2, col: 'C', isPercentage: true, cellClass: 'data-field' },
 
-        'okShift1': { row: 9, col: 'D' },
-        'okShift2': { row: 9, col: 'E' },
-        'okShift3': { row: 9, col: 'F' },
-        'okTotal': { row: 9, col: 'C' },
+        'okShift1': { row: 9, col: 'D', cellClass: 'data-field' },
+        'okShift2': { row: 9, col: 'E', cellClass: 'data-field' },
+        'okShift3': { row: 9, col: 'F', cellClass: 'data-field' },
+        'okTotal': { row: 9, col: 'C', cellClass: 'data-field' },
 
-        'nokShift1': { row: 10, col: 'D' },
-        'nokShift2': { row: 10, col: 'E' },
-        'nokShift3': { row: 10, col: 'F' },
-        'nokTotal': { row: 10, col: 'C' },
+        'nokShift1': { row: 10, col: 'D', cellClass: 'data-field' },
+        'nokShift2': { row: 10, col: 'E', cellClass: 'data-field' },
+        'nokShift3': { row: 10, col: 'F', cellClass: 'data-field' },
+        'nokTotal': { row: 10, col: 'C', cellClass: 'data-field' },
 
         // GODZINY - WIERSZ 1 (teraz z isPercentage)
         'h6_r1': { row: 14, col: 'E', isPercentage: true },
@@ -456,28 +435,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Funkcja do czyszczenia wszystkich pól danych (w tym stylów)
     function clearAllDataFields() {
-        const dataFields = document.querySelectorAll('.data-field');
-        dataFields.forEach(field => {
-            field.textContent = '';
-            field.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
-            field.style.backgroundColor = ''; // Resetuj tło
-            field.style.color = ''; // Resetuj kolor tekstu
+        // Wszystkie pola danych (w tym te oznaczone jako data-field i komórki tabeli czasu)
+        const allDataElements = document.querySelectorAll('.data-field, .time-table td');
+        allDataElements.forEach(element => {
+            element.textContent = '';
+            // Usuń wszystkie klasy kolorystyczne
+            element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
+            // Resetuj style inline, które mogą być ustawione przez JS
+            element.style.backgroundColor = '';
+            element.style.color = '';
         });
-        const timeCells = document.querySelectorAll('.time-table td');
-        timeCells.forEach(cell => {
-            cell.textContent = '';
-            // Resetowanie stylów dla komórek godzinowych, które mogą być procentami
-            cell.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
-            cell.style.backgroundColor = '';
-            cell.style.color = '';
-        });
+        // Specjalne czyszczenie dla mainDisplayField, które nie ma klasy .data-field
+        mainDisplayField.textContent = '';
+        mainDisplayField.style.backgroundColor = '';
+        mainDisplayField.style.color = '';
     }
 
     // Główna funkcja do pobierania i aktualizowania danych
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
         mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
-        clearAllDataFields();
+        clearAllDataFields(); // Wyczyść wszystko przed ładowaniem
 
         if (!selectedSheetName) {
             mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
@@ -511,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
             mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
-            clearAllDataFields();
+            clearAllDataFields(); // Wyczyść dane nawet po błędzie
         }
     }
 
@@ -519,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function() {
     sheetSelector.addEventListener('change', updateDashboard);
 
     // Wywołaj funkcję raz po załadowaniu strony, aby ustawić początkowy stan
+    // Sprawdź, czy selektor ma już wybraną wartość po załadowaniu (np. z `selected` w opcji)
     if (sheetSelector.value) {
         updateDashboard();
     } else {
