@@ -65,7 +65,7 @@
             font-weight: 500;
         }
 
-        /* Warunkowe style dla OEE */
+        /* Warunkowe style dla OEE i procentów godzinowych */
         .oee-below-60 { background-color: #ff4d4d; color: white; } /* Czerwony */
         .oee-60-70 { background-color: #ff9933; color: black; } /* Pomarańczowy */
         .oee-70-80 { background-color: #ffff66; color: black; } /* Żółty */
@@ -91,7 +91,7 @@
             padding: 10px;
             height: 30px;
             background-color: #fff;
-            /* ZMIENIONE: Powiększona czcionka dla komórek czasowych */
+            /* Powiększona czcionka dla komórek czasowych */
             font-size: 16px; 
             font-weight: bold;
         }
@@ -312,58 +312,75 @@ document.addEventListener('DOMContentLoaded', function() {
     // Funkcja do ustawiania tekstu i stylów w danej komórce HTML
     function setFieldValue(elementId, value, options = {}) {
         const element = document.getElementById(elementId);
-        if (element) {
-            let displayValue = '';
-            let rawValue = value;
+        if (!element) {
+            // console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`); // Odkomentuj do debugowania
+            return;
+        }
 
-            // Usuń wszystkie poprzednie klasy stylów związanych z kolorowaniem OEE
-            element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
-            // Zresetuj styl inline (np. background-color, color), jeśli były ustawione
-            element.style.backgroundColor = '';
-            element.style.color = '';
+        let displayValue = '';
+        let rawValue = value;
 
-            // Sprawdź, czy wartość jest pusta lub jest liczbowym zerem
-            if (rawValue === '' || rawValue === null || rawValue === undefined || parseFloat(rawValue) === 0) {
-                element.textContent = ''; // Ustaw puste, jeśli wartość to "nic" lub 0
-                return; // Zakończ funkcję, nic więcej nie wyświetlaj ani nie formatuj
-            }
-            
-            if (options.isDate) {
-                displayValue = formatGoogleSheetDate(rawValue);
-            } else if (options.isPercentage) {
-                const numValue = parseFloat(rawValue);
-                if (!isNaN(numValue)) {
-                    displayValue = `${(numValue * 100).toFixed(0)}%`; // Formatuj jako procent bez miejsc po przecinku
-                    
-                    // ZASTOSUJ WARUNKOWE FORMATOWANIE DLA PROCENTÓW
-                    if (numValue < 0.60) {
-                        element.classList.add('oee-below-60');
-                    } else if (numValue >= 0.60 && numValue < 0.70) {
-                        element.classList.add('oee-60-70');
-                    } else if (numValue >= 0.70 && numValue < 0.80) {
-                        element.classList.add('oee-70-80');
-                    } else { // >= 0.80
-                        element.classList.add('oee-above-80');
-                    }
+        // Usuń wszystkie poprzednie klasy stylów związanych z kolorowaniem OEE
+        element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
+        // Zresetuj styl inline (np. background-color, color), jeśli były ustawione
+        element.style.backgroundColor = '';
+        element.style.color = '';
+
+        // Konwertuj wartość na liczbę, jeśli jest to oczekiwane (np. dla procentów, liczb)
+        // Sprawdź, czy wartość jest pusta, null, undefined, pustym stringiem lub liczbowym zerem.
+        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '') {
+            element.textContent = ''; // Ustaw puste
+            return; 
+        }
+
+        let numValue = parseFloat(rawValue);
+
+        // Specjalne traktowanie dla 0, aby nie wyświetlać "0%" lub "0"
+        if (numValue === 0) {
+            element.textContent = '';
+            return;
+        }
+
+        if (options.isDate) {
+            displayValue = formatGoogleSheetDate(rawValue);
+        } else if (options.isPercentage) {
+            if (!isNaN(numValue)) {
+                // Jeśli wartość z arkusza to np. "74%" (czyli 0.74 po parsowaniu), to mnożymy przez 100
+                // Jeśli arkusz wysyła "74", to też jest ok. Sprawdzimy, czy jest między 0 a 1, żeby zdecydować.
+                if (numValue < 1.0 && numValue > 0) { // Traktujemy jako ułamek procentu (np. 0.74)
+                    displayValue = `${(numValue * 100).toFixed(0)}%`; 
+                } else { // Traktujemy jako już pomnożony procent (np. 74)
+                    displayValue = `${numValue.toFixed(0)}%`;
+                }
+                
+                // Warunkowe formatowanie kolorystyczne, bazujemy na numValue
+                if (numValue < 0.60) {
+                    element.classList.add('oee-below-60');
+                } else if (numValue >= 0.60 && numValue < 0.70) {
+                    element.classList.add('oee-60-70');
+                } else if (numValue >= 0.70 && numValue < 0.80) {
+                    element.classList.add('oee-70-80');
+                } else { // >= 0.80
+                    element.classList.add('oee-above-80');
                 }
             } else {
-                displayValue = rawValue;
+                displayValue = rawValue; // Jeśli nie jest liczbą, wyświetl jak jest
             }
-            element.textContent = displayValue;
         } else {
-            // console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`); // Odkomentuj do debugowania
+            displayValue = rawValue;
         }
+        element.textContent = displayValue;
     }
 
     // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
-    // Dodano 'isPercentage: true' dla pól OEE
+    // Dodano 'isPercentage: true' dla pól OEE i odpowiednich pól godzinowych
     const cellMappings = {
         'mainDisplayField': { row: 1, col: 'C', isDate: true },
 
         'oeeShift1': { row: 2, col: 'D', isPercentage: true },
         'oeeShift2': { row: 2, col: 'E', isPercentage: true },
         'oeeShift3': { row: 2, col: 'F', isPercentage: true },
-        'oeeTotal': { row: 2, col: 'C', isPercentage: true }, // Zakładam C2 dla total OEE
+        'oeeTotal': { row: 2, col: 'C', isPercentage: true },
 
         'okShift1': { row: 9, col: 'D' },
         'okShift2': { row: 9, col: 'E' },
@@ -375,13 +392,35 @@ document.addEventListener('DOMContentLoaded', function() {
         'nokShift3': { row: 10, col: 'F' },
         'nokTotal': { row: 10, col: 'C' },
 
-        'h6_r1': { row: 14, col: 'E' }, 'h7_r1': { row: 15, col: 'E' }, 'h8_r1': { row: 16, col: 'E' }, 'h9_r1': { row: 17, col: 'E' },
-        'h10_r1': { row: 18, col: 'E' }, 'h11_r1': { row: 19, col: 'E' }, 'h12_r1': { row: 20, col: 'E' }, 'h13_r1': { row: 21, col: 'E' },
-        'h14_r1': { row: 22, col: 'E' }, 'h15_r1': { row: 23, col: 'E' }, 'h16_r1': { row: 24, col: 'E' }, 'h17_r1': { row: 25, col: 'E' },
-        'h18_r1': { row: 26, col: 'E' }, 'h19_r1': { row: 27, col: 'E' }, 'h20_r1': { row: 28, col: 'E' }, 'h21_r1': { row: 29, col: 'E' },
-        'h22_r1': { row: 30, col: 'E' }, 'h23_r1': { row: 31, col: 'E' }, 'h0_r1': { row: 32, col: 'E' }, 'h1_r1': { row: 33, col: 'E' },
-        'h2_r1': { row: 34, col: 'E' }, 'h3_r1': { row: 35, col: 'E' }, 'h4_r1': { row: 36, col: 'E' }, 'h5_r1': { row: 37, col: 'E' },
+        // GODZINY - WIERSZ 1 (teraz z isPercentage)
+        'h6_r1': { row: 14, col: 'E', isPercentage: true },
+        'h7_r1': { row: 15, col: 'E', isPercentage: true },
+        'h8_r1': { row: 16, col: 'E', isPercentage: true },
+        'h9_r1': { row: 17, col: 'E', isPercentage: true },
+        'h10_r1': { row: 18, col: 'E', isPercentage: true },
+        'h11_r1': { row: 19, col: 'E', isPercentage: true },
+        'h12_r1': { row: 20, col: 'E', isPercentage: true },
+        'h13_r1': { row: 21, col: 'E', isPercentage: true },
 
+        'h14_r1': { row: 22, col: 'E', isPercentage: true },
+        'h15_r1': { row: 23, col: 'E', isPercentage: true },
+        'h16_r1': { row: 24, col: 'E', isPercentage: true },
+        'h17_r1': { row: 25, col: 'E', isPercentage: true },
+        'h18_r1': { row: 26, col: 'E', isPercentage: true },
+        'h19_r1': { row: 27, col: 'E', isPercentage: true },
+        'h20_r1': { row: 28, col: 'E', isPercentage: true },
+        'h21_r1': { row: 29, col: 'E', isPercentage: true },
+
+        'h22_r1': { row: 30, col: 'E', isPercentage: true },
+        'h23_r1': { row: 31, col: 'E', isPercentage: true },
+        'h0_r1': { row: 32, col: 'E', isPercentage: true },
+        'h1_r1': { row: 33, col: 'E', isPercentage: true },
+        'h2_r1': { row: 34, col: 'E', isPercentage: true },
+        'h3_r1': { row: 35, col: 'E', isPercentage: true },
+        'h4_r1': { row: 36, col: 'E', isPercentage: true },
+        'h5_r1': { row: 37, col: 'E', isPercentage: true },
+
+        // GODZINY - WIERSZ 2 (nie procentowe, więc bez isPercentage)
         'h6_r2': { row: 14, col: 'C' }, 'h7_r2': { row: 15, col: 'C' }, 'h8_r2': { row: 16, col: 'C' }, 'h9_r2': { row: 17, col: 'C' },
         'h10_r2': { row: 18, col: 'C' }, 'h11_r2': { row: 19, col: 'C' }, 'h12_r2': { row: 20, col: 'C' }, 'h13_r2': { row: 21, col: 'C' },
         'h14_r2': { row: 22, col: 'C' }, 'h15_r2': { row: 23, col: 'C' }, 'h16_r2': { row: 24, col: 'C' }, 'h17_r2': { row: 25, col: 'C' },
@@ -402,6 +441,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const timeCells = document.querySelectorAll('.time-table td');
         timeCells.forEach(cell => {
             cell.textContent = '';
+            // Resetowanie stylów dla komórek godzinowych, które mogą być procentami
+            cell.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
+            cell.style.backgroundColor = '';
+            cell.style.color = '';
         });
     }
 
