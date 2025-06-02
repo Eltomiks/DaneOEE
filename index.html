@@ -255,41 +255,196 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
     const sheetSelector = document.getElementById('sheetSelector');
     const mainDisplayField = document.getElementById('mainDisplayField');
 
-    // Wyczyść wszystkie pola danych przy starcie, aby nie było "Ładowanie..." po wyborze "Wybierz linię"
+    // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
+    function getGoogleSheetColumnIndex(colLetter) {
+        let colIndex = 0;
+        for (let i = 0; i < colLetter.length; i++) {
+            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+        }
+        return colIndex - 1; // Zwróć indeks 0-bazowy
+    }
+
+    // Funkcja pomocnicza do parsowania CSV
+    function parseCsv(csvString) {
+        const lines = csvString.trim().split('\n');
+        return lines.map(line => {
+            return line.split(',').map(cell => {
+                let cleanedCell = cell.trim();
+                // Usuń cudzysłowy jeśli są na początku i końcu
+                if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
+                    cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
+                }
+                // Obsłuż podwójne cudzysłowy w środku (escapowanie)
+                return cleanedCell.replace(/""/g, '"');
+            });
+        });
+    }
+
+    // Funkcja do ustawiania tekstu w danej komórce HTML
+    function setFieldValue(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = (value === '' || value === null || value === undefined) ? '' : value;
+        } else {
+            console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`);
+        }
+    }
+
+    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
+    // Kluczem jest ID elementu HTML, wartością jest obiekt { row: numer_wiersza_arkusza, col: "litera_kolumny_arkusza" }
+    // UWAGA: Numery wierszy i litery kolumn są takie same jak w arkuszu Google.
+    // Dostosuj te wartości do faktycznego rozmieszczenia danych w Twoim arkuszu Google (zakres A1:M50).
+    const cellMappings = {
+        // Główny wskaźnik / data
+        'mainDisplayField': { row: 1, col: 'C' }, // Przykładowo: C1 w arkuszu
+
+        // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'oeeShift1': { row: 5, col: 'D' },
+        'oeeShift2': { row: 5, col: 'E' },
+        'oeeShift3': { row: 5, col: 'F' },
+        'oeeTotal': { row: 5, col: 'G' },
+
+        // OK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'okShift1': { row: 6, col: 'D' },
+        'okShift2': { row: 6, col: 'E' },
+        'okShift3': { row: 6, col: 'F' },
+        'okTotal': { row: 6, col: 'G' },
+
+        // NOK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'nokShift1': { row: 7, col: 'D' },
+        'nokShift2': { row: 7, col: 'E' },
+        'nokShift3': { row: 7, col: 'F' },
+        'nokTotal': { row: 7, col: 'G' },
+
+        // GODZINY - WIERSZ 1 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'h6_r1': { row: 9, col: 'H' },
+        'h7_r1': { row: 9, col: 'I' },
+        'h8_r1': { row: 9, col: 'J' },
+        'h9_r1': { row: 9, col: 'K' },
+        'h10_r1': { row: 9, col: 'L' },
+        'h11_r1': { row: 9, col: 'M' },
+        'h12_r1': { row: 9, col: 'N' },
+        'h13_r1': { row: 9, col: 'O' },
+
+        'h14_r1': { row: 9, col: 'P' },
+        'h15_r1': { row: 9, col: 'Q' },
+        'h16_r1': { row: 9, col: 'R' },
+        'h17_r1': { row: 9, col: 'S' },
+        'h18_r1': { row: 9, col: 'T' },
+        'h19_r1': { row: 9, col: 'U' },
+        'h20_r1': { row: 9, col: 'V' },
+        'h21_r1': { row: 9, col: 'W' },
+
+        'h22_r1': { row: 9, col: 'X' },
+        'h23_r1': { row: 9, col: 'Y' },
+        'h0_r1': { row: 9, col: 'Z' },
+        'h1_r1': { row: 9, col: 'AA' },
+        'h2_r1': { row: 9, col: 'AB' },
+        'h3_r1': { row: 9, col: 'AC' },
+        'h4_r1': { row: 9, col: 'AD' },
+        'h5_r1': { row: 9, col: 'AE' },
+
+        // GODZINY - WIERSZ 2 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'h6_r2': { row: 10, col: 'H' },
+        'h7_r2': { row: 10, col: 'I' },
+        'h8_r2': { row: 10, col: 'J' },
+        'h9_r2': { row: 10, col: 'K' },
+        'h10_r2': { row: 10, col: 'L' },
+        'h11_r2': { row: 10, col: 'M' },
+        'h12_r2': { row: 10, col: 'N' },
+        'h13_r2': { row: 10, col: 'O' },
+
+        'h14_r2': { row: 10, col: 'P' },
+        'h15_r2': { row: 10, col: 'Q' },
+        'h16_r2': { row: 10, col: 'R' },
+        'h17_r2': { row: 10, col: 'S' },
+        'h18_r2': { row: 10, col: 'T' },
+        'h19_r2': { row: 10, col: 'U' },
+        'h20_r2': { row: 10, col: 'V' },
+        'h21_r2': { row: 10, col: 'W' },
+
+        'h22_r2': { row: 10, col: 'X' },
+        'h23_r2': { row: 10, col: 'Y' },
+        'h0_r2': { row: 10, col: 'Z' },
+        'h1_r2': { row: 10, col: 'AA' },
+        'h2_r2': { row: 10, col: 'AB' },
+        'h3_r2': { row: 10, col: 'AC' },
+        'h4_r2': { row: 10, col: 'AD' },
+        'h5_r2': { row: 10, col: 'AE' },
+    };
+
+    // Funkcja do czyszczenia wszystkich pól danych
     function clearAllDataFields() {
         const dataFields = document.querySelectorAll('.data-field');
         dataFields.forEach(field => {
             field.textContent = '';
         });
-        // Dodatkowo wyczyść wszystkie komórki czasowe
         const timeCells = document.querySelectorAll('.time-table td');
         timeCells.forEach(cell => {
             cell.textContent = '';
         });
     }
 
-    // Funkcja do aktualizacji wyświetlanej daty/wskaźnika
-    function updateMainDisplay() {
+    // Główna funkcja do pobierania i aktualizowania danych
+    async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
+        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
+        clearAllDataFields();
+
         if (!selectedSheetName) {
             mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
-            clearAllDataFields(); // Wyczyść dane, jeśli nic nie wybrano
-        } else {
-            mainDisplayField.innerHTML = `<strong>Ładowanie danych dla: ${selectedSheetName}...</strong>`;
-            // Tutaj w przyszłości będzie logika do pobierania danych
-            // Na razie po prostu zresetujemy pola
+            return;
+        }
+
+        const range = `A1:M50`; // Ustawiony zakres danych do pobrania
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
+            }
+            const csvText = await response.text();
+            const data = parseCsv(csvText);
+
+            // Ustaw dane w polach HTML zgodnie z mapowaniem
+            for (const htmlId in cellMappings) {
+                const map = cellMappings[htmlId];
+                // Wiersz w danych JS to numer wiersza w arkuszu minus 1 (bo tablice są 0-indexed)
+                const rowIndexInData = map.row - 1;
+                // Kolumna w danych JS to indeks pobrany przez getGoogleSheetColumnIndex
+                const colIndexInData = getGoogleSheetColumnIndex(map.col);
+
+                if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
+                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData]);
+                } else {
+                    setFieldValue(htmlId, ''); // Ustaw puste, jeśli brak danych
+                    console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`);
+                }
+            }
+            mainDisplayField.innerHTML = `<strong>Dane dla: ${selectedSheetName}</strong>`;
+
+        } catch (error) {
+            console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
+            mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
             clearAllDataFields();
         }
     }
 
-    // Nasłuchuj zmian w rozwijanej liście i odświeżaj wyświetlacz
-    sheetSelector.addEventListener('change', updateMainDisplay);
+    // Nasłuchuj zmian w rozwijanej liście i odświeżaj dashboard
+    sheetSelector.addEventListener('change', updateDashboard);
 
     // Wywołaj funkcję raz po załadowaniu strony, aby ustawić początkowy stan
-    updateMainDisplay();
+    if (sheetSelector.value) {
+        updateDashboard();
+    } else {
+        mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+        clearAllDataFields();
+    }
 });
 </script>
 </body>
