@@ -65,7 +65,7 @@
             font-weight: 500;
         }
 
-        /* DODANE: Warunkowe style dla OEE */
+        /* Warunkowe style dla OEE */
         .oee-below-60 { background-color: #ff4d4d; color: white; } /* Czerwony */
         .oee-60-70 { background-color: #ff9933; color: black; } /* Pomarańczowy */
         .oee-70-80 { background-color: #ffff66; color: black; } /* Żółty */
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const element = document.getElementById(elementId);
         if (element) {
             let displayValue = '';
-            let rawValue = value; // Zachowaj oryginalną wartość do porównań numerycznych
+            let rawValue = value;
 
             // Usuń wszystkie poprzednie klasy stylów związanych z kolorowaniem OEE
             element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
@@ -322,30 +322,32 @@ document.addEventListener('DOMContentLoaded', function() {
             element.style.backgroundColor = '';
             element.style.color = '';
 
-            // Sprawdź, czy wartość nie jest pusta ani nie jest stringiem "0"
-            if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
-                if (options.isDate) {
-                    displayValue = formatGoogleSheetDate(rawValue);
-                } else if (options.isPercentage) {
-                    // Spróbuj przekonwertować na liczbę
-                    const numValue = parseFloat(rawValue);
-                    if (!isNaN(numValue)) {
-                        displayValue = `${(numValue * 100).toFixed(0)}%`; // Formatuj jako procent bez miejsc po przecinku
-                        
-                        // ZASTOSUJ WARUNKOWE FORMATOWANIE DLA PROCENTÓW
-                        if (numValue < 0.60) {
-                            element.classList.add('oee-below-60');
-                        } else if (numValue >= 0.60 && numValue < 0.70) {
-                            element.classList.add('oee-60-70');
-                        } else if (numValue >= 0.70 && numValue < 0.80) {
-                            element.classList.add('oee-70-80');
-                        } else { // >= 0.80
-                            element.classList.add('oee-above-80');
-                        }
+            // Sprawdź, czy wartość jest pusta lub jest liczbowym zerem
+            if (rawValue === '' || rawValue === null || rawValue === undefined || parseFloat(rawValue) === 0) {
+                element.textContent = ''; // Ustaw puste, jeśli wartość to "nic" lub 0
+                return; // Zakończ funkcję, nic więcej nie wyświetlaj ani nie formatuj
+            }
+            
+            if (options.isDate) {
+                displayValue = formatGoogleSheetDate(rawValue);
+            } else if (options.isPercentage) {
+                const numValue = parseFloat(rawValue);
+                if (!isNaN(numValue)) {
+                    displayValue = `${(numValue * 100).toFixed(0)}%`; // Formatuj jako procent bez miejsc po przecinku
+                    
+                    // ZASTOSUJ WARUNKOWE FORMATOWANIE DLA PROCENTÓW
+                    if (numValue < 0.60) {
+                        element.classList.add('oee-below-60');
+                    } else if (numValue >= 0.60 && numValue < 0.70) {
+                        element.classList.add('oee-60-70');
+                    } else if (numValue >= 0.70 && numValue < 0.80) {
+                        element.classList.add('oee-70-80');
+                    } else { // >= 0.80
+                        element.classList.add('oee-above-80');
                     }
-                } else {
-                    displayValue = rawValue;
                 }
+            } else {
+                displayValue = rawValue;
             }
             element.textContent = displayValue;
         } else {
