@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>D</title>
+    <title>Dashboard OEE - Poprawiony i Uproszczony</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -65,6 +65,13 @@
             font-weight: 500;
         }
 
+        /* Warunkowe style dla OEE i procentów godzinowych */
+        .oee-below-60 { background-color: #ff4d4d; color: white; } /* Czerwony */
+        .oee-60-70 { background-color: #ff9933; color: black; } /* Pomarańczowy */
+        .oee-70-80 { background-color: #ffff66; color: black; } /* Żółty */
+        .oee-above-80 { background-color: #66cc66; color: black; } /* Zielony */
+
+
         .time-block {
             margin-bottom: 20px;
         }
@@ -84,11 +91,18 @@
             padding: 10px;
             height: 30px;
             background-color: #fff;
-            font-size: 12px;
+            /* Powiększona czcionka dla komórek czasowych */
+            font-size: 16px; 
+            font-weight: bold;
         }
         .time-header th {
             text-align: center;
             font-weight: bold;
+        }
+        /* NOWA KLASA DLA WIERSZA _r1 (procenty godzinowe) */
+        .time-r1-font {
+            font-size: 20px; /* PRZYKŁADOWA WIĘKSZA CZCIONKA DLA _r1 */
+            color: #1a5e8c; 
         }
         @media (max-width: 600px) {
             th, td {
@@ -97,7 +111,7 @@
             }
             .time-table th, .time-table td {
                 padding: 6px;
-                font-size: 10px;
+                font-size: 14px; 
             }
             select {
                 max-width: 100%;
@@ -113,11 +127,11 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="____c__Dawid - spokojnie, ogarniemy:) ;) ">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Tu będize zajebiste logo ... Piasecki jest the best ;) ">
 
         <table>
             <tr>
-                <td id="mainDisplayField"><strong>Wyb</strong></td>
+                <td id="mainDisplayField"><strong>Wybierz linię</strong></td>
                 <td colspan="4">
                     <select id="sheetSelector">
                         <option value="">Wybierz linię</option>
@@ -172,14 +186,14 @@
                     <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
                 </tr>
                 <tr>
-                    <td id="h6_r1"></td>
-                    <td id="h7_r1"></td>
-                    <td id="h8_r1"></td>
-                    <td id="h9_r1"></td>
-                    <td id="h10_r1"></td>
-                    <td id="h11_r1"></td>
-                    <td id="h12_r1"></td>
-                    <td id="h13_r1"></td>
+                    <td id="h6_r1" class="time-r1-font"></td>
+                    <td id="h7_r1" class="time-r1-font"></td>
+                    <td id="h8_r1" class="time-r1-font"></td>
+                    <td id="h9_r1" class="time-r1-font"></td>
+                    <td id="h10_r1" class="time-r1-font"></td>
+                    <td id="h11_r1" class="time-r1-font"></td>
+                    <td id="h12_r1" class="time-r1-font"></td>
+                    <td id="h13_r1" class="time-r1-font"></td>
                 </tr>
                 <tr>
                     <td id="h6_r2"></td>
@@ -201,14 +215,14 @@
                     <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
                 </tr>
                 <tr>
-                    <td id="h14_r1"></td>
-                    <td id="h15_r1"></td>
-                    <td id="h16_r1"></td>
-                    <td id="h17_r1"></td>
-                    <td id="h18_r1"></td>
-                    <td id="h19_r1"></td>
-                    <td id="h20_r1"></td>
-                    <td id="h21_r1"></td>
+                    <td id="h14_r1" class="time-r1-font"></td>
+                    <td id="h15_r1" class="time-r1-font"></td>
+                    <td id="h16_r1" class="time-r1-font"></td>
+                    <td id="h17_r1" class="time-r1-font"></td>
+                    <td id="h18_r1" class="time-r1-font"></td>
+                    <td id="h19_r1" class="time-r1-font"></td>
+                    <td id="h20_r1" class="time-r1-font"></td>
+                    <td id="h21_r1" class="time-r1-font"></td>
                 </tr>
                 <tr>
                     <td id="h14_r2"></td>
@@ -230,14 +244,14 @@
                     <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
                 </tr>
                 <tr>
-                    <td id="h22_r1"></td>
-                    <td id="h23_r1"></td>
-                    <td id="h0_r1"></td>
-                    <td id="h1_r1"></td>
-                    <td id="h2_r1"></td>
-                    <td id="h3_r1"></td>
-                    <td id="h4_r1"></td>
-                    <td id="h5_r1"></td>
+                    <td id="h22_r1" class="time-r1-font"></td>
+                    <td id="h23_r1" class="time-r1-font"></td>
+                    <td id="h0_r1" class="time-r1-font"></td>
+                    <td id="h1_r1" class="time-r1-font"></td>
+                    <td id="h2_r1" class="time-r1-font"></td>
+                    <td id="h3_r1" class="time-r1-font"></td>
+                    <td id="h4_r1" class="time-r1-font"></td>
+                    <td id="h5_r1" class="time-r1-font"></td>
                 </tr>
                 <tr>
                     <td id="h22_r2"></td>
@@ -255,189 +269,234 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
     const sheetSelector = document.getElementById('sheetSelector');
     const mainDisplayField = document.getElementById('mainDisplayField');
 
+    // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
         let colIndex = 0;
         for (let i = 0; i < colLetter.length; i++) {
             colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
         }
-        return colIndex - 1;
+        return colIndex - 1; // Zwróć indeks 0-bazowy
     }
 
+    // Funkcja pomocnicza do parsowania CSV
     function parseCsv(csvString) {
         const lines = csvString.trim().split('\n');
         return lines.map(line => {
             return line.split(',').map(cell => {
                 let cleanedCell = cell.trim();
+                // Usuń cudzysłowy jeśli są na początku i końcu
                 if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
                     cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
                 }
+                // Obsłuż podwójne cudzysłowy w środku (escapowanie)
                 return cleanedCell.replace(/""/g, '"');
             });
         });
     }
 
-    function formatDate(value) {
-        if (!value || value === '0') return '';
-        
-        // Sprawdź czy to data w formacie tekstowym (np. '2025-06-03 00:00:00')
-        if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}/)) {
-            try {
-                const date = new Date(value);
-                if (!isNaN(date.getTime())) {
-                    const day = String(date.getDate()).padStart(2, '0');
-                    const month = String(date.getMonth() + 1).padStart(2, '0');
-                    const year = date.getFullYear();
-                    return `${day}.${month}.${year}`;
-                }
-            } catch (e) {
-                console.warn('Błąd parsowania daty:', e);
-            }
+    // Funkcja do formatowania daty z numeru seryjnego Google Sheets lub tekstowego formatu
+    function formatGoogleSheetDate(serialOrDateString) {
+        if (!serialOrDateString || String(serialOrDateString).trim() === '') {
+            return ''; // Zwróć pusty string dla pustych wartości
         }
-        
-        // Jeśli to liczba (serial number daty w Google Sheets)
-        if (!isNaN(value) && parseFloat(value) > 0) {
+
+        let date;
+        const numValue = parseFloat(serialOrDateString);
+
+        // Najpierw spróbuj sparsować jako numer seryjny Google Sheets (np. 45078)
+        if (!isNaN(numValue) && numValue > 0 && numValue < 60000) { // Typowy zakres dla dat seryjnych
             const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-            const date = new Date(excelEpoch + (parseFloat(value) * 86400000));
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}.${month}.${year}`;
+            date = new Date(excelEpoch + (numValue * 86400000));
+        } else {
+            // Jeśli nie jest numerem seryjnym, spróbuj sparsować jako tekst daty (np. '2025-06-02 00:00:00')
+            date = new Date(serialOrDateString);
         }
-        
-        return value; // Jeśli nie można sparsować jako data, zwróć oryginalną wartość
+
+        // Sprawdź, czy data jest prawidłowa (nie Invalid Date)
+        if (isNaN(date.getTime())) {
+            return ''; // Nieprawidłowa data, zwróć pusty string
+        }
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        return `${day}.${month}.${year}`;
     }
 
-    function setFieldValue(elementId, value) {
+    // Funkcja do ustawiania tekstu i stylów w danej komórce HTML
+    function setFieldValue(elementId, value, options = {}) {
         const element = document.getElementById(elementId);
-        if (element) {
-            let displayValue = '';
-            if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
-                if (cellMappings[elementId] && cellMappings[elementId].isDate) {
-                    displayValue = formatDate(value);
-                } else {
-                    displayValue = value;
-                }
-            }
-            element.textContent = displayValue;
+        if (!element) {
+            // console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`); 
+            return;
         }
+
+        let displayValue = '';
+        let rawValue = value;
+
+        // Usuń wszystkie poprzednie klasy stylów związanych z kolorowaniem OEE
+        element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
+        // Zresetuj styl inline (np. background-color, color), jeśli były ustawione
+        element.style.backgroundColor = '';
+        element.style.color = '';
+
+        // KROK 1: Jeśli to data, sformatuj i ustaw. Zawsze powinna się wyświetlać, jeśli jest prawidłowa.
+        if (options.isDate) {
+            displayValue = formatGoogleSheetDate(rawValue);
+            element.textContent = displayValue;
+            return; 
+        }
+
+        // KROK 2: Obsługa wartości pustych lub "0" dla innych pól (szczególnie procentów i liczb)
+        // Jeśli wartość jest pusta, null, undefined, pustym stringiem lub liczbowym zerem, ukryj.
+        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '' || parseFloat(rawValue) === 0) {
+            element.textContent = ''; 
+            return; 
+        }
+
+        // KROK 3: Jeśli to procent, sformatuj i pokoloruj.
+        if (options.isPercentage) {
+            const numValue = parseFloat(rawValue);
+            if (!isNaN(numValue)) {
+                let percentageValue = numValue;
+                // Jeśli wartość jest ułamkiem (np. 0.74), to mnożymy przez 100
+                if (numValue > 0 && numValue < 1.0) { 
+                    percentageValue = numValue * 100;
+                }
+                
+                displayValue = `${percentageValue.toFixed(0)}%`; 
+                
+                // Warunkowe formatowanie kolorystyczne
+                const normalizedValue = percentageValue / 100; 
+
+                if (normalizedValue < 0.60) {
+                    element.classList.add('oee-below-60');
+                } else if (normalizedValue >= 0.60 && normalizedValue < 0.70) {
+                    element.classList.add('oee-60-70');
+                } else if (normalizedValue >= 0.70 && normalizedValue < 0.80) {
+                    element.classList.add('oee-70-80');
+                } else { // >= 0.80
+                    element.classList.add('oee-above-80');
+                }
+            } else {
+                displayValue = rawValue; // Jeśli nie jest liczbą, wyświetl jak jest
+            }
+        } 
+        // KROK 4: W pozostałych przypadkach (zwykłe liczby), po prostu wyświetl surową wartość.
+        else {
+            displayValue = rawValue;
+        }
+        element.textContent = displayValue;
     }
 
+    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
+    // WAŻNE: Wartości `row` odpowiadają TERAZ BEZPOŚREDNIO numerom wierszy w Arkuszu Google.
+    // 'mainDisplayField' (data) to C1
+    // 'oeeTotal' (TOTAL) to C3
     const cellMappings = {
-        'mainDisplayField': { row: -1, col: 'C', isDate: true },
-        'oeeShift1': { row: 2, col: 'D' },
-        'oeeShift2': { row: 2, col: 'E' },
-        'oeeShift3': { row: 2, col: 'F' },
-        'oeeTotal': { row: 2, col: 'C' },
-        'okShift1': { row: 9, col: 'D' },
-        'okShift2': { row: 9, col: 'E' },
-        'okShift3': { row: 9, col: 'F' },
-        'okTotal': { row: 9, col: 'C' },
-        'nokShift1': { row: 10, col: 'D' },
-        'nokShift2': { row: 10, col: 'E' },
-        'nokShift3': { row: 10, col: 'F' },
-        'nokTotal': { row: 10, col: 'C' },
-        'h6_r1': { row: 14, col: 'E' },
-        'h7_r1': { row: 15, col: 'E' },
-        'h8_r1': { row: 16, col: 'E' },
-        'h9_r1': { row: 17, col: 'E' },
-        'h10_r1': { row: 18, col: 'E' },
-        'h11_r1': { row: 19, col: 'E' },
-        'h12_r1': { row: 20, col: 'E' },
-        'h13_r1': { row: 21, col: 'E' },
-        'h14_r1': { row: 22, col: 'E' },
-        'h15_r1': { row: 23, col: 'E' },
-        'h16_r1': { row: 24, col: 'E' },
-        'h17_r1': { row: 25, col: 'E' },
-        'h18_r1': { row: 26, col: 'E' },
-        'h19_r1': { row: 27, col: 'E' },
-        'h20_r1': { row: 28, col: 'E' },
-        'h21_r1': { row: 29, col: 'E' },
-        'h22_r1': { row: 30, col: 'E' },
-        'h23_r1': { row: 31, col: 'E' },
-        'h0_r1': { row: 32, col: 'E' },
-        'h1_r1': { row: 33, col: 'E' },
-        'h2_r1': { row: 34, col: 'E' },
-        'h3_r1': { row: 35, col: 'E' },
-        'h4_r1': { row: 36, col: 'E' },
-        'h5_r1': { row: 37, col: 'E' },
-        'h6_r2': { row: 14, col: 'C' },
-        'h7_r2': { row: 15, col: 'C' },
-        'h8_r2': { row: 16, col: 'C' },
-        'h9_r2': { row: 17, col: 'C' },
-        'h10_r2': { row: 18, col: 'C' },
-        'h11_r2': { row: 19, col: 'C' },
-        'h12_r2': { row: 20, col: 'C' },
-        'h13_r2': { row: 21, col: 'C' },
-        'h14_r2': { row: 22, col: 'C' },
-        'h15_r2': { row: 23, col: 'C' },
-        'h16_r2': { row: 24, col: 'C' },
-        'h17_r2': { row: 25, col: 'C' },
-        'h18_r2': { row: 26, col: 'C' },
-        'h19_r2': { row: 27, col: 'C' },
-        'h20_r2': { row: 28, col: 'C' },
-        'h21_r2': { row: 29, col: 'C' },
-        'h22_r2': { row: 30, col: 'C' },
-        'h23_r2': { row: 31, col: 'C' },
-        'h0_r2': { row: 32, col: 'C' },
-        'h1_r2': { row: 33, col: 'C' },
-        'h2_r2': { row: 34, col: 'C' },
-        'h3_r2': { row: 35, col: 'C' },
-        'h4_r2': { row: 36, col: 'C' },
-        'h5_r2': { row: 37, col: 'C' },
+        'mainDisplayField': { row: 1, col: 'C', isDate: true }, // Data z C1
+
+        'oeeShift1': { row: 3, col: 'D', isPercentage: true, cellClass: 'data-field' },
+        'oeeShift2': { row: 3, col: 'E', isPercentage: true, cellClass: 'data-field' },
+        'oeeShift3': { row: 3, col: 'F', isPercentage: true, cellClass: 'data-field' },
+        'oeeTotal': { row: 3, col: 'C', isPercentage: true, cellClass: 'data-field' }, // OEE TOTAL z C3
+
+        'okShift1': { row: 10, col: 'D', cellClass: 'data-field' },
+        'okShift2': { row: 10, col: 'E', cellClass: 'data-field' },
+        'okShift3': { row: 10, col: 'F', cellClass: 'data-field' },
+        'okTotal': { row: 10, col: 'C', cellClass: 'data-field' },
+
+        'nokShift1': { row: 11, col: 'D', cellClass: 'data-field' },
+        'nokShift2': { row: 11, col: 'E', cellClass: 'data-field' },
+        'nokShift3': { row: 11, col: 'F', cellClass: 'data-field' },
+        'nokTotal': { row: 11, col: 'C', cellClass: 'data-field' },
+
+        // GODZINY - WIERSZ 1 (procenty)
+        'h6_r1': { row: 15, col: 'E', isPercentage: true }, 'h7_r1': { row: 16, col: 'E', isPercentage: true }, 
+        'h8_r1': { row: 17, col: 'E', isPercentage: true }, 'h9_r1': { row: 18, col: 'E', isPercentage: true },
+        'h10_r1': { row: 19, col: 'E', isPercentage: true }, 'h11_r1': { row: 20, col: 'E', isPercentage: true },
+        'h12_r1': { row: 21, col: 'E', isPercentage: true }, 'h13_r1': { row: 22, col: 'E', isPercentage: true },
+
+        'h14_r1': { row: 23, col: 'E', isPercentage: true }, 'h15_r1': { row: 24, col: 'E', isPercentage: true },
+        'h16_r1': { row: 25, col: 'E', isPercentage: true }, 'h17_r1': { row: 26, col: 'E', isPercentage: true },
+        'h18_r1': { row: 27, col: 'E', isPercentage: true }, 'h19_r1': { row: 28, col: 'E', isPercentage: true },
+        'h20_r1': { row: 29, col: 'E', isPercentage: true }, 'h21_r1': { row: 30, col: 'E', isPercentage: true },
+
+        'h22_r1': { row: 31, col: 'E', isPercentage: true }, 'h23_r1': { row: 32, col: 'E', isPercentage: true },
+        'h0_r1': { row: 33, col: 'E', isPercentage: true }, 'h1_r1': { row: 34, col: 'E', isPercentage: true },
+        'h2_r1': { row: 35, col: 'E', isPercentage: true }, 'h3_r1': { row: 36, col: 'E', isPercentage: true },
+        'h4_r1': { row: 37, col: 'E', isPercentage: true }, 'h5_r1': { row: 38, col: 'E', isPercentage: true },
+
+        // GODZINY - WIERSZ 2 (nie procentowe)
+        'h6_r2': { row: 15, col: 'C' }, 'h7_r2': { row: 16, col: 'C' }, 'h8_r2': { row: 17, col: 'C' }, 'h9_r2': { row: 18, col: 'C' },
+        'h10_r2': { row: 19, col: 'C' }, 'h11_r2': { row: 20, col: 'C' }, 'h12_r2': { row: 21, col: 'C' }, 'h13_r2': { row: 22, col: 'C' },
+        'h14_r2': { row: 23, col: 'C' }, 'h15_r2': { row: 24, col: 'C' }, 'h16_r2': { row: 25, col: 'C' }, 'h17_r2': { row: 26, col: 'C' },
+        'h18_r2': { row: 27, col: 'C' }, 'h19_r2': { row: 28, col: 'C' }, 'h20_r2': { row: 29, col: 'C' }, 'h21_r2': { row: 30, col: 'C' },
+        'h22_r2': { row: 31, col: 'C' }, 'h23_r2': { row: 32, col: 'C' }, 'h0_r2': { row: 33, col: 'C' }, 'h1_r2': { row: 34, col: 'C' },
+        'h2_r2': { row: 35, col: 'C' }, 'h3_r2': { row: 36, col: 'C' }, 'h4_r2': { row: 37, col: 'C' }, 'h5_r2': { row: 38, col: 'C' },
     };
 
+    // Funkcja do czyszczenia wszystkich pól danych (w tym stylów)
     function clearAllDataFields() {
-        const dataFields = document.querySelectorAll('.data-field');
-        dataFields.forEach(field => {
-            field.textContent = '';
+        const allDataElements = document.querySelectorAll('.data-field, .time-table td');
+        allDataElements.forEach(element => {
+            element.textContent = '';
+            element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
+            element.style.backgroundColor = '';
+            element.style.color = '';
         });
-        const timeCells = document.querySelectorAll('.time-table td');
-        timeCells.forEach(cell => {
-            cell.textContent = '';
-        });
+        mainDisplayField.textContent = '';
+        mainDisplayField.style.backgroundColor = '';
+        mainDisplayField.style.color = '';
     }
 
+    // Główna funkcja do pobierania i aktualizowania danych
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
         mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
-        clearAllDataFields();
+        clearAllDataFields(); 
 
         if (!selectedSheetName) {
             mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
             return;
         }
 
-        const range = `A1:M50`;
+        const range = `A1:M50`; 
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
 
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Błąd sieci: ${response.status}`);
+                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
             }
             const csvText = await response.text();
             const data = parseCsv(csvText);
 
             for (const htmlId in cellMappings) {
                 const map = cellMappings[htmlId];
-                const rowIndex = map.row - 1;
-                const colIndex = getGoogleSheetColumnIndex(map.col);
+                // NIE ODEJMUJEMY JUŻ 1, ponieważ `map.row` to numer wiersza w arkuszu Google (1-bazowy)
+                const rowIndexInData = map.row; 
+                const colIndexInData = getGoogleSheetColumnIndex(map.col);
 
-                if (data[rowIndex] && data[rowIndex][colIndex] !== undefined) {
-                    setFieldValue(htmlId, data[rowIndex][colIndex]);
+                // Dostęp do danych z tablicy: data[rowIndexInData - 1] bo tablica jest 0-bazowa
+                // Ale map.row jest już 1-bazowe, więc aby dostać się do indeksu tablicy,
+                // musimy użyć `map.row - 1`.
+                if (data[rowIndexInData - 1] && data[rowIndexInData - 1][colIndexInData] !== undefined) {
+                    setFieldValue(htmlId, data[rowIndexInData - 1][colIndexInData], map);
                 } else {
-                    setFieldValue(htmlId, '');
+                    setFieldValue(htmlId, '', map); 
                 }
             }
 
         } catch (error) {
-            console.error('Błąd:', error);
+            console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
             mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
-            clearAllDataFields();
+            clearAllDataFields(); 
         }
     }
 
