@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard OEE</title>
+    <title>Dashboard OEE - Poprawiony i Uproszczony</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -108,7 +108,7 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="_______Dawid - spokojnie, ogarniemy:) ;) ">
 
         <table>
             <tr>
@@ -160,8 +160,92 @@
             </tr>
         </table>
 
-        <!-- Sekcje godzinowe pozostają bez zmian -->
-        <!-- ... -->
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
+                    <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
+                </tr>
+                <tr>
+                    <td id="h6_r1"></td>
+                    <td id="h7_r1"></td>
+                    <td id="h8_r1"></td>
+                    <td id="h9_r1"></td>
+                    <td id="h10_r1"></td>
+                    <td id="h11_r1"></td>
+                    <td id="h12_r1"></td>
+                    <td id="h13_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h6_r2"></td>
+                    <td id="h7_r2"></td>
+                    <td id="h8_r2"></td>
+                    <td id="h9_r2"></td>
+                    <td id="h10_r2"></td>
+                    <td id="h11_r2"></td>
+                    <td id="h12_r2"></td>
+                    <td id="h13_r2"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
+                    <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
+                </tr>
+                <tr>
+                    <td id="h14_r1"></td>
+                    <td id="h15_r1"></td>
+                    <td id="h16_r1"></td>
+                    <td id="h17_r1"></td>
+                    <td id="h18_r1"></td>
+                    <td id="h19_r1"></td>
+                    <td id="h20_r1"></td>
+                    <td id="h21_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h14_r2"></td>
+                    <td id="h15_r2"></td>
+                    <td id="h16_r2"></td>
+                    <td id="h17_r2"></td>
+                    <td id="h18_r2"></td>
+                    <td id="h19_r2"></td>
+                    <td id="h20_r2"></td>
+                    <td id="h21_r2"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
+                    <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
+                </tr>
+                <tr>
+                    <td id="h22_r1"></td>
+                    <td id="h23_r1"></td>
+                    <td id="h0_r1"></td>
+                    <td id="h1_r1"></td>
+                    <td id="h2_r1"></td>
+                    <td id="h3_r1"></td>
+                    <td id="h4_r1"></td>
+                    <td id="h5_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h22_r2"></td>
+                    <td id="h23_r2"></td>
+                    <td id="h0_r2"></td>
+                    <td id="h1_r2"></td>
+                    <td id="h2_r2"></td>
+                    <td id="h3_r2"></td>
+                    <td id="h4_r2"></td>
+                    <td id="h5_r2"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 
 <script>
@@ -194,15 +278,32 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatDate(value) {
         if (!value || value === '0') return '';
         
-        value = value.toString().trim();
-        
-        // Format '2025-06-03 00:00:00' -> '03.06.2025'
-        const dateMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
-        if (dateMatch) {
-            return `${dateMatch[3]}.${dateMatch[2]}.${dateMatch[1]}`;
+        // Sprawdź czy to data w formacie tekstowym (np. '2025-06-03 00:00:00')
+        if (typeof value === 'string') {
+            // Usuń ewentualne cudzysłowy
+            value = value.replace(/^"(.*)"$/, '$1').trim();
+            
+            // Spróbuj sparsować datę w formacie YYYY-MM-DD
+            const dateMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (dateMatch) {
+                const year = dateMatch[1];
+                const month = dateMatch[2];
+                const day = dateMatch[3];
+                return `${day}.${month}.${year}`;
+            }
         }
         
-        return value;
+        // Jeśli to liczba (serial number daty w Google Sheets)
+        if (!isNaN(value) && parseFloat(value) > 0) {
+            const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
+            const date = new Date(excelEpoch + (parseFloat(value) * 86400000));
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
+        }
+        
+        return value; // Jeśli nie można sparsować jako data, zwróć oryginalną wartość
     }
 
     function setFieldValue(elementId, value) {
@@ -210,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (element) {
             let displayValue = '';
             if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
-                if (cellMappings[elementId]?.isDate) {
+                if (cellMappings[elementId] && cellMappings[elementId].isDate) {
                     displayValue = formatDate(value);
                 } else {
                     displayValue = value;
@@ -220,84 +321,83 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // POPRAWIONE MAPOWANIE (C1 w arkuszu = C1 w kodzie)
+    // Zaktualizowane mapowanie z przesunięciem wierszy -2
     const cellMappings = {
-        'mainDisplayField': { row: 1, col: 'C', isDate: true }, // C1 - data
-        
-        // OEE
-        'oeeShift1': { row: 3, col: 'D' }, // D3
-        'oeeShift2': { row: 3, col: 'E' }, // E3
-        'oeeShift3': { row: 3, col: 'F' }, // F3
-        'oeeTotal': { row: 3, col: 'C' },  // C3 - TOTAL
-        
-        // OK
-        'okShift1': { row: 4, col: 'D' }, // D4
-        'okShift2': { row: 4, col: 'E' }, // E4
-        'okShift3': { row: 4, col: 'F' }, // F4
-        'okTotal': { row: 4, col: 'C' },  // C4
-        
-        // NOK
-        'nokShift1': { row: 5, col: 'D' }, // D5
-        'nokShift2': { row: 5, col: 'E' }, // E5
-        'nokShift3': { row: 5, col: 'F' }, // F5
-        'nokTotal': { row: 5, col: 'C' },  // C5
+        'mainDisplayField': { row: 1, col: 'C', isDate: true }, // C1 w arkuszu
+        'oeeShift1': { row: 2, col: 'D' }, // D2 w arkuszu
+        'oeeShift2': { row: 2, col: 'E' }, // E2 w arkuszu
+        'oeeShift3': { row: 2, col: 'F' }, // F2 w arkuszu
+        'oeeTotal': { row: 2, col: 'C' }, // C2 w arkuszu
+        'okShift1': { row: 3, col: 'D' }, // D3 w arkuszu
+        'okShift2': { row: 3, col: 'E' }, // E3 w arkuszu
+        'okShift3': { row: 3, col: 'F' }, // F3 w arkuszu
+        'okTotal': { row: 3, col: 'C' }, // C3 w arkuszu
+        'nokShift1': { row: 4, col: 'D' }, // D4 w arkuszu
+        'nokShift2': { row: 4, col: 'E' }, // E4 w arkuszu
+        'nokShift3': { row: 4, col: 'F' }, // F4 w arkuszu
+        'nokTotal': { row: 4, col: 'C' }, // C4 w arkuszu
 
         // GODZINY - WIERSZ 1
-        'h6_r1': { row: 7, col: 'E' },
-        'h7_r1': { row: 8, col: 'E' },
-        'h8_r1': { row: 9, col: 'E' },
-        'h9_r1': { row: 10, col: 'E' },
-        'h10_r1': { row: 11, col: 'E' },
-        'h11_r1': { row: 12, col: 'E' },
-        'h12_r1': { row: 13, col: 'E' },
-        'h13_r1': { row: 14, col: 'E' },
-        'h14_r1': { row: 15, col: 'E' },
-        'h15_r1': { row: 16, col: 'E' },
-        'h16_r1': { row: 17, col: 'E' },
-        'h17_r1': { row: 18, col: 'E' },
-        'h18_r1': { row: 19, col: 'E' },
-        'h19_r1': { row: 20, col: 'E' },
-        'h20_r1': { row: 21, col: 'E' },
-        'h21_r1': { row: 22, col: 'E' },
-        'h22_r1': { row: 23, col: 'E' },
-        'h23_r1': { row: 24, col: 'E' },
-        'h0_r1': { row: 25, col: 'E' },
-        'h1_r1': { row: 26, col: 'E' },
-        'h2_r1': { row: 27, col: 'E' },
-        'h3_r1': { row: 28, col: 'E' },
-        'h4_r1': { row: 29, col: 'E' },
-        'h5_r1': { row: 30, col: 'E' },
+        'h6_r1': { row: 7, col: 'E' }, // E7 w arkuszu
+        'h7_r1': { row: 8, col: 'E' }, // E8 w arkuszu
+        'h8_r1': { row: 9, col: 'E' }, // E9 w arkuszu
+        'h9_r1': { row: 10, col: 'E' }, // E10 w arkuszu
+        'h10_r1': { row: 11, col: 'E' }, // E11 w arkuszu
+        'h11_r1': { row: 12, col: 'E' }, // E12 w arkuszu
+        'h12_r1': { row: 13, col: 'E' }, // E13 w arkuszu
+        'h13_r1': { row: 14, col: 'E' }, // E14 w arkuszu
+        'h14_r1': { row: 15, col: 'E' }, // E15 w arkuszu
+        'h15_r1': { row: 16, col: 'E' }, // E16 w arkuszu
+        'h16_r1': { row: 17, col: 'E' }, // E17 w arkuszu
+        'h17_r1': { row: 18, col: 'E' }, // E18 w arkuszu
+        'h18_r1': { row: 19, col: 'E' }, // E19 w arkuszu
+        'h19_r1': { row: 20, col: 'E' }, // E20 w arkuszu
+        'h20_r1': { row: 21, col: 'E' }, // E21 w arkuszu
+        'h21_r1': { row: 22, col: 'E' }, // E22 w arkuszu
+        'h22_r1': { row: 23, col: 'E' }, // E23 w arkuszu
+        'h23_r1': { row: 24, col: 'E' }, // E24 w arkuszu
+        'h0_r1': { row: 25, col: 'E' }, // E25 w arkuszu
+        'h1_r1': { row: 26, col: 'E' }, // E26 w arkuszu
+        'h2_r1': { row: 27, col: 'E' }, // E27 w arkuszu
+        'h3_r1': { row: 28, col: 'E' }, // E28 w arkuszu
+        'h4_r1': { row: 29, col: 'E' }, // E29 w arkuszu
+        'h5_r1': { row: 30, col: 'E' }, // E30 w arkuszu
 
         // GODZINY - WIERSZ 2
-        'h6_r2': { row: 7, col: 'C' },
-        'h7_r2': { row: 8, col: 'C' },
-        'h8_r2': { row: 9, col: 'C' },
-        'h9_r2': { row: 10, col: 'C' },
-        'h10_r2': { row: 11, col: 'C' },
-        'h11_r2': { row: 12, col: 'C' },
-        'h12_r2': { row: 13, col: 'C' },
-        'h13_r2': { row: 14, col: 'C' },
-        'h14_r2': { row: 15, col: 'C' },
-        'h15_r2': { row: 16, col: 'C' },
-        'h16_r2': { row: 17, col: 'C' },
-        'h17_r2': { row: 18, col: 'C' },
-        'h18_r2': { row: 19, col: 'C' },
-        'h19_r2': { row: 20, col: 'C' },
-        'h20_r2': { row: 21, col: 'C' },
-        'h21_r2': { row: 22, col: 'C' },
-        'h22_r2': { row: 23, col: 'C' },
-        'h23_r2': { row: 24, col: 'C' },
-        'h0_r2': { row: 25, col: 'C' },
-        'h1_r2': { row: 26, col: 'C' },
-        'h2_r2': { row: 27, col: 'C' },
-        'h3_r2': { row: 28, col: 'C' },
-        'h4_r2': { row: 29, col: 'C' },
-        'h5_r2': { row: 30, col: 'C' }
+        'h6_r2': { row: 7, col: 'C' }, // C7 w arkuszu
+        'h7_r2': { row: 8, col: 'C' }, // C8 w arkuszu
+        'h8_r2': { row: 9, col: 'C' }, // C9 w arkuszu
+        'h9_r2': { row: 10, col: 'C' }, // C10 w arkuszu
+        'h10_r2': { row: 11, col: 'C' }, // C11 w arkuszu
+        'h11_r2': { row: 12, col: 'C' }, // C12 w arkuszu
+        'h12_r2': { row: 13, col: 'C' }, // C13 w arkuszu
+        'h13_r2': { row: 14, col: 'C' }, // C14 w arkuszu
+        'h14_r2': { row: 15, col: 'C' }, // C15 w arkuszu
+        'h15_r2': { row: 16, col: 'C' }, // C16 w arkuszu
+        'h16_r2': { row: 17, col: 'C' }, // C17 w arkuszu
+        'h17_r2': { row: 18, col: 'C' }, // C18 w arkuszu
+        'h18_r2': { row: 19, col: 'C' }, // C19 w arkuszu
+        'h19_r2': { row: 20, col: 'C' }, // C20 w arkuszu
+        'h20_r2': { row: 21, col: 'C' }, // C21 w arkuszu
+        'h21_r2': { row: 22, col: 'C' }, // C22 w arkuszu
+        'h22_r2': { row: 23, col: 'C' }, // C23 w arkuszu
+        'h23_r2': { row: 24, col: 'C' }, // C24 w arkuszu
+        'h0_r2': { row: 25, col: 'C' }, // C25 w arkuszu
+        'h1_r2': { row: 26, col: 'C' }, // C26 w arkuszu
+        'h2_r2': { row: 27, col: 'C' }, // C27 w arkuszu
+        'h3_r2': { row: 28, col: 'C' }, // C28 w arkuszu
+        'h4_r2': { row: 29, col: 'C' }, // C29 w arkuszu
+        'h5_r2': { row: 30, col: 'C' }  // C30 w arkuszu
     };
 
     function clearAllDataFields() {
-        document.querySelectorAll('.data-field, .time-table td').forEach(el => {
-            el.textContent = '';
+        const dataFields = document.querySelectorAll('.data-field');
+        dataFields.forEach(field => {
+            field.textContent = '';
+        });
+        const timeCells = document.querySelectorAll('.time-table td');
+        timeCells.forEach(cell => {
+            cell.textContent = '';
         });
     }
 
@@ -311,28 +411,44 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        const range = `A1:M50`;
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
+
         try {
-            const response = await fetch(
-                `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=A1:M30`
-            );
-            
-            if (!response.ok) throw new Error(`Błąd HTTP: ${response.status}`);
-            
-            const data = parseCsv(await response.text());
-            
-            for (const [htmlId, {row, col, isDate}] of Object.entries(cellMappings)) {
-                const rowData = data[row - 1];
-                setFieldValue(htmlId, rowData ? rowData[getGoogleSheetColumnIndex(col)] : '');
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Błąd sieci: ${response.status}`);
             }
-            
+            const csvText = await response.text();
+            const data = parseCsv(csvText);
+
+            for (const htmlId in cellMappings) {
+                const map = cellMappings[htmlId];
+                const rowIndex = map.row - 1; // -1 bo indeksowanie od 0
+                const colIndex = getGoogleSheetColumnIndex(map.col);
+
+                if (data[rowIndex] && data[rowIndex][colIndex] !== undefined) {
+                    setFieldValue(htmlId, data[rowIndex][colIndex]);
+                } else {
+                    setFieldValue(htmlId, '');
+                }
+            }
+
         } catch (error) {
             console.error('Błąd:', error);
             mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
+            clearAllDataFields();
         }
     }
 
     sheetSelector.addEventListener('change', updateDashboard);
-    if (sheetSelector.value) updateDashboard();
+
+    if (sheetSelector.value) {
+        updateDashboard();
+    } else {
+        mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+        clearAllDataFields();
+    }
 });
 </script>
 </body>
