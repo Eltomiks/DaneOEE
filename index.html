@@ -6,120 +6,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif; /* [cite: 1] */
-            background: #f4f4f4; /* [cite: 2] */
-            margin: 0; /* [cite: 2] */
-            padding: 10px; /* [cite: 2] */
-            color: #333; /* [cite: 2] */
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 10px;
+            color: #333;
         }
         .container {
-            max-width: 100%; /* [cite: 3] */
-            margin: auto; /* [cite: 3] */
-            background: white; /* [cite: 3] */
-            padding: 10px; /* [cite: 3] */
-            border-radius: 10px; /* [cite: 3] */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* [cite: 3] */
+            max-width: 100%;
+            margin: auto;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .header-image {
-            width: 100%; /* [cite: 4] */
-            height: auto; /* [cite: 5] */
-            display: block; /* [cite: 5] */
-            margin-bottom: 10px; /* [cite: 5] */
-            border-radius: 10px; /* [cite: 5] */
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            border-radius: 10px;
         }
         table {
-            width: 100%; /* [cite: 6] */
-            border-collapse: collapse; /* [cite: 6] */
-            margin-bottom: 15px; /* [cite: 6] */
-            font-size: 12px; /* [cite: 6] */
-            table-layout: fixed; /* [cite: 6] */
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
+            table-layout: fixed;
         }
         th, td {
-            border: 1px solid #ccc; /* [cite: 7] */
-            padding: 6px; /* [cite: 7] */
-            text-align: center; /* [cite: 7] */
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
         }
         .red {
-            color: red; /* [cite: 8] */
-            font-weight: bold; /* [cite: 8] */
+            color: red;
+            font-weight: bold;
         }
         select {
-            font-size: 14px; /* [cite: 9] */
-            padding: 4px; /* [cite: 9] */
-            border-radius: 4px; /* [cite: 9] */
-            border: 1px solid #ccc; /* [cite: 9] */
-            width: 100%; /* [cite: 9] */
-            max-width: 200px; /* [cite: 9] */
+            font-size: 14px;
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 200px;
         }
-
-        /* Styl dla głównego pola daty/wskaźnika */
         #mainDisplayField {
-            font-size: 20px; /* [cite: 10] */
-            font-weight: bold; /* [cite: 11] */
-            color: #333; /* [cite: 11] */
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
         }
-
-        /* Ogólny styl dla wszystkich pól danych */
         .data-field {
-            font-size: 14px; /* [cite: 12] */
-            font-weight: 500; /* [cite: 12] */
+            font-size: 14px;
+            font-weight: 500;
         }
-
-        /* Warunkowe style dla OEE i procentów godzinowych */
-        .oee-below-60 { background-color: #ff4d4d; color: white; } /* Czerwony */
-        .oee-60-70 { background-color: #ff9933; color: black; } /* Pomarańczowy */
-        .oee-70-80 { background-color: #ffff66; color: black; } /* Żółty */
-        .oee-above-80 { background-color: #66cc66; color: black; } /* Zielony */
-
-
         .time-block {
-            margin-bottom: 20px; /* [cite: 13] */
+            margin-bottom: 20px;
         }
         .time-table {
-            width: 100%; /* [cite: 14] */
-            border-collapse: collapse; /* [cite: 14] */
-            table-layout: fixed; /* [cite: 14] */
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
         }
         .time-table th {
-            background: #3498db; /* [cite: 15] */
-            color: white; /* [cite: 15] */
-            padding: 6px; /* [cite: 15] */
-            font-size: 11px; /* [cite: 15] */
+            background: #3498db;
+            color: white;
+            padding: 6px;
+            font-size: 11px;
         }
         .time-table td {
-            border: 1px solid #ccc; /* [cite: 16] */
-            padding: 10px; /* [cite: 16] */
-            height: 30px; /* [cite: 16] */
-            background-color: #fff; /* [cite: 16] */
-            font-size: 16px; /* Zwiększona czcionka dla wszystkich komórek czasowych - zmienione z 12px w załączniku */
-            font-weight: bold; /* Dodany font-weight */
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 30px;
+            background-color: #fff;
+            font-size: 12px;
         }
         .time-header th {
-            text-align: center; /* [cite: 17] */
-            font-weight: bold; /* [cite: 17] */
-        }
-        /* NOWA KLASA DLA WIERSZA _r1 (procenty godzinowe) */
-        .time-r1-font {
-            font-size: 20px; /* PRZYKŁADOWA WIĘKSZA CZCIONKA DLA _r1 */
-            color: #1a5e8c; 
+            text-align: center;
+            font-weight: bold;
         }
         @media (max-width: 600px) {
             th, td {
-                padding: 4px; /* [cite: 18] */
-                font-size: 11px; /* [cite: 18] */
+                padding: 4px;
+                font-size: 11px;
             }
             .time-table th, .time-table td {
-                padding: 6px; /* [cite: 19] */
-                font-size: 14px; /* Dopasowanie czcionki godzinowej dla mniejszych ekranów - zmienione z 10px w załączniku */
+                padding: 6px;
+                font-size: 10px;
             }
             select {
-                max-width: 100%; /* [cite: 20] */
+                max-width: 100%;
             }
             #mainDisplayField {
-                font-size: 16px; /* [cite: 21] */
+                font-size: 16px;
             }
             .data-field {
-                font-size: 12px; /* [cite: 22] */
+                font-size: 12px;
             }
         }
     </style>
@@ -132,51 +114,51 @@
             <tr>
                 <td id="mainDisplayField"><strong>Wybierz linię</strong></td>
                 <td colspan="4">
-                    <select id="sheetSelector"> /* [cite: 23] */
-                        <option value="">Wybierz linię</option> /* [cite: 23] */
-                        <option>NHL</option> /* [cite: 23] */
-                        <option>MP4</option> /* [cite: 23] */
-                        <option>Hood Latch</option> /* [cite: 24] */
-                        <option>M4</option> /* [cite: 24] */
-                        <option>H-Latch GŁÓWNA</option> /* [cite: 24] */
-                        <option>H-Latch PIANA</option> /* [cite: 24] */
-                        <option>139 P</option> /* [cite: 25] */
-                        <option>139 T</option> /* [cite: 25] */
-                        <option>SV3 A9</option> /* [cite: 25] */
-                        <option>Pokrywki</option> /* [cite: 25] */
-                        <option>Cardrige</option> /* [cite: 26] */
+                    <select id="sheetSelector">
+                        <option value="">Wybierz linię</option>
+                        <option>NHL</option>
+                        <option>MP4</option>
+                        <option>Hood Latch</option>
+                        <option>M4</option>
+                        <option>H-Latch GŁÓWNA</option>
+                        <option>H-Latch PIANA</option>
+                        <option>139 P</option>
+                        <option>139 T</option>
+                        <option>SV3 A9</option>
+                        <option>Pokrywki</option>
+                        <option>Cardrige</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td><strong>zm</strong></td>
                 <td>I</td>
-                <td>II</td> /* [cite: 27] */
-                <td>III</td> /* [cite: 27] */
-                <td><strong>TOTAL</strong></td> /* [cite: 27] */
+                <td>II</td>
+                <td>III</td>
+                <td><strong>TOTAL</strong></td>
             </tr>
             <tr>
                 <td><strong>OEE</strong></td>
-                <td id="oeeShift1" class="data-field"></td> /* [cite: 28] */
-                <td id="oeeShift2" class="data-field"></td> /* [cite: 28] */
-                <td id="oeeShift3" class="data-field"></td> /* [cite: 28] */
-                <td id="oeeTotal" class="data-field"></td> /* [cite: 28] */
+                <td id="oeeShift1" class="data-field"></td>
+                <td id="oeeShift2" class="data-field"></td>
+                <td id="oeeShift3" class="data-field"></td>
+                <td id="oeeTotal" class="data-field"></td>
             </tr>
             <tr>
                 <td><strong>OK</strong></td>
-                <td id="okShift1" class="data-field"></td> /* [cite: 29] */
-                <td id="okShift2" class="data-field"></td> /* [cite: 29] */
-                <td id="okShift3" class="data-field"></td> /* [cite: 29] */
-                <td id="okTotal" class="data-field"></td> /* [cite: 29] */
+                <td id="okShift1" class="data-field"></td>
+                <td id="okShift2" class="data-field"></td>
+                <td id="okShift3" class="data-field"></td>
+                <td id="okTotal" class="data-field"></td>
             </tr>
             <tr>
-                <td class="red">NOK</td> /* [cite: 30] */
-                <td id="nokShift1" class="data-field"></td> /* [cite: 30] */
-                <td id="nokShift2" class="data-field"></td> /* [cite: 30] */
-                <td id="nokShift3" class="data-field"></td> /* [cite: 30] */
-                <td id="nokTotal" class="data-field"></td> /* [cite: 30] */
+                <td class="red">NOK</td>
+                <td id="nokShift1" class="data-field"></td>
+                <td id="nokShift2" class="data-field"></td>
+                <td id="nokShift3" class="data-field"></td>
+                <td id="nokTotal" class="data-field"></td>
             </tr>
-        </table> /* [cite: 31] */
+        </table>
 
         <div class="time-block">
             <table class="time-table">
@@ -185,26 +167,26 @@
                     <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
                 </tr>
                 <tr>
-                    <td id="h6_r1" class="time-r1-font"></td> /* [cite: 32] */
-                    <td id="h7_r1" class="time-r1-font"></td> /* [cite: 32] */
-                    <td id="h8_r1" class="time-r1-font"></td> /* [cite: 32] */
-                    <td id="h9_r1" class="time-r1-font"></td> /* [cite: 32] */
-                    <td id="h10_r1" class="time-r1-font"></td> /* [cite: 33] */
-                    <td id="h11_r1" class="time-r1-font"></td> /* [cite: 33] */
-                    <td id="h12_r1" class="time-r1-font"></td> /* [cite: 33] */
-                    <td id="h13_r1" class="time-r1-font"></td> /* [cite: 33] */
+                    <td id="h6_r1"></td>
+                    <td id="h7_r1"></td>
+                    <td id="h8_r1"></td>
+                    <td id="h9_r1"></td>
+                    <td id="h10_r1"></td>
+                    <td id="h11_r1"></td>
+                    <td id="h12_r1"></td>
+                    <td id="h13_r1"></td>
                 </tr>
                 <tr>
-                    <td id="h6_r2"></td> /* [cite: 34] */
-                    <td id="h7_r2"></td> /* [cite: 34] */
-                    <td id="h8_r2"></td> /* [cite: 34] */
-                    <td id="h9_r2"></td> /* [cite: 34] */
-                    <td id="h10_r2"></td> /* [cite: 35] */
-                    <td id="h11_r2"></td> /* [cite: 35] */
-                    <td id="h12_r2"></td> /* [cite: 35] */
-                    <td id="h13_r2"></td> /* [cite: 35] */
+                    <td id="h6_r2"></td>
+                    <td id="h7_r2"></td>
+                    <td id="h8_r2"></td>
+                    <td id="h9_r2"></td>
+                    <td id="h10_r2"></td>
+                    <td id="h11_r2"></td>
+                    <td id="h12_r2"></td>
+                    <td id="h13_r2"></td>
                 </tr>
-            </table> /* [cite: 36] */
+            </table>
         </div>
 
         <div class="time-block">
@@ -212,27 +194,27 @@
                 <tr class="time-header">
                     <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
                     <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
-                </tr> /* [cite: 37] */
+                </tr>
                 <tr>
-                    <td id="h14_r1" class="time-r1-font"></td> /* [cite: 37] */
-                    <td id="h15_r1" class="time-r1-font"></td> /* [cite: 37] */
-                    <td id="h16_r1" class="time-r1-font"></td> /* [cite: 38] */
-                    <td id="h17_r1" class="time-r1-font"></td> /* [cite: 38] */
-                    <td id="h18_r1" class="time-r1-font"></td> /* [cite: 38] */
-                    <td id="h19_r1" class="time-r1-font"></td> /* [cite: 38] */
-                    <td id="h20_r1" class="time-r1-font"></td> /* [cite: 38] */
-                    <td id="h21_r1" class="time-r1-font"></td> /* [cite: 38] */
-                </tr> /* [cite: 39] */
+                    <td id="h14_r1"></td>
+                    <td id="h15_r1"></td>
+                    <td id="h16_r1"></td>
+                    <td id="h17_r1"></td>
+                    <td id="h18_r1"></td>
+                    <td id="h19_r1"></td>
+                    <td id="h20_r1"></td>
+                    <td id="h21_r1"></td>
+                </tr>
                 <tr>
-                    <td id="h14_r2"></td> /* [cite: 39] */
-                    <td id="h15_r2"></td> /* [cite: 39] */
-                    <td id="h16_r2"></td> /* [cite: 40] */
-                    <td id="h17_r2"></td> /* [cite: 40] */
-                    <td id="h18_r2"></td> /* [cite: 40] */
-                    <td id="h19_r2"></td> /* [cite: 40] */
-                    <td id="h20_r2"></td> /* [cite: 40] */
-                    <td id="h21_r2"></td> /* [cite: 40] */
-                </tr> /* [cite: 41] */
+                    <td id="h14_r2"></td>
+                    <td id="h15_r2"></td>
+                    <td id="h16_r2"></td>
+                    <td id="h17_r2"></td>
+                    <td id="h18_r2"></td>
+                    <td id="h19_r2"></td>
+                    <td id="h20_r2"></td>
+                    <td id="h21_r2"></td>
+                </tr>
             </table>
         </div>
 
@@ -240,27 +222,27 @@
             <table class="time-table">
                 <tr class="time-header">
                     <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
-                    <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th> /* [cite: 42] */
+                    <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
                 </tr>
                 <tr>
-                    <td id="h22_r1" class="time-r1-font"></td> /* [cite: 42] */
-                    <td id="h23_r1" class="time-r1-font"></td> /* [cite: 43] */
-                    <td id="h0_r1" class="time-r1-font"></td> /* [cite: 43] */
-                    <td id="h1_r1" class="time-r1-font"></td> /* [cite: 43] */
-                    <td id="h2_r1" class="time-r1-font"></td> /* [cite: 43] */
-                    <td id="h3_r1" class="time-r1-font"></td> /* [cite: 43] */
-                    <td id="h4_r1" class="time-r1-font"></td> /* [cite: 44] */
-                    <td id="h5_r1" class="time-r1-font"></td> /* [cite: 44] */
+                    <td id="h22_r1"></td>
+                    <td id="h23_r1"></td>
+                    <td id="h0_r1"></td>
+                    <td id="h1_r1"></td>
+                    <td id="h2_r1"></td>
+                    <td id="h3_r1"></td>
+                    <td id="h4_r1"></td>
+                    <td id="h5_r1"></td>
                 </tr>
                 <tr>
-                    <td id="h22_r2"></td> /* [cite: 44] */
-                    <td id="h23_r2"></td> /* [cite: 45] */
-                    <td id="h0_r2"></td> /* [cite: 45] */
-                    <td id="h1_r2"></td> /* [cite: 45] */
-                    <td id="h2_r2"></td> /* [cite: 45] */
-                    <td id="h3_r2"></td> /* [cite: 45] */
-                    <td id="h4_r2"></td> /* [cite: 46] */
-                    <td id="h5_r2"></td> /* [cite: 46] */
+                    <td id="h22_r2"></td>
+                    <td id="h23_r2"></td>
+                    <td id="h0_r2"></td>
+                    <td id="h1_r2"></td>
+                    <td id="h2_r2"></td>
+                    <td id="h3_r2"></td>
+                    <td id="h4_r2"></td>
+                    <td id="h5_r2"></td>
                 </tr>
             </table>
         </div>
@@ -268,275 +250,204 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; /* [cite: 47] */
-    const sheetSelector = document.getElementById('sheetSelector'); /* [cite: 47] */
-    const mainDisplayField = document.getElementById('mainDisplayField'); /* [cite: 47] */
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
+    const sheetSelector = document.getElementById('sheetSelector');
+    const mainDisplayField = document.getElementById('mainDisplayField');
 
-    // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
-        let colIndex = 0; /* [cite: 48] */
-        for (let i = 0; i < colLetter.length; i++) { /* [cite: 48] */
-            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1); /* [cite: 49] */
+        let colIndex = 0;
+        for (let i = 0; i < colLetter.length; i++) {
+            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
         }
-        return colIndex - 1; /* [cite: 50] */
+        return colIndex - 1;
     }
 
-    // Funkcja pomocnicza do parsowania CSV
     function parseCsv(csvString) {
-        const lines = csvString.trim().split('\n'); /* [cite: 51] */
-        return lines.map(line => { /* [cite: 51] */
-            return line.split(',').map(cell => { /* [cite: 51] */
-                let cleanedCell = cell.trim(); /* [cite: 51] */
-                if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) { /* [cite: 51] */
-                    cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1); /* [cite: 51] */
+        const lines = csvString.trim().split('\n');
+        return lines.map(line => {
+            return line.split(',').map(cell => {
+                let cleanedCell = cell.trim();
+                if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
+                    cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
                 }
-                return cleanedCell.replace(/""/g, '"'); /* [cite: 52] */
+                return cleanedCell.replace(/""/g, '"');
             });
         });
     }
 
-    // Funkcja do formatowania daty z numeru seryjnego Google Sheets lub tekstowego formatu
-    function formatGoogleSheetDate(serialOrDateString) {
-        if (!serialOrDateString || String(serialOrDateString).trim() === '') {
-            return ''; 
+    function formatDate(value) {
+        if (!value || value === '0') return '';
+        
+        // Sprawdź czy to data w formacie tekstowym (np. '2025-06-03 00:00:00')
+        if (typeof value === 'string') {
+            // Usuń ewentualne cudzysłowy
+            value = value.replace(/^"(.*)"$/, '$1').trim();
+            
+            // Spróbuj sparsować datę w formacie YYYY-MM-DD
+            const dateMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (dateMatch) {
+                const year = dateMatch[1];
+                const month = dateMatch[2];
+                const day = dateMatch[3];
+                return `${day}.${month}.${year}`;
+            }
         }
-
-        let date;
-        const numValue = parseFloat(serialOrDateString);
-
-        // Najpierw spróbuj sparsować jako numer seryjny Google Sheets (np. 45078)
-        if (!isNaN(numValue) && numValue > 0 && numValue < 60000) { /* [cite: 57] */
-            const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime(); /* [cite: 57] */
-            date = new Date(excelEpoch + (numValue * 86400000)); /* [cite: 57] */
-        } else {
-            // Jeśli nie jest numerem seryjnym, spróbuj sparsować jako tekst daty (np. '2025-06-02 00:00:00')
-            // Używamy `new Date()` które jest dość elastyczne w parsowaniu
-            date = new Date(serialOrDateString); /* [cite: 53] */
+        
+        // Jeśli to liczba (serial number daty w Google Sheets)
+        if (!isNaN(value) && parseFloat(value) > 0) {
+            const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
+            const date = new Date(excelEpoch + (parseFloat(value) * 86400000));
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}.${month}.${year}`;
         }
-
-        // Sprawdź, czy data jest prawidłowa (nie Invalid Date)
-        if (isNaN(date.getTime())) {
-            return ''; 
-        }
-
-        const day = String(date.getDate()).padStart(2, '0'); /* [cite: 58] */
-        const month = String(date.getMonth() + 1).padStart(2, '0'); /* [cite: 54, 58] */
-        const year = date.getFullYear(); /* [cite: 54, 58] */
-
-        return `${day}.${month}.${year}`; /* [cite: 55, 59] */
+        
+        return value; // Jeśli nie można sparsować jako data, zwróć oryginalną wartość
     }
 
-    // Funkcja do ustawiania tekstu i stylów w danej komórce HTML
-    function setFieldValue(elementId, value, options = {}) {
-        const element = document.getElementById(elementId); /* [cite: 61] */
-        if (!element) {
-            // console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`); 
+    function setFieldValue(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            let displayValue = '';
+            if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
+                if (cellMappings[elementId] && cellMappings[elementId].isDate) {
+                    displayValue = formatDate(value);
+                } else {
+                    displayValue = value;
+                }
+            }
+            element.textContent = displayValue;
+        }
+    }
+
+    // Zaktualizowane mapowanie z przesunięciem wierszy -2
+    const cellMappings = {
+        'mainDisplayField': { row: 1, col: 'C', isDate: true }, // C1 w arkuszu
+        'oeeShift1': { row: 2, col: 'D' }, // D2 w arkuszu
+        'oeeShift2': { row: 2, col: 'E' }, // E2 w arkuszu
+        'oeeShift3': { row: 2, col: 'F' }, // F2 w arkuszu
+        'oeeTotal': { row: 2, col: 'C' }, // C2 w arkuszu
+        'okShift1': { row: 3, col: 'D' }, // D3 w arkuszu
+        'okShift2': { row: 3, col: 'E' }, // E3 w arkuszu
+        'okShift3': { row: 3, col: 'F' }, // F3 w arkuszu
+        'okTotal': { row: 3, col: 'C' }, // C3 w arkuszu
+        'nokShift1': { row: 4, col: 'D' }, // D4 w arkuszu
+        'nokShift2': { row: 4, col: 'E' }, // E4 w arkuszu
+        'nokShift3': { row: 4, col: 'F' }, // F4 w arkuszu
+        'nokTotal': { row: 4, col: 'C' }, // C4 w arkuszu
+
+        // GODZINY - WIERSZ 1
+        'h6_r1': { row: 7, col: 'E' }, // E7 w arkuszu
+        'h7_r1': { row: 8, col: 'E' }, // E8 w arkuszu
+        'h8_r1': { row: 9, col: 'E' }, // E9 w arkuszu
+        'h9_r1': { row: 10, col: 'E' }, // E10 w arkuszu
+        'h10_r1': { row: 11, col: 'E' }, // E11 w arkuszu
+        'h11_r1': { row: 12, col: 'E' }, // E12 w arkuszu
+        'h12_r1': { row: 13, col: 'E' }, // E13 w arkuszu
+        'h13_r1': { row: 14, col: 'E' }, // E14 w arkuszu
+        'h14_r1': { row: 15, col: 'E' }, // E15 w arkuszu
+        'h15_r1': { row: 16, col: 'E' }, // E16 w arkuszu
+        'h16_r1': { row: 17, col: 'E' }, // E17 w arkuszu
+        'h17_r1': { row: 18, col: 'E' }, // E18 w arkuszu
+        'h18_r1': { row: 19, col: 'E' }, // E19 w arkuszu
+        'h19_r1': { row: 20, col: 'E' }, // E20 w arkuszu
+        'h20_r1': { row: 21, col: 'E' }, // E21 w arkuszu
+        'h21_r1': { row: 22, col: 'E' }, // E22 w arkuszu
+        'h22_r1': { row: 23, col: 'E' }, // E23 w arkuszu
+        'h23_r1': { row: 24, col: 'E' }, // E24 w arkuszu
+        'h0_r1': { row: 25, col: 'E' }, // E25 w arkuszu
+        'h1_r1': { row: 26, col: 'E' }, // E26 w arkuszu
+        'h2_r1': { row: 27, col: 'E' }, // E27 w arkuszu
+        'h3_r1': { row: 28, col: 'E' }, // E28 w arkuszu
+        'h4_r1': { row: 29, col: 'E' }, // E29 w arkuszu
+        'h5_r1': { row: 30, col: 'E' }, // E30 w arkuszu
+
+        // GODZINY - WIERSZ 2
+        'h6_r2': { row: 7, col: 'C' }, // C7 w arkuszu
+        'h7_r2': { row: 8, col: 'C' }, // C8 w arkuszu
+        'h8_r2': { row: 9, col: 'C' }, // C9 w arkuszu
+        'h9_r2': { row: 10, col: 'C' }, // C10 w arkuszu
+        'h10_r2': { row: 11, col: 'C' }, // C11 w arkuszu
+        'h11_r2': { row: 12, col: 'C' }, // C12 w arkuszu
+        'h12_r2': { row: 13, col: 'C' }, // C13 w arkuszu
+        'h13_r2': { row: 14, col: 'C' }, // C14 w arkuszu
+        'h14_r2': { row: 15, col: 'C' }, // C15 w arkuszu
+        'h15_r2': { row: 16, col: 'C' }, // C16 w arkuszu
+        'h16_r2': { row: 17, col: 'C' }, // C17 w arkuszu
+        'h17_r2': { row: 18, col: 'C' }, // C18 w arkuszu
+        'h18_r2': { row: 19, col: 'C' }, // C19 w arkuszu
+        'h19_r2': { row: 20, col: 'C' }, // C20 w arkuszu
+        'h20_r2': { row: 21, col: 'C' }, // C21 w arkuszu
+        'h21_r2': { row: 22, col: 'C' }, // C22 w arkuszu
+        'h22_r2': { row: 23, col: 'C' }, // C23 w arkuszu
+        'h23_r2': { row: 24, col: 'C' }, // C24 w arkuszu
+        'h0_r2': { row: 25, col: 'C' }, // C25 w arkuszu
+        'h1_r2': { row: 26, col: 'C' }, // C26 w arkuszu
+        'h2_r2': { row: 27, col: 'C' }, // C27 w arkuszu
+        'h3_r2': { row: 28, col: 'C' }, // C28 w arkuszu
+        'h4_r2': { row: 29, col: 'C' }, // C29 w arkuszu
+        'h5_r2': { row: 30, col: 'C' }  // C30 w arkuszu
+    };
+
+    function clearAllDataFields() {
+        const dataFields = document.querySelectorAll('.data-field');
+        dataFields.forEach(field => {
+            field.textContent = '';
+        });
+        const timeCells = document.querySelectorAll('.time-table td');
+        timeCells.forEach(cell => {
+            cell.textContent = '';
+        });
+    }
+
+    async function updateDashboard() {
+        const selectedSheetName = sheetSelector.value;
+        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
+        clearAllDataFields();
+
+        if (!selectedSheetName) {
+            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
             return;
         }
 
-        let displayValue = '';
-        let rawValue = value;
-
-        // Usuń wszystkie poprzednie klasy stylów związanych z kolorowaniem OEE
-        element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
-        // Zresetuj styl inline (np. background-color, color), jeśli były ustawione
-        element.style.backgroundColor = '';
-        element.style.color = '';
-
-        // KROK 1: Jeśli to data, sformatuj i ustaw. Zawsze powinna się wyświetlać, jeśli jest prawidłowa.
-        if (options.isDate) {
-            displayValue = formatGoogleSheetDate(rawValue); /* [cite: 63] */
-            element.textContent = displayValue; /* [cite: 64] */
-            return; 
-        }
-
-        // KROK 2: Obsługa wartości pustych lub "0" dla innych pól (szczególnie procentów i liczb)
-        // Jeśli wartość jest pusta, null, undefined, pustym stringiem lub liczbowym zerem, ukryj.
-        if (rawValue === '' || rawValue === null || rawValue === undefined || String(rawValue).trim() === '' || parseFloat(rawValue) === 0) {
-            element.textContent = ''; 
-            return; 
-        }
-
-        // KROK 3: Jeśli to procent, sformatuj i pokoloruj.
-        if (options.isPercentage) {
-            const numValue = parseFloat(rawValue);
-            if (!isNaN(numValue)) {
-                let percentageValue = numValue;
-                // Jeśli wartość jest ułamkiem (np. 0.74), to mnożymy przez 100
-                if (numValue > 0 && numValue < 1.0) { 
-                    percentageValue = numValue * 100;
-                }
-                
-                displayValue = `${percentageValue.toFixed(0)}%`; 
-                
-                // Warunkowe formatowanie kolorystyczne
-                const normalizedValue = percentageValue / 100; 
-
-                if (normalizedValue < 0.60) {
-                    element.classList.add('oee-below-60');
-                } else if (normalizedValue >= 0.60 && normalizedValue < 0.70) {
-                    element.classList.add('oee-60-70');
-                } else if (normalizedValue >= 0.70 && normalizedValue < 0.80) {
-                    element.classList.add('oee-70-80');
-                } else { // >= 0.80
-                    element.classList.add('oee-above-80');
-                }
-            } else {
-                displayValue = rawValue; // Jeśli nie jest liczbą, wyświetl jak jest
-            }
-        } 
-        // KROK 4: W pozostałych przypadkach (zwykłe liczby), po prostu wyświetl surową wartość.
-        else {
-            displayValue = rawValue;
-        }
-        element.textContent = displayValue; /* [cite: 65] */
-    }
-
-    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
-    // WAŻNE: Wartości `row` odpowiadają TERAZ BEZPOŚREDNIO numerom wierszy w Arkuszu Google.
-    // 'mainDisplayField' (data) to C1
-    // 'oeeTotal' (TOTAL) to C3
-    const cellMappings = {
-        'mainDisplayField': { row: 1, col: 'C', isDate: true }, // Data z C1 /* [cite: 65] */
-
-        'oeeShift1': { row: 3, col: 'D', isPercentage: true, cellClass: 'data-field' }, // Zmienione z 2 na 3
-        'oeeShift2': { row: 3, col: 'E', isPercentage: true, cellClass: 'data-field' }, // Zmienione z 2 na 3
-        'oeeShift3': { row: 3, col: 'F', isPercentage: true, cellClass: 'data-field' }, // Zmienione z 2 na 3
-        'oeeTotal': { row: 3, col: 'C', isPercentage: true, cellClass: 'data-field' }, // OEE TOTAL z C3 - zmienione z 2 na 3
-
-        'okShift1': { row: 10, col: 'D', cellClass: 'data-field' }, // Zmienione z 9 na 10 /* [cite: 66] */
-        'okShift2': { row: 10, col: 'E', cellClass: 'data-field' }, // Zmienione z 9 na 10 /* [cite: 66] */
-        'okShift3': { row: 10, col: 'F', cellClass: 'data-field' }, // Zmienione z 9 na 10 /* [cite: 66] */
-        'okTotal': { row: 10, col: 'C', cellClass: 'data-field' }, // Zmienione z 9 na 10 /* [cite: 66] */
-
-        'nokShift1': { row: 11, col: 'D', cellClass: 'data-field' }, // Zmienione z 10 na 11 /* [cite: 66] */
-        'nokShift2': { row: 11, col: 'E', cellClass: 'data-field' }, // Zmienione z 10 na 11 /* [cite: 66] */
-        'nokShift3': { row: 11, col: 'F', cellClass: 'data-field' }, // Zmienione z 10 na 11 /* [cite: 66] */
-        'nokTotal': { row: 11, col: 'C', cellClass: 'data-field' }, // Zmienione z 10 na 11 /* [cite: 66] */
-
-        // GODZINY - WIERSZ 1 (procenty)
-        'h6_r1': { row: 15, col: 'E', isPercentage: true }, // Zmienione z 14 na 15 /* [cite: 67] */
-        'h7_r1': { row: 16, col: 'E', isPercentage: true }, // Zmienione z 15 na 16 /* [cite: 67] */
-        'h8_r1': { row: 17, col: 'E', isPercentage: true }, // Zmienione z 16 na 17 /* [cite: 67] */
-        'h9_r1': { row: 18, col: 'E', isPercentage: true }, // Zmienione z 17 na 18 /* [cite: 67] */
-        'h10_r1': { row: 19, col: 'E', isPercentage: true }, // Zmienione z 18 na 19 /* [cite: 67] */
-        'h11_r1': { row: 20, col: 'E', isPercentage: true }, // Zmienione z 19 na 20 /* [cite: 67] */
-        'h12_r1': { row: 21, col: 'E', isPercentage: true }, // Zmienione z 20 na 21 /* [cite: 67] */
-        'h13_r1': { row: 22, col: 'E', isPercentage: true }, // Zmienione z 21 na 22 /* [cite: 68] */
-
-        'h14_r1': { row: 23, col: 'E', isPercentage: true }, // Zmienione z 22 na 23 /* [cite: 68] */
-        'h15_r1': { row: 24, col: 'E', isPercentage: true }, // Zmienione z 23 na 24 /* [cite: 68] */
-        'h16_r1': { row: 25, col: 'E', isPercentage: true }, // Zmienione z 24 na 25 /* [cite: 68] */
-        'h17_r1': { row: 26, col: 'E', isPercentage: true }, // Zmienione z 25 na 26 /* [cite: 68] */
-        'h18_r1': { row: 27, col: 'E', isPercentage: true }, // Zmienione z 26 na 27 /* [cite: 68] */
-        'h19_r1': { row: 28, col: 'E', isPercentage: true }, // Zmienione z 27 na 28 /* [cite: 68] */
-        'h20_r1': { row: 29, col: 'E', isPercentage: true }, // Zmienione z 28 na 29 /* [cite: 69] */
-        'h21_r1': { row: 30, col: 'E', isPercentage: true }, // Zmienione z 29 na 30 /* [cite: 69] */
-
-        'h22_r1': { row: 31, col: 'E', isPercentage: true }, // Zmienione z 30 na 31 /* [cite: 69] */
-        'h23_r1': { row: 32, col: 'E', isPercentage: true }, // Zmienione z 31 na 32 /* [cite: 69] */
-        'h0_r1': { row: 33, col: 'E', isPercentage: true }, // Zmienione z 32 na 33 /* [cite: 69] */
-        'h1_r1': { row: 34, col: 'E', isPercentage: true }, // Zmienione z 33 na 34 /* [cite: 69] */
-        'h2_r1': { row: 35, col: 'E', isPercentage: true }, // Zmienione z 34 na 35 /* [cite: 69, 70] */
-        'h3_r1': { row: 36, col: 'E', isPercentage: true }, // Zmienione z 35 na 36 /* [cite: 70] */
-        'h4_r1': { row: 37, col: 'E', isPercentage: true }, // Zmienione z 36 na 37 /* [cite: 70] */
-        'h5_r1': { row: 38, col: 'E', isPercentage: true }, // Zmienione z 37 na 38 /* [cite: 70] */
-
-        // GODZINY - WIERSZ 2 (nie procentowe)
-        'h6_r2': { row: 15, col: 'C' }, // Zmienione z 14 na 15 /* [cite: 70] */
-        'h7_r2': { row: 16, col: 'C' }, // Zmienione z 15 na 16 /* [cite: 70] */
-        'h8_r2': { row: 17, col: 'C' }, // Zmienione z 16 na 17 /* [cite: 70] */
-        'h9_r2': { row: 18, col: 'C' }, // Zmienione z 17 na 18 /* [cite: 70] */
-        'h10_r2': { row: 19, col: 'C' }, // Zmienione z 18 na 19 /* [cite: 70, 71] */
-        'h11_r2': { row: 20, col: 'C' }, // Zmienione z 19 na 20 /* [cite: 71] */
-        'h12_r2': { row: 21, col: 'C' }, // Zmienione z 20 na 21 /* [cite: 71] */
-        'h13_r2': { row: 22, col: 'C' }, // Zmienione z 21 na 22 /* [cite: 71] */
-        'h14_r2': { row: 23, col: 'C' }, // Zmienione z 22 na 23 /* [cite: 71] */
-        'h15_r2': { row: 24, col: 'C' }, // Zmienione z 23 na 24 /* [cite: 71] */
-        'h16_r2': { row: 25, col: 'C' }, // Zmienione z 24 na 25 /* [cite: 71] */
-        'h17_r2': { row: 26, col: 'C' }, // Zmienione z 25 na 26 /* [cite: 71, 72] */
-
-        'h18_r2': { row: 27, col: 'C' }, // Zmienione z 26 na 27 /* [cite: 72] */
-        'h19_r2': { row: 28, col: 'C' }, // Zmienione z 27 na 28 /* [cite: 72] */
-        'h20_r2': { row: 29, col: 'C' }, // Zmienione z 28 na 29 /* [cite: 72] */
-        'h21_r2': { row: 30, col: 'C' }, // Zmienione z 29 na 30 /* [cite: 72] */
-        'h22_r2': { row: 31, col: 'C' }, // Zmienione z 30 na 31 /* [cite: 72] */
-        'h23_r2': { row: 32, col: 'C' }, // Zmienione z 31 na 32 /* [cite: 72] */
-        'h0_r2': { row: 33, col: 'C' }, // Zmienione z 32 na 33 /* [cite: 72, 73] */
-        'h1_r2': { row: 34, col: 'C' }, // Zmienione z 33 na 34 /* [cite: 73] */
-        'h2_r2': { row: 35, col: 'C' }, // Zmienione z 34 na 35 /* [cite: 73] */
-        'h3_r2': { row: 36, col: 'C' }, // Zmienione z 35 na 36 /* [cite: 73] */
-        'h4_r2': { row: 37, col: 'C' }, // Zmienione z 36 na 37 /* [cite: 73] */
-        'h5_r2': { row: 38, col: 'C' }, // Zmienione z 37 na 38 /* [cite: 73] */
-    }; /* [cite: 74] */
-
-    // Funkcja do czyszczenia wszystkich pól danych (w tym stylów)
-    function clearAllDataFields() {
-        const allDataElements = document.querySelectorAll('.data-field, .time-table td');
-        allDataElements.forEach(element => {
-            element.textContent = '';
-            // Usuń wszystkie klasy kolorystyczne
-            element.classList.remove('oee-below-60', 'oee-60-70', 'oee-70-80', 'oee-above-80');
-            // Resetuj style inline, które mogą być ustawione przez JS
-            element.style.backgroundColor = '';
-            element.style.color = '';
-        });
-        // Specjalne czyszczenie dla mainDisplayField, które nie ma klasy .data-field
-        mainDisplayField.textContent = '';
-        mainDisplayField.style.backgroundColor = '';
-        mainDisplayField.style.color = '';
-    }
-
-    // Główna funkcja do pobierania i aktualizowania danych
-    async function updateDashboard() {
-        const selectedSheetName = sheetSelector.value; /* [cite: 78] */
-        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>'; /* [cite: 78] */
-        clearAllDataFields(); /* [cite: 78] */
-
-        if (!selectedSheetName) {
-            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>'; /* [cite: 79] */
-            return; /* [cite: 79] */
-        }
-
-        const range = `A1:M50`; /* [cite: 80] */
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`; /* [cite: 80] */
+        const range = `A1:M50`;
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
 
         try {
-            const response = await fetch(url); /* [cite: 81] */
-            if (!response.ok) { /* [cite: 81] */
-                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`); /* [cite: 82] */
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Błąd sieci: ${response.status}`);
             }
-            const csvText = await response.text(); /* [cite: 83] */
-            const data = parseCsv(csvText); /* [cite: 83] */
+            const csvText = await response.text();
+            const data = parseCsv(csvText);
 
             for (const htmlId in cellMappings) {
-                const map = cellMappings[htmlId]; /* [cite: 84] */
-                // WAŻNE: rowIndexInData to teraz numer wiersza z arkusza (1-bazowy)
-                // Do dostępu do tablicy 'data' musimy odjąć 1 (bo tablice są 0-bazowe)
-                const rowIndexInData = map.row; 
-                const colIndexInData = getGoogleSheetColumnIndex(map.col); /* [cite: 85] */
+                const map = cellMappings[htmlId];
+                const rowIndex = map.row - 1; // -1 bo indeksowanie od 0
+                const colIndex = getGoogleSheetColumnIndex(map.col);
 
-                if (data[rowIndexInData - 1] && data[rowIndexInData - 1][colIndexInData] !== undefined) { /* [cite: 85] */
-                    setFieldValue(htmlId, data[rowIndexInData - 1][colIndexInData], map); /* [cite: 86] */
+                if (data[rowIndex] && data[rowIndex][colIndex] !== undefined) {
+                    setFieldValue(htmlId, data[rowIndex][colIndex]);
                 } else {
-                    setFieldValue(htmlId, '', map); /* [cite: 87] */
+                    setFieldValue(htmlId, '');
                 }
             }
 
         } catch (error) {
-            console.error('Błąd podczas pobierania lub przetwarzania danych:', error); /* [cite: 88] */
-            mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>'; /* [cite: 88] */
-            clearAllDataFields(); /* [cite: 88] */
+            console.error('Błąd:', error);
+            mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
+            clearAllDataFields();
         }
     }
 
-    sheetSelector.addEventListener('change', updateDashboard); /* [cite: 89] */
+    sheetSelector.addEventListener('change', updateDashboard);
 
-    if (sheetSelector.value) { /* [cite: 89] */
-        updateDashboard(); /* [cite: 90] */
+    if (sheetSelector.value) {
+        updateDashboard();
     } else {
-        mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>'; /* [cite: 90] */
-        clearAllDataFields(); /* [cite: 90] */
+        mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+        clearAllDataFields();
     }
 });
 </script>
