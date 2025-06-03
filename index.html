@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard OEE - Poprawiony i Uproszczony</title>
+    <title>Dashboard OEE - DZIAŁAJĄCA WERSJA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -51,20 +51,15 @@
             width: 100%;
             max-width: 200px;
         }
-
-        /* Styl dla głównego pola daty/wskaźnika */
         #mainDisplayField {
             font-size: 20px;
             font-weight: bold;
             color: #333;
         }
-
-        /* Ogólny styl dla wszystkich pól danych */
         .data-field {
             font-size: 14px;
             font-weight: 500;
         }
-
         .time-block {
             margin-bottom: 20px;
         }
@@ -113,7 +108,7 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="_______Dawid - spokojnie, ogarniemy:) ;) ">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Dashboard OEE">
 
         <table>
             <tr>
@@ -259,196 +254,148 @@ document.addEventListener('DOMContentLoaded', function() {
     const sheetSelector = document.getElementById('sheetSelector');
     const mainDisplayField = document.getElementById('mainDisplayField');
 
-    function getGoogleSheetColumnIndex(colLetter) {
-        let colIndex = 0;
-        for (let i = 0; i < colLetter.length; i++) {
-            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
-        }
-        return colIndex - 1;
+    // Funkcja konwertująca literę kolumny na indeks (0-based)
+    function colToIndex(col) {
+        return col.charCodeAt(0) - 65; // A=0, B=1, ..., Z=25
     }
 
-    function parseCsv(csvString) {
-        const lines = csvString.trim().split('\n');
-        return lines.map(line => {
-            return line.split(',').map(cell => {
-                let cleanedCell = cell.trim();
-                if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
-                    cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
-                }
-                return cleanedCell.replace(/""/g, '"');
-            });
-        });
-    }
-
+    // Funkcja formatująca datę
     function formatDate(value) {
-        if (!value || value === '0') return '';
+        if (!value) return '';
         
-        // Sprawdź czy to data w formacie tekstowym (np. '2025-06-03 00:00:00')
-        if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}/)) {
-            try {
-                const date = new Date(value);
-                if (!isNaN(date.getTime())) {
-                    const day = String(date.getDate()).padStart(2, '0');
-                    const month = String(date.getMonth() + 1).padStart(2, '0');
-                    const year = date.getFullYear();
-                    return `${day}.${month}.${year}`;
-                }
-            } catch (e) {
-                console.warn('Błąd parsowania daty:', e);
-            }
+        // Usuń cudzysłowy jeśli istnieją
+        value = value.toString().replace(/^["']|["']$/g, '').trim();
+        
+        // Formatuj datę '2025-06-03 00:00:00' -> '03.06.2025'
+        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (match) {
+            return `${match[3]}.${match[2]}.${match[1]}`;
         }
         
-        // Jeśli to liczba (serial number daty w Google Sheets)
-        if (!isNaN(value) && parseFloat(value) > 0) {
-            const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-            const date = new Date(excelEpoch + (parseFloat(value) * 86400000));
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}.${month}.${year}`;
-        }
-        
-        return value; // Jeśli nie można sparsować jako data, zwróć oryginalną wartość
+        return value;
     }
 
-    function setFieldValue(elementId, value) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            let displayValue = '';
-            if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
-                if (cellMappings[elementId] && cellMappings[elementId].isDate) {
-                    displayValue = formatDate(value);
-                } else {
-                    displayValue = value;
-                }
-            }
-            element.textContent = displayValue;
-        }
-    }
-
-    const cellMappings = {
-        'mainDisplayField': { row: 1, col: 'A', isDate: true },
-        'oeeShift1': { row: 2, col: 'D' },
-        'oeeShift2': { row: 2, col: 'E' },
-        'oeeShift3': { row: 2, col: 'F' },
-        'oeeTotal': { row: 2, col: 'C' },
-        'okShift1': { row: 9, col: 'D' },
-        'okShift2': { row: 9, col: 'E' },
-        'okShift3': { row: 9, col: 'F' },
-        'okTotal': { row: 9, col: 'C' },
-        'nokShift1': { row: 10, col: 'D' },
-        'nokShift2': { row: 10, col: 'E' },
-        'nokShift3': { row: 10, col: 'F' },
-        'nokTotal': { row: 10, col: 'C' },
-        'h6_r1': { row: 14, col: 'E' },
-        'h7_r1': { row: 15, col: 'E' },
-        'h8_r1': { row: 16, col: 'E' },
-        'h9_r1': { row: 17, col: 'E' },
-        'h10_r1': { row: 18, col: 'E' },
-        'h11_r1': { row: 19, col: 'E' },
-        'h12_r1': { row: 20, col: 'E' },
-        'h13_r1': { row: 21, col: 'E' },
-        'h14_r1': { row: 22, col: 'E' },
-        'h15_r1': { row: 23, col: 'E' },
-        'h16_r1': { row: 24, col: 'E' },
-        'h17_r1': { row: 25, col: 'E' },
-        'h18_r1': { row: 26, col: 'E' },
-        'h19_r1': { row: 27, col: 'E' },
-        'h20_r1': { row: 28, col: 'E' },
-        'h21_r1': { row: 29, col: 'E' },
-        'h22_r1': { row: 30, col: 'E' },
-        'h23_r1': { row: 31, col: 'E' },
-        'h0_r1': { row: 32, col: 'E' },
-        'h1_r1': { row: 33, col: 'E' },
-        'h2_r1': { row: 34, col: 'E' },
-        'h3_r1': { row: 35, col: 'E' },
-        'h4_r1': { row: 36, col: 'E' },
-        'h5_r1': { row: 37, col: 'E' },
-        'h6_r2': { row: 14, col: 'C' },
-        'h7_r2': { row: 15, col: 'C' },
-        'h8_r2': { row: 16, col: 'C' },
-        'h9_r2': { row: 17, col: 'C' },
-        'h10_r2': { row: 18, col: 'C' },
-        'h11_r2': { row: 19, col: 'C' },
-        'h12_r2': { row: 20, col: 'C' },
-        'h13_r2': { row: 21, col: 'C' },
-        'h14_r2': { row: 22, col: 'C' },
-        'h15_r2': { row: 23, col: 'C' },
-        'h16_r2': { row: 24, col: 'C' },
-        'h17_r2': { row: 25, col: 'C' },
-        'h18_r2': { row: 26, col: 'C' },
-        'h19_r2': { row: 27, col: 'C' },
-        'h20_r2': { row: 28, col: 'C' },
-        'h21_r2': { row: 29, col: 'C' },
-        'h22_r2': { row: 30, col: 'C' },
-        'h23_r2': { row: 31, col: 'C' },
-        'h0_r2': { row: 32, col: 'C' },
-        'h1_r2': { row: 33, col: 'C' },
-        'h2_r2': { row: 34, col: 'C' },
-        'h3_r2': { row: 35, col: 'C' },
-        'h4_r2': { row: 36, col: 'C' },
-        'h5_r2': { row: 37, col: 'C' },
+    // Mapowanie ID elementu -> {wiersz, kolumna, czyData}
+    const cellMap = {
+        // Górna data (C1 w arkuszu)
+        'mainDisplayField': { row: 1, col: 'C', isDate: true },
+        
+        // OEE (wiersz 3)
+        'oeeTotal': { row: 3, col: 'C' },
+        'oeeShift1': { row: 3, col: 'D' },
+        'oeeShift2': { row: 3, col: 'E' },
+        'oeeShift3': { row: 3, col: 'F' },
+        
+        // OK (wiersz 4)
+        'okTotal': { row: 4, col: 'C' },
+        'okShift1': { row: 4, col: 'D' },
+        'okShift2': { row: 4, col: 'E' },
+        'okShift3': { row: 4, col: 'F' },
+        
+        // NOK (wiersz 5)
+        'nokTotal': { row: 5, col: 'C' },
+        'nokShift1': { row: 5, col: 'D' },
+        'nokShift2': { row: 5, col: 'E' },
+        'nokShift3': { row: 5, col: 'F' },
+        
+        // Godziny - WIERSZ 1 (kolumna E)
+        'h6_r1': { row: 7, col: 'E' },
+        'h7_r1': { row: 8, col: 'E' },
+        'h8_r1': { row: 9, col: 'E' },
+        'h9_r1': { row: 10, col: 'E' },
+        'h10_r1': { row: 11, col: 'E' },
+        'h11_r1': { row: 12, col: 'E' },
+        'h12_r1': { row: 13, col: 'E' },
+        'h13_r1': { row: 14, col: 'E' },
+        'h14_r1': { row: 15, col: 'E' },
+        'h15_r1': { row: 16, col: 'E' },
+        'h16_r1': { row: 17, col: 'E' },
+        'h17_r1': { row: 18, col: 'E' },
+        'h18_r1': { row: 19, col: 'E' },
+        'h19_r1': { row: 20, col: 'E' },
+        'h20_r1': { row: 21, col: 'E' },
+        'h21_r1': { row: 22, col: 'E' },
+        'h22_r1': { row: 23, col: 'E' },
+        'h23_r1': { row: 24, col: 'E' },
+        'h0_r1': { row: 25, col: 'E' },
+        'h1_r1': { row: 26, col: 'E' },
+        'h2_r1': { row: 27, col: 'E' },
+        'h3_r1': { row: 28, col: 'E' },
+        'h4_r1': { row: 29, col: 'E' },
+        'h5_r1': { row: 30, col: 'E' },
+        
+        // Godziny - WIERSZ 2 (kolumna C)
+        'h6_r2': { row: 7, col: 'C' },
+        'h7_r2': { row: 8, col: 'C' },
+        'h8_r2': { row: 9, col: 'C' },
+        'h9_r2': { row: 10, col: 'C' },
+        'h10_r2': { row: 11, col: 'C' },
+        'h11_r2': { row: 12, col: 'C' },
+        'h12_r2': { row: 13, col: 'C' },
+        'h13_r2': { row: 14, col: 'C' },
+        'h14_r2': { row: 15, col: 'C' },
+        'h15_r2': { row: 16, col: 'C' },
+        'h16_r2': { row: 17, col: 'C' },
+        'h17_r2': { row: 18, col: 'C' },
+        'h18_r2': { row: 19, col: 'C' },
+        'h19_r2': { row: 20, col: 'C' },
+        'h20_r2': { row: 21, col: 'C' },
+        'h21_r2': { row: 22, col: 'C' },
+        'h22_r2': { row: 23, col: 'C' },
+        'h23_r2': { row: 24, col: 'C' },
+        'h0_r2': { row: 25, col: 'C' },
+        'h1_r2': { row: 26, col: 'C' },
+        'h2_r2': { row: 27, col: 'C' },
+        'h3_r2': { row: 28, col: 'C' },
+        'h4_r2': { row: 29, col: 'C' },
+        'h5_r2': { row: 30, col: 'C' }
     };
 
-    function clearAllDataFields() {
-        const dataFields = document.querySelectorAll('.data-field');
-        dataFields.forEach(field => {
-            field.textContent = '';
-        });
-        const timeCells = document.querySelectorAll('.time-table td');
-        timeCells.forEach(cell => {
-            cell.textContent = '';
+    // Czyść wszystkie pola danych
+    function clearFields() {
+        document.querySelectorAll('.data-field, .time-table td').forEach(el => {
+            el.textContent = '';
         });
     }
 
-    async function updateDashboard() {
-        const selectedSheetName = sheetSelector.value;
-        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
-        clearAllDataFields();
-
-        if (!selectedSheetName) {
+    // Pobierz i wyświetl dane
+    async function loadData() {
+        const sheetName = sheetSelector.value;
+        if (!sheetName) {
             mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+            clearFields();
             return;
         }
 
-        const range = `A1:M50`;
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
-
+        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
+        
         try {
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
             const response = await fetch(url);
+            
             if (!response.ok) {
-                throw new Error(`Błąd sieci: ${response.status}`);
+                throw new Error(`Błąd HTTP: ${response.status}`);
             }
-            const csvText = await response.text();
-            const data = parseCsv(csvText);
-
-            for (const htmlId in cellMappings) {
-                const map = cellMappings[htmlId];
-                const rowIndex = map.row - 1;
-                const colIndex = getGoogleSheetColumnIndex(map.col);
-
-                if (data[rowIndex] && data[rowIndex][colIndex] !== undefined) {
-                    setFieldValue(htmlId, data[rowIndex][colIndex]);
-                } else {
-                    setFieldValue(htmlId, '');
-                }
+            
+            const csv = await response.text();
+            const rows = csv.split('\n').map(row => row.split(','));
+            
+            // Wypełnij wszystkie pola
+            for (const [id, {row, col, isDate}] of Object.entries(cellMap)) {
+                const cellValue = rows[row-1] ? rows[row-1][colToIndex(col)] || '' : '';
+                document.getElementById(id).textContent = isDate ? formatDate(cellValue) : cellValue;
             }
-
+            
         } catch (error) {
             console.error('Błąd:', error);
-            mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
-            clearAllDataFields();
+            mainDisplayField.innerHTML = '<strong>Błąd ładowania!</strong>';
+            clearFields();
         }
     }
 
-    sheetSelector.addEventListener('change', updateDashboard);
-
-    if (sheetSelector.value) {
-        updateDashboard();
-    } else {
-        mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
-        clearAllDataFields();
-    }
+    // Inicjalizacja
+    sheetSelector.addEventListener('change', loadData);
+    if (sheetSelector.value) loadData();
 });
 </script>
 </body>
