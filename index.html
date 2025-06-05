@@ -113,7 +113,7 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="____s___Dawid - spokojnie, ogarniemy:) ;) ">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Tu będize zajebiste logo ... Piasecki jest the best ;) ">
 
         <table>
             <tr>
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Miesiące są 0-11
         const year = date.getFullYear();
 
-        return ${day}.${month}.${year};
+        return `${day}.${month}.${year}`;
     }
 
     // Funkcja do ustawiania tekstu w danej komórce HTML
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             element.textContent = displayValue;
         } else {
-            console.warn(Element o ID "${elementId}" nie został znaleziony w HTML.);
+            console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`);
         }
     }
 
@@ -430,13 +430,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const range = A1:M50; // Ustawiony zakres danych do pobrania
-        const url = https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)};
+        const range = `A1:M50`; // Ustawiony zakres danych do pobrania
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
 
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status});
+                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
             }
             const csvText = await response.text();
             const data = parseCsv(csvText);
@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
                 } else {
                     setFieldValue(htmlId, ''); // Ustaw puste, jeśli brak danych
-                    // console.warn(Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).); // Możesz odkomentować dla debugowania
+                    // console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`); // Możesz odkomentować dla debugowania
                 }
             }
 
