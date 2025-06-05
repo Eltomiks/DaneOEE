@@ -28,41 +28,41 @@
             border-radius: 10px;
         }
 
-        /* Nowy kontener dla trzech sekcji nagłówka */
         .top-bar {
             display: flex;
-            /* Zmiana: ustawiamy nowrap, aby elementy nie zawijały się na nową linię */
             flex-wrap: nowrap;
-            justify-content: space-between; /* Rozłóż elementy równomiernie */
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            gap: 10px; /* Odstępy między kolumnami */
+            gap: 10px;
             padding: 5px 0;
         }
 
         .top-bar-item {
-            /* flex: 1; */ /* Możesz to usunąć, jeśli chcesz bardziej kontrolować szerokość */
-            min-width: 100px; /* Nieco mniejsza minimalna szerokość, aby ułatwić dopasowanie */
+            min-width: 100px;
             text-align: center;
-            /* Dodajemy overflow: hidden, aby tekst się nie "wylewał" */
             overflow: hidden;
-            /* Dodajemy text-overflow: ellipsis, aby długi tekst był skracany z "..." */
             text-overflow: ellipsis;
-            white-space: nowrap; /* Zapobiega łamaniu wiersza wewnątrz elementu */
+            white-space: nowrap;
         }
 
-        #mainDisplayField {
+        /* Nowy styl dla okienka "DUPA" */
+        #displayDupaField {
             font-size: 20px;
             font-weight: bold;
             color: #333;
-            text-align: left; /* Wartość daty/wskaźnika może być wyrównana do lewej */
-            flex-shrink: 0; /* Zapobiega kurczeniu się tego elementu poniżej jego contentu */
-            min-width: 140px; /* Utrzymaj sensowną minimalną szerokość */
+            text-align: center; /* Wyśrodkowanie tekstu */
+            background-color: #f0f0f0; /* Lekkie tło, aby wyróżnić okienko */
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            flex-shrink: 0;
+            min-width: 140px; /* Minimalna szerokość, aby się ładnie wyświetlało */
         }
 
         .select-wrapper {
-            flex-shrink: 0; /* Zapobiega kurczeniu się tego elementu poniżej jego contentu */
-            min-width: 140px; /* Zapewnia minimalną szerokość listy */
+            flex-shrink: 0;
+            min-width: 140px;
             text-align: center;
         }
 
@@ -76,8 +76,8 @@
         }
 
         .button-wrapper {
-            flex-shrink: 0; /* Zapobiega kurczeniu się tego elementu poniżej jego contentu */
-            min-width: 90px; /* Zapewnia minimalną szerokość przycisku */
+            flex-shrink: 0;
+            min-width: 90px;
             text-align: center;
         }
 
@@ -145,41 +145,37 @@
             font-weight: bold;
         }
 
-        /* Responsywność - Upewniamy się, że nie ma breakpointu dla top-bar */
         @media (max-width: 768px) {
-            /* Usuwamy flex-direction: column; i align-items: stretch; dla .top-bar */
             .top-bar {
-                /* Te właściwości zostały usunięte, aby top-bar pozostał w jednym rzędzie */
-                /* flex-direction: column; */
-                /* align-items: stretch; */
-                flex-wrap: nowrap; /* Upewnij się, że nowrap jest nadal aktywne */
+                flex-wrap: nowrap;
             }
-            .top-bar-item, #mainDisplayField, .select-wrapper, .button-wrapper {
-                min-width: unset; /* Usuwamy minimalną szerokość, pozwalamy na elastyczne dopasowanie */
-                width: auto; /* Zmieniamy na auto, aby nie próbowały zajmować 100% szerokości */
+            .top-bar-item {
+                min-width: unset;
+                width: auto;
                 text-align: center;
-                flex: 1; /* Pozwalamy im na równomierne rozłożenie dostępnej przestrzeni */
+                flex: 1;
             }
-            #mainDisplayField {
-                font-size: 16px; /* Zmniejsz czcionkę dla mniejszych ekranów */
+            /* Dostosowanie dla nowego pola "DUPA" na małych ekranach */
+            #displayDupaField {
+                font-size: 16px;
+                min-width: 100px;
                 text-align: center;
-                min-width: 100px; /* Możesz dostosować, aby tekst "Ładowanie daty..." się mieścił */
             }
             select, button {
                 width: 100%;
                 max-width: none;
-                font-size: 12px; /* Zmniejsz czcionkę dla mniejszych ekranów */
+                font-size: 12px;
             }
             th, td {
                 padding: 4px;
-                font-size: 10px; /* Nieco mniejsza czcionka dla tabel */
+                font-size: 10px;
             }
             .time-table th, .time-table td {
                 padding: 4px;
-                font-size: 9px; /* Mniejsza czcionka dla tabeli godzinowej */
+                font-size: 9px;
             }
             .data-field {
-                font-size: 11px; /* Mniejsza czcionka dla danych OEE/OK/NOK */
+                font-size: 11px;
             }
         }
     </style>
@@ -189,8 +185,8 @@
         <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek Pulpitu OEE">
 
         <div class="top-bar">
-            <div class="top-bar-item" id="mainDisplayField">
-                <strong>Ładowanie daty...</strong>
+            <div class="top-bar-item" id="displayDupaField">
+                <strong>DUPA</strong>
             </div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
@@ -337,7 +333,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
     const sheetSelector = document.getElementById('sheetSelector');
     const refreshButton = document.getElementById('refreshButton');
-    const mainDisplayField = document.getElementById('mainDisplayField');
+    // Usunięto mainDisplayField
+    // const mainDisplayField = document.getElementById('mainDisplayField');
 
     // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
@@ -354,23 +351,25 @@ document.addEventListener('DOMContentLoaded', function() {
         return lines.map(line => {
             return line.split(',').map(cell => {
                 let cleanedCell = cell.trim();
-                // Usuń cudzysłowy jeśli są na początku i końcu
                 if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
                     cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
                 }
-                // Obsłuż podwójne cudzysłowy w środku (escapowanie)
                 return cleanedCell.replace(/""/g, '"');
             });
         });
     }
 
-    // Funkcja do formatowania daty z numeru seryjnego Google Sheets
+    // Ta funkcja nie będzie już używana do displayDupaField
     function formatGoogleSheetDate(serial) {
         if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
             return '';
         }
+        let adjustedSerial = parseFloat(serial);
+        if (adjustedSerial < 61) {
+            adjustedSerial -= 1;
+        }
         const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-        const date = new Date(excelEpoch + (parseFloat(serial) * 86400000));
+        const date = new Date(excelEpoch + (adjustedSerial * 86400000));
 
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -379,7 +378,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${day}.${month}.${year}`;
     }
 
-    // Funkcja do ustawiania tekstu w danej komórce HTML
     function setFieldValue(elementId, value, isDate = false) {
         const element = document.getElementById(elementId);
         if (element) {
@@ -399,8 +397,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
     const cellMappings = {
-        // Główny wskaźnik / data (teraz odwołuje się bezpośrednio do mainDisplayField)
-        'mainDisplayField': { row: 43, col: 'E', isDate: true },
+        // Usunięto mainDisplayField z mapowania
+        // 'mainDisplayField': { row: 45, col: 'E', isDate: true },
 
         // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
         'oeeShift1': { row: 2, col: 'D' },
@@ -490,12 +488,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
-        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>'; // Zaktualizuj tylko pole daty
+        // Zmieniono: displayDupaField nie będzie "ładować" ani zależeć od danych z arkusza
+        const displayDupaField = document.getElementById('displayDupaField');
+        if (displayDupaField) {
+            displayDupaField.innerHTML = '<strong>DUPA</strong>'; // Zawsze wyświetlaj "DUPA"
+        }
         clearAllDataFields(); // Wyczyszczenie reszty danych
 
         if (!selectedSheetName) {
-            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
-            return;
+            // Zmieniono: displayDupaField nie jest polem do wyboru linii
+            // mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+            return; // Nic nie rób, jeśli nie wybrano linii, bo nie ma danych do pobrania
         }
 
         const range = `A1:M50`;
@@ -523,7 +526,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
+            // Zmieniono: displayDupaField nie pokazuje błędu ładowania danych
+            // mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
             clearAllDataFields();
         }
     }
@@ -531,10 +535,17 @@ document.addEventListener('DOMContentLoaded', function() {
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
 
+    // Wywołaj updateDashboard przy starcie, aby od razu wyświetlić "DUPA"
+    const initialDisplayDupaField = document.getElementById('displayDupaField');
+    if (initialDisplayDupaField) {
+        initialDisplayDupaField.innerHTML = '<strong>DUPA</strong>';
+    }
+
+    // Po uruchomieniu, jeśli jest już wybrana linia, załaduj dane
     if (sheetSelector.value) {
         updateDashboard();
     } else {
-        mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+        // Jeśli nie ma wybranej linii, nic więcej nie rób, "DUPA" już się wyświetla
         clearAllDataFields();
     }
 });
