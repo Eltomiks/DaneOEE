@@ -31,7 +31,8 @@
         /* Nowy kontener dla trzech sekcji nagłówka */
         .top-bar {
             display: flex;
-            flex-wrap: wrap; /* Pozwól elementom zawijać się na nową linię */
+            /* Zmiana: ustawiamy nowrap, aby elementy nie zawijały się na nową linię */
+            flex-wrap: nowrap;
             justify-content: space-between; /* Rozłóż elementy równomiernie */
             align-items: center;
             margin-bottom: 15px;
@@ -40,9 +41,14 @@
         }
 
         .top-bar-item {
-            flex: 1; /* Równa szerokość dla każdego elementu */
-            min-width: 120px; /* Minimalna szerokość przed zawinięciem */
+            /* flex: 1; */ /* Możesz to usunąć, jeśli chcesz bardziej kontrolować szerokość */
+            min-width: 100px; /* Nieco mniejsza minimalna szerokość, aby ułatwić dopasowanie */
             text-align: center;
+            /* Dodajemy overflow: hidden, aby tekst się nie "wylewał" */
+            overflow: hidden;
+            /* Dodajemy text-overflow: ellipsis, aby długi tekst był skracany z "..." */
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Zapobiega łamaniu wiersza wewnątrz elementu */
         }
 
         #mainDisplayField {
@@ -50,14 +56,14 @@
             font-weight: bold;
             color: #333;
             text-align: left; /* Wartość daty/wskaźnika może być wyrównana do lewej */
-            flex: 1.5; /* Daj więcej miejsca polu daty, jeśli potrzebne */
-            min-width: 150px;
+            flex-shrink: 0; /* Zapobiega kurczeniu się tego elementu poniżej jego contentu */
+            min-width: 140px; /* Utrzymaj sensowną minimalną szerokość */
         }
 
         .select-wrapper {
-            flex: 1; /* Pozwól liście rozwijanej zająć dostępną przestrzeń */
-            min-width: 150px; /* Minimalna szerokość selecta */
-            text-align: center; /* Wyśrodkuj select w swojej kolumnie */
+            flex-shrink: 0; /* Zapobiega kurczeniu się tego elementu poniżej jego contentu */
+            min-width: 140px; /* Zapewnia minimalną szerokość listy */
+            text-align: center;
         }
 
         select {
@@ -65,14 +71,14 @@
             padding: 5px 8px;
             border-radius: 4px;
             border: 1px solid #ccc;
-            width: 100%; /* Wypełnij dostępną szerokość w ramach .select-wrapper */
-            box-sizing: border-box; /* Padding wliczony w szerokość */
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .button-wrapper {
-            flex: 0.5; /* Mniej miejsca dla przycisku, niech będzie mniejszy */
-            min-width: 80px; /* Minimalna szerokość przycisku */
-            text-align: center; /* Wyśrodkuj przycisk w swojej kolumnie */
+            flex-shrink: 0; /* Zapobiega kurczeniu się tego elementu poniżej jego contentu */
+            min-width: 90px; /* Zapewnia minimalną szerokość przycisku */
+            text-align: center;
         }
 
         button {
@@ -85,7 +91,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             white-space: nowrap;
-            width: 100%; /* Wypełnij dostępną szerokość w ramach .button-wrapper */
+            width: 100%;
             box-sizing: border-box;
         }
         button:hover {
@@ -139,35 +145,41 @@
             font-weight: bold;
         }
 
-        /* Responsywność */
+        /* Responsywność - Upewniamy się, że nie ma breakpointu dla top-bar */
         @media (max-width: 768px) {
+            /* Usuwamy flex-direction: column; i align-items: stretch; dla .top-bar */
             .top-bar {
-                flex-direction: column; /* Stack items vertically */
-                align-items: stretch; /* Stretch items to full width */
+                /* Te właściwości zostały usunięte, aby top-bar pozostał w jednym rzędzie */
+                /* flex-direction: column; */
+                /* align-items: stretch; */
+                flex-wrap: nowrap; /* Upewnij się, że nowrap jest nadal aktywne */
             }
             .top-bar-item, #mainDisplayField, .select-wrapper, .button-wrapper {
-                min-width: unset; /* Usuń minimalną szerokość, pozwól im się rozciągnąć */
-                width: 100%;
-                text-align: center; /* Wyśrodkuj tekst/elementy na małych ekranach */
+                min-width: unset; /* Usuwamy minimalną szerokość, pozwalamy na elastyczne dopasowanie */
+                width: auto; /* Zmieniamy na auto, aby nie próbowały zajmować 100% szerokości */
+                text-align: center;
+                flex: 1; /* Pozwalamy im na równomierne rozłożenie dostępnej przestrzeni */
             }
             #mainDisplayField {
-                font-size: 18px;
-                text-align: center; /* Wyśrodkuj datę na małych ekranach */
+                font-size: 16px; /* Zmniejsz czcionkę dla mniejszych ekranów */
+                text-align: center;
+                min-width: 100px; /* Możesz dostosować, aby tekst "Ładowanie daty..." się mieścił */
             }
             select, button {
-                width: 100%; /* Upewnij się, że wypełniają pełną szerokość */
+                width: 100%;
                 max-width: none;
+                font-size: 12px; /* Zmniejsz czcionkę dla mniejszych ekranów */
             }
             th, td {
                 padding: 4px;
-                font-size: 11px;
+                font-size: 10px; /* Nieco mniejsza czcionka dla tabel */
             }
             .time-table th, .time-table td {
-                padding: 6px;
-                font-size: 10px;
+                padding: 4px;
+                font-size: 9px; /* Mniejsza czcionka dla tabeli godzinowej */
             }
             .data-field {
-                font-size: 12px;
+                font-size: 11px; /* Mniejsza czcionka dla danych OEE/OK/NOK */
             }
         }
     </style>
