@@ -27,6 +27,71 @@
             margin-bottom: 10px;
             border-radius: 10px;
         }
+
+        /* Nowy kontener dla trzech sekcji nagłówka */
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap; /* Pozwól elementom zawijać się na nową linię */
+            justify-content: space-between; /* Rozłóż elementy równomiernie */
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px; /* Odstępy między kolumnami */
+            padding: 5px 0;
+        }
+
+        .top-bar-item {
+            flex: 1; /* Równa szerokość dla każdego elementu */
+            min-width: 120px; /* Minimalna szerokość przed zawinięciem */
+            text-align: center;
+        }
+
+        #mainDisplayField {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-align: left; /* Wartość daty/wskaźnika może być wyrównana do lewej */
+            flex: 1.5; /* Daj więcej miejsca polu daty, jeśli potrzebne */
+            min-width: 150px;
+        }
+
+        .select-wrapper {
+            flex: 1; /* Pozwól liście rozwijanej zająć dostępną przestrzeń */
+            min-width: 150px; /* Minimalna szerokość selecta */
+            text-align: center; /* Wyśrodkuj select w swojej kolumnie */
+        }
+
+        select {
+            font-size: 14px;
+            padding: 5px 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%; /* Wypełnij dostępną szerokość w ramach .select-wrapper */
+            box-sizing: border-box; /* Padding wliczony w szerokość */
+        }
+
+        .button-wrapper {
+            flex: 0.5; /* Mniej miejsca dla przycisku, niech będzie mniejszy */
+            min-width: 80px; /* Minimalna szerokość przycisku */
+            text-align: center; /* Wyśrodkuj przycisk w swojej kolumnie */
+        }
+
+        button {
+            padding: 5px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #007bff;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+            width: 100%; /* Wypełnij dostępną szerokość w ramach .button-wrapper */
+            box-sizing: border-box;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -43,45 +108,6 @@
             color: red;
             font-weight: bold;
         }
-        /* Flex container dla listy rozwijanej i przycisku */
-        .select-button-group {
-            display: flex;
-            align-items: center;
-            gap: 5px; /* Mała przestrzeń między selectem a buttonem */
-            width: 100%; /* Upewnij się, że grupa zajmuje dostępną szerokość */
-            justify-content: center; /* Wyśrodkuj zawartość w komórce */
-        }
-        select {
-            font-size: 12px; /* Mniejsza czcionka dla select */
-            padding: 3px 5px; /* Mniejszy padding */
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            width: auto; /* Pozwól szerokości dostosować się do zawartości */
-            max-width: 120px; /* Ogranicz maksymalną szerokość selecta */
-        }
-        button {
-            padding: 3px 10px; /* Mniejszy padding dla przycisku */
-            font-size: 12px; /* Mniejsza czcionka dla przycisku */
-            border-radius: 4px;
-            border: 1px solid #007bff;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            white-space: nowrap; /* Zapobiega zawijaniu tekstu przycisku */
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Styl dla głównego pola daty/wskaźnika */
-        #mainDisplayField {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Ogólny styl dla wszystkich pól danych */
         .data-field {
             font-size: 14px;
             font-weight: 500;
@@ -106,13 +132,32 @@
             padding: 10px;
             height: 30px;
             background-color: #fff;
-            font-size: 12px; /* Domyślny rozmiar dla komórek czasowych */
+            font-size: 12px;
         }
         .time-header th {
             text-align: center;
             font-weight: bold;
         }
-        @media (max-width: 600px) {
+
+        /* Responsywność */
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column; /* Stack items vertically */
+                align-items: stretch; /* Stretch items to full width */
+            }
+            .top-bar-item, #mainDisplayField, .select-wrapper, .button-wrapper {
+                min-width: unset; /* Usuń minimalną szerokość, pozwól im się rozciągnąć */
+                width: 100%;
+                text-align: center; /* Wyśrodkuj tekst/elementy na małych ekranach */
+            }
+            #mainDisplayField {
+                font-size: 18px;
+                text-align: center; /* Wyśrodkuj datę na małych ekranach */
+            }
+            select, button {
+                width: 100%; /* Upewnij się, że wypełniają pełną szerokość */
+                max-width: none;
+            }
             th, td {
                 padding: 4px;
                 font-size: 11px;
@@ -120,19 +165,6 @@
             .time-table th, .time-table td {
                 padding: 6px;
                 font-size: 10px;
-            }
-            /* Na małych ekranach przycisk i select mogą się zawijać na nową linię, jeśli nie ma miejsca */
-            .select-button-group {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 5px;
-            }
-            select, button {
-                max-width: 100%; /* Pełna szerokość na małych ekranach */
-                width: 100%;
-            }
-            #mainDisplayField {
-                font-size: 16px;
             }
             .data-field {
                 font-size: 12px;
@@ -142,31 +174,34 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="wdize zajebiste logo ... Piasecki jest the best ;) ">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek Pulpitu OEE">
+
+        <div class="top-bar">
+            <div class="top-bar-item" id="mainDisplayField">
+                <strong>Ładowanie daty...</strong>
+            </div>
+            <div class="top-bar-item select-wrapper">
+                <select id="sheetSelector">
+                    <option value="">Wybierz linię</option>
+                    <option>NHL</option>
+                    <option>MP4</option>
+                    <option>Hood Latch</option>
+                    <option>M4</option>
+                    <option>H-Latch GŁÓWNA</option>
+                    <option>H-Latch PIANA</option>
+                    <option>139 P</option>
+                    <option>139 T</option>
+                    <option>SV3 A9</option>
+                    <option>Pokrywki</option>
+                    <option>Cardrige</option>
+                </select>
+            </div>
+            <div class="top-bar-item button-wrapper">
+                <button id="refreshButton">ODŚWIEŻ</button>
+            </div>
+        </div>
 
         <table>
-            <tr>
-                <td id="mainDisplayField"><strong>Wybierz linię</strong></td>
-                <td colspan="4">
-                    <div class="select-button-group">
-                        <select id="sheetSelector">
-                            <option value="">Wybierz linię</option>
-                            <option>NHL</option>
-                            <option>MP4</option>
-                            <option>Hood Latch</option>
-                            <option>M4</option>
-                            <option>H-Latch GŁÓWNA</option>
-                            <option>H-Latch PIANA</option>
-                            <option>139 P</option>
-                            <option>139 T</option>
-                            <option>SV3 A9</option>
-                            <option>Pokrywki</option>
-                            <option>Cardrige</option>
-                        </select>
-                        <button id="refreshButton">ODŚWIEŻ</button>
-                    </div>
-                </td>
-            </tr>
             <tr>
                 <td><strong>zm</strong></td>
                 <td>I</td>
@@ -319,20 +354,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Funkcja do formatowania daty z numeru seryjnego Google Sheets
     function formatGoogleSheetDate(serial) {
-        // Sprawdź, czy wartość jest numerem i nie jest zerem.
-        // Google Sheets często zwraca "0" dla pustych komórek z formatowaniem daty.
         if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
-            return ''; // Zwróć pusty string dla nieprawidłowych wartości lub zera
+            return '';
         }
-        // Data zerowa w Google Sheets to 30.12.1899
-        // Liczba milisekund od 1 stycznia 1970 do 30.12.1899
         const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-        // 86400000 milisekund w dobie
         const date = new Date(excelEpoch + (parseFloat(serial) * 86400000));
 
-        // Formatowanie do DD.MM.RRRR
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Miesiące są 0-11
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
         return `${day}.${month}.${year}`;
@@ -343,7 +372,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const element = document.getElementById(elementId);
         if (element) {
             let displayValue = '';
-            // Sprawdź, czy wartość nie jest pusta ani nie jest stringiem "0"
             if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
                 if (isDate) {
                     displayValue = formatGoogleSheetDate(value);
@@ -358,30 +386,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
-    // Kluczem jest ID elementu HTML, wartością jest obiekt { row: numer_wiersza_arkusza, col: "litera_kolumny_arkusza" }
-    // UWAGA: Numery wierszy i litery kolumn są takie same jak w arkuszu Google.
-    // Dostosuj te wartości do faktycznego rozmieszczenia danych w Twoim arkuszu Google (zakres A1:M50).
     const cellMappings = {
-        // Główny wskaźnik / data
+        // Główny wskaźnik / data (teraz odwołuje się bezpośrednio do mainDisplayField)
         'mainDisplayField': { row: 43, col: 'E', isDate: true },
 
         // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
         'oeeShift1': { row: 2, col: 'D' },
         'oeeShift2': { row: 2, col: 'E' },
         'oeeShift3': { row: 2, col: 'F' },
-        'oeeTotal': { row: 2, col: 'C' }, // Zakładam C2 dla total OEE
+        'oeeTotal': { row: 2, col: 'C' },
 
         // OK (przykładowe mapowanie, dostosuj do swojego arkusza)
         'okShift1': { row: 9, col: 'D' },
         'okShift2': { row: 9, col: 'E' },
         'okShift3': { row: 9, col: 'F' },
-        'okTotal': { row: 9, col: 'C' }, // Zakładam C9 dla total OK
+        'okTotal': { row: 9, col: 'C' },
 
         // NOK (przykładowe mapowanie, dostosuj do swojego arkusza)
         'nokShift1': { row: 10, col: 'D' },
         'nokShift2': { row: 10, col: 'E' },
         'nokShift3': { row: 10, col: 'F' },
-        'nokTotal': { row: 10, col: 'C' }, // Zakładam C10 dla total NOK
+        'nokTotal': { row: 10, col: 'C' },
 
         // GODZINY - WIERSZ 1 (przykładowe mapowanie, dostosuj do swojego arkusza)
         'h6_r1': { row: 14, col: 'E' },
@@ -440,7 +465,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'h5_r2': { row: 37, col: 'C' },
     };
 
-    // Funkcja do czyszczenia wszystkich pól danych
     function clearAllDataFields() {
         const dataFields = document.querySelectorAll('.data-field');
         dataFields.forEach(field => {
@@ -452,18 +476,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Główna funkcja do pobierania i aktualizowania danych
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
-        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
-        clearAllDataFields();
+        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>'; // Zaktualizuj tylko pole daty
+        clearAllDataFields(); // Wyczyszczenie reszty danych
 
         if (!selectedSheetName) {
             mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
             return;
         }
 
-        const range = `A1:M50`; // Ustawiony zakres danych do pobrania
+        const range = `A1:M50`;
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
 
         try {
@@ -474,7 +497,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const csvText = await response.text();
             const data = parseCsv(csvText);
 
-            // Ustaw dane w polach HTML zgodnie z mapowaniem
             for (const htmlId in cellMappings) {
                 const map = cellMappings[htmlId];
                 const rowIndexInData = map.row - 1;
@@ -483,8 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
                     setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
                 } else {
-                    setFieldValue(htmlId, ''); // Ustaw puste, jeśli brak danych
-                    // console.warn(`Brak danych dla ID "${htmlId}" w arkuszu (komórka ${map.col}${map.row}).`); // Możesz odkomentować dla debugowania
+                    setFieldValue(htmlId, '');
                 }
             }
 
@@ -495,12 +516,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Nasłuchuj zmian w rozwijanej liście
     sheetSelector.addEventListener('change', updateDashboard);
-    // Nasłuchuj kliknięcia przycisku odświeżania
     refreshButton.addEventListener('click', updateDashboard);
 
-    // Wywołaj funkcję raz po załadowaniu strony, aby ustawić początkowy stan
     if (sheetSelector.value) {
         updateDashboard();
     } else {
