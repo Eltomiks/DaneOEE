@@ -43,29 +43,32 @@
             color: red;
             font-weight: bold;
         }
-        .input-group {
-            display: flex; /* Use flexbox for side-by-side elements */
-            align-items: center; /* Align items vertically in the middle */
-            gap: 10px; /* Space between the select and the button */
-            width: 100%; /* Ensure the group takes full width */
+        /* Flex container dla listy rozwijanej i przycisku */
+        .select-button-group {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Mała przestrzeń między selectem a buttonem */
+            width: 100%; /* Upewnij się, że grupa zajmuje dostępną szerokość */
+            justify-content: center; /* Wyśrodkuj zawartość w komórce */
         }
         select {
-            font-size: 14px;
-            padding: 4px;
+            font-size: 12px; /* Mniejsza czcionka dla select */
+            padding: 3px 5px; /* Mniejszy padding */
             border-radius: 4px;
             border: 1px solid #ccc;
-            flex-grow: 1; /* Allow select to grow and take available space */
-            max-width: 200px; /* Keep a max-width for the select */
+            width: auto; /* Pozwól szerokości dostosować się do zawartości */
+            max-width: 120px; /* Ogranicz maksymalną szerokość selecta */
         }
         button {
-            padding: 5px 15px;
-            font-size: 14px;
+            padding: 3px 10px; /* Mniejszy padding dla przycisku */
+            font-size: 12px; /* Mniejsza czcionka dla przycisku */
             border-radius: 4px;
             border: 1px solid #007bff;
             background-color: #007bff;
             color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            white-space: nowrap; /* Zapobiega zawijaniu tekstu przycisku */
         }
         button:hover {
             background-color: #0056b3;
@@ -118,22 +121,21 @@
                 padding: 6px;
                 font-size: 10px;
             }
-            select {
-                max-width: 100%;
+            /* Na małych ekranach przycisk i select mogą się zawijać na nową linię, jeśli nie ma miejsca */
+            .select-button-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 5px;
+            }
+            select, button {
+                max-width: 100%; /* Pełna szerokość na małych ekranach */
+                width: 100%;
             }
             #mainDisplayField {
                 font-size: 16px;
             }
             .data-field {
                 font-size: 12px;
-            }
-            .input-group {
-                flex-direction: column; /* Stack vertically on small screens */
-                align-items: stretch; /* Stretch items to full width */
-            }
-            select, button {
-                width: 100%; /* Full width for select and button on small screens */
-                max-width: none; /* Remove max-width constraint */
             }
         }
     </style>
@@ -146,7 +148,7 @@
             <tr>
                 <td id="mainDisplayField"><strong>Wybierz linię</strong></td>
                 <td colspan="4">
-                    <div class="input-group">
+                    <div class="select-button-group">
                         <select id="sheetSelector">
                             <option value="">Wybierz linię</option>
                             <option>NHL</option>
@@ -287,7 +289,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
     const sheetSelector = document.getElementById('sheetSelector');
-    const refreshButton = document.getElementById('refreshButton'); // New: Get the refresh button
+    const refreshButton = document.getElementById('refreshButton');
     const mainDisplayField = document.getElementById('mainDisplayField');
 
     // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
