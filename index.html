@@ -44,19 +44,15 @@
             text-align: center;
         }
 
-        .input-wrapper {
-            display: flex;
-            gap: 5px;
-        }
-
-        .input-wrapper input {
-            flex: 1;
-            min-width: 0;
-            font-size: 14px;
-            padding: 5px 8px;
+        .cell-display {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
+            padding: 6px 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .select-wrapper {
@@ -153,10 +149,7 @@
                 width: 100%;
                 margin-bottom: 5px;
             }
-            .input-wrapper {
-                width: 100%;
-            }
-            select, button, input {
+            select, button, .cell-display {
                 width: 100%;
                 max-width: none;
                 font-size: 12px;
@@ -181,10 +174,7 @@
 
         <div class="top-bar">
             <div class="top-bar-item">
-                <div class="input-wrapper">
-                    <input type="text" id="rowInput" placeholder="Wiersz" value="1">
-                    <input type="text" id="colInput" placeholder="Kolumna" value="A">
-                </div>
+                <div id="cellC1Display" class="cell-display">Ładowanie...</div>
             </div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
@@ -331,8 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
     const sheetSelector = document.getElementById('sheetSelector');
     const refreshButton = document.getElementById('refreshButton');
-    const rowInput = document.getElementById('rowInput');
-    const colInput = document.getElementById('colInput');
+    const cellC1Display = document.getElementById('cellC1Display');
 
     // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
@@ -481,16 +470,16 @@ document.addEventListener('DOMContentLoaded', function() {
         timeCells.forEach(cell => {
             cell.textContent = '';
         });
+        cellC1Display.textContent = 'Ładowanie...';
     }
 
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
-        const customRow = parseInt(rowInput.value) || 1;
-        const customCol = colInput.value.toUpperCase() || 'A';
 
         clearAllDataFields();
 
         if (!selectedSheetName) {
+            cellC1Display.textContent = 'Wybierz linię';
             return;
         }
 
@@ -505,13 +494,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const csvText = await response.text();
             const data = parseCsv(csvText);
 
-            // Pobierz wartość z wybranej komórki
-            const customRowIndex = customRow - 1;
-            const customColIndex = getGoogleSheetColumnIndex(customCol);
-            
-            if (data[customRowIndex] && data[customRowIndex][customColIndex] !== undefined) {
-                console.log(`Wartość z komórki ${customCol}${customRow}:`, data[customRowIndex][customColIndex]);
-                // Tutaj możesz wykorzystać tę wartość według potrzeb
+            // Pobierz wartość z komórki C1 (wiersz 0, kolumna 2 w indeksowaniu 0-bazowym)
+            if (data[0] && data[0][2] !== undefined) {
+                cellC1Display.textContent = data[0][2] || '(pusta)';
+            } else {
+                cellC1Display.textContent = 'Brak danych';
             }
 
             // Zaktualizuj pozostałe pola
@@ -529,14 +516,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
+            cellC1Display.textContent = 'Błąd ładowania';
             clearAllDataFields();
         }
     }
 
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
-    rowInput.addEventListener('change', updateDashboard);
-    colInput.addEventListener('change', updateDashboard);
 
     // Wywołaj updateDashboard przy starcie
     if (sheetSelector.value) {
