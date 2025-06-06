@@ -11,14 +11,12 @@
             margin: 0;
             padding: 10px;
             color: #333;
-            font-size: 18px;
         }
         .container {
-            max-width: 480px;
-            width: 100%;
+            max-width: 100%;
             margin: auto;
             background: white;
-            padding: 16px;
+            padding: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -46,7 +44,7 @@
             white-space: nowrap;
         }
         #displayDupaField {
-            font-size: 28px;
+            font-size: 20px;
             font-weight: normal;
             color: #333;
             text-align: center;
@@ -62,8 +60,8 @@
             text-align: center;
         }
         select {
-            font-size: 18px;
-            padding: 8px 10px;
+            font-size: 14px;
+            padding: 5px 8px;
             border-radius: 4px;
             border: 1px solid #ccc;
             width: 100%;
@@ -75,8 +73,8 @@
             text-align: center;
         }
         button {
-            padding: 8px 16px;
-            font-size: 18px;
+            padding: 5px 12px;
+            font-size: 14px;
             border-radius: 4px;
             border: 1px solid #007bff;
             background-color: #007bff;
@@ -94,22 +92,21 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            font-size: 18px;
+            font-size: 12px;
             table-layout: fixed;
         }
         th, td {
             border: 1px solid #ccc;
-            padding: 8px;
+            padding: 6px;
             text-align: center;
-            font-weight: normal;
         }
         .red {
             color: red;
             font-weight: bold;
         }
         .data-field {
-            font-size: 18px;
-            font-weight: normal;
+            font-size: 17px; /* 14 + 3 */
+            font-weight: 500;
         }
         .time-block {
             margin-bottom: 20px;
@@ -122,54 +119,70 @@
         .time-table th {
             background: #3498db;
             color: white;
-            padding: 8px;
-            font-size: 16px;
+            padding: 6px;
+            font-size: 11px;
         }
         .time-table td {
             border: 1px solid #ccc;
-            padding: 8px;
+            padding: 10px;
             height: 30px;
             background-color: #fff;
-            font-size: 16px;
-            font-weight: normal;
+            font-size: 15px; /* 12 + 3 */
         }
         .time-header th {
             text-align: center;
             font-weight: bold;
         }
-        /* Kolorowanie OEE i _r1 - style nadpisywane inline przez JS */
         .oee-color-red {
             background: #e53935 !important;
             color: #fff !important;
+            font-weight: normal !important;
         }
         .oee-color-orange {
             background: #ffb300 !important;
             color: #222 !important;
+            font-weight: normal !important;
         }
         .oee-color-yellow {
             background: #fff176 !important;
             color: #222 !important;
+            font-weight: normal !important;
         }
         .oee-color-green {
             background: #43a047 !important;
             color: #222 !important;
+            font-weight: normal !important;
         }
-        @media (max-width: 600px) {
-            .container {
-                max-width: 99vw;
-                padding: 12px;
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-wrap: nowrap;
             }
-            body {
-                font-size: 20px;
+            .top-bar-item {
+                min-width: unset;
+                width: auto;
+                text-align: center;
+                flex: 1;
             }
             #displayDupaField {
-                font-size: 32px;
+                font-size: 16px;
+                min-width: 100px;
+                text-align: center;
             }
-            select, button, .data-field, th, td {
-                font-size: 20px !important;
+            select, button {
+                width: 100%;
+                max-width: none;
+                font-size: 12px;
             }
             th, td {
-                padding: 10px;
+                padding: 4px;
+                font-size: 13px;
+            }
+            .time-table th, .time-table td {
+                padding: 4px;
+                font-size: 12px;
+            }
+            .data-field {
+                font-size: 14px;
             }
         }
     </style>
