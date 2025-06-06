@@ -120,19 +120,19 @@
             background: #3498db;
             color: white;
             padding: 6px;
-            font-size: 11px;
+            font-size: 8px; /* 11 - 3 */
         }
         .time-table td {
             border: 1px solid #ccc;
             padding: 10px;
             height: 30px;
             background-color: #fff;
-            font-size: 15px; /* 12 + 3 */
         }
         .time-header th {
             text-align: center;
             font-weight: bold;
         }
+        /* Kolorowanie OEE i _r1 - style nadpisywane inline przez JS */
         .oee-color-red {
             background: #e53935 !important;
             color: #fff !important;
@@ -152,6 +152,9 @@
             background: #43a047 !important;
             color: #222 !important;
             font-weight: normal !important;
+        }
+        .r1-cell, .r2-cell {
+            font-size: 15px !important; /* 12 + 3 */
         }
         @media (max-width: 768px) {
             .top-bar {
@@ -183,6 +186,9 @@
             }
             .data-field {
                 font-size: 14px;
+            }
+            .r1-cell, .r2-cell {
+                font-size: 13px !important;
             }
         }
     </style>
@@ -251,24 +257,24 @@
                     <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
                 </tr>
                 <tr>
-                    <td id="h6_r1"></td>
-                    <td id="h7_r1"></td>
-                    <td id="h8_r1"></td>
-                    <td id="h9_r1"></td>
-                    <td id="h10_r1"></td>
-                    <td id="h11_r1"></td>
-                    <td id="h12_r1"></td>
-                    <td id="h13_r1"></td>
+                    <td id="h6_r1" class="r1-cell"></td>
+                    <td id="h7_r1" class="r1-cell"></td>
+                    <td id="h8_r1" class="r1-cell"></td>
+                    <td id="h9_r1" class="r1-cell"></td>
+                    <td id="h10_r1" class="r1-cell"></td>
+                    <td id="h11_r1" class="r1-cell"></td>
+                    <td id="h12_r1" class="r1-cell"></td>
+                    <td id="h13_r1" class="r1-cell"></td>
                 </tr>
                 <tr>
-                    <td id="h6_r2"></td>
-                    <td id="h7_r2"></td>
-                    <td id="h8_r2"></td>
-                    <td id="h9_r2"></td>
-                    <td id="h10_r2"></td>
-                    <td id="h11_r2"></td>
-                    <td id="h12_r2"></td>
-                    <td id="h13_r2"></td>
+                    <td id="h6_r2" class="r2-cell"></td>
+                    <td id="h7_r2" class="r2-cell"></td>
+                    <td id="h8_r2" class="r2-cell"></td>
+                    <td id="h9_r2" class="r2-cell"></td>
+                    <td id="h10_r2" class="r2-cell"></td>
+                    <td id="h11_r2" class="r2-cell"></td>
+                    <td id="h12_r2" class="r2-cell"></td>
+                    <td id="h13_r2" class="r2-cell"></td>
                 </tr>
             </table>
         </div>
@@ -280,24 +286,24 @@
                     <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
                 </tr>
                 <tr>
-                    <td id="h14_r1"></td>
-                    <td id="h15_r1"></td>
-                    <td id="h16_r1"></td>
-                    <td id="h17_r1"></td>
-                    <td id="h18_r1"></td>
-                    <td id="h19_r1"></td>
-                    <td id="h20_r1"></td>
-                    <td id="h21_r1"></td>
+                    <td id="h14_r1" class="r1-cell"></td>
+                    <td id="h15_r1" class="r1-cell"></td>
+                    <td id="h16_r1" class="r1-cell"></td>
+                    <td id="h17_r1" class="r1-cell"></td>
+                    <td id="h18_r1" class="r1-cell"></td>
+                    <td id="h19_r1" class="r1-cell"></td>
+                    <td id="h20_r1" class="r1-cell"></td>
+                    <td id="h21_r1" class="r1-cell"></td>
                 </tr>
                 <tr>
-                    <td id="h14_r2"></td>
-                    <td id="h15_r2"></td>
-                    <td id="h16_r2"></td>
-                    <td id="h17_r2"></td>
-                    <td id="h18_r2"></td>
-                    <td id="h19_r2"></td>
-                    <td id="h20_r2"></td>
-                    <td id="h21_r2"></td>
+                    <td id="h14_r2" class="r2-cell"></td>
+                    <td id="h15_r2" class="r2-cell"></td>
+                    <td id="h16_r2" class="r2-cell"></td>
+                    <td id="h17_r2" class="r2-cell"></td>
+                    <td id="h18_r2" class="r2-cell"></td>
+                    <td id="h19_r2" class="r2-cell"></td>
+                    <td id="h20_r2" class="r2-cell"></td>
+                    <td id="h21_r2" class="r2-cell"></td>
                 </tr>
             </table>
         </div>
@@ -309,24 +315,24 @@
                     <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
                 </tr>
                 <tr>
-                    <td id="h22_r1"></td>
-                    <td id="h23_r1"></td>
-                    <td id="h0_r1"></td>
-                    <td id="h1_r1"></td>
-                    <td id="h2_r1"></td>
-                    <td id="h3_r1"></td>
-                    <td id="h4_r1"></td>
-                    <td id="h5_r1"></td>
+                    <td id="h22_r1" class="r1-cell"></td>
+                    <td id="h23_r1" class="r1-cell"></td>
+                    <td id="h0_r1" class="r1-cell"></td>
+                    <td id="h1_r1" class="r1-cell"></td>
+                    <td id="h2_r1" class="r1-cell"></td>
+                    <td id="h3_r1" class="r1-cell"></td>
+                    <td id="h4_r1" class="r1-cell"></td>
+                    <td id="h5_r1" class="r1-cell"></td>
                 </tr>
                 <tr>
-                    <td id="h22_r2"></td>
-                    <td id="h23_r2"></td>
-                    <td id="h0_r2"></td>
-                    <td id="h1_r2"></td>
-                    <td id="h2_r2"></td>
-                    <td id="h3_r2"></td>
-                    <td id="h4_r2"></td>
-                    <td id="h5_r2"></td>
+                    <td id="h22_r2" class="r2-cell"></td>
+                    <td id="h23_r2" class="r2-cell"></td>
+                    <td id="h0_r2" class="r2-cell"></td>
+                    <td id="h1_r2" class="r2-cell"></td>
+                    <td id="h2_r2" class="r2-cell"></td>
+                    <td id="h3_r2" class="r2-cell"></td>
+                    <td id="h4_r2" class="r2-cell"></td>
+                    <td id="h5_r2" class="r2-cell"></td>
                 </tr>
             </table>
         </div>
@@ -368,12 +374,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return value;
     }
 
-    // Lista ID do kolorowania OEE i godzin _r1
+    // Lista ID do kolorowania OEE i godzin _r1 oraz OEE TOTAL
     const oeeColorFields = [
-        'oeeShift1', 'oeeShift2', 'oeeShift3',
+        'oeeShift1', 'oeeShift2', 'oeeShift3', 'oeeTotal',
         'h6_r1','h7_r1','h8_r1','h9_r1','h10_r1','h11_r1','h12_r1','h13_r1',
         'h14_r1','h15_r1','h16_r1','h17_r1','h18_r1','h19_r1','h20_r1','h21_r1',
         'h22_r1','h23_r1','h0_r1','h1_r1','h2_r1','h3_r1','h4_r1','h5_r1'
+    ];
+
+    // Lista ID do ukrywania 0 w _r2
+    const r2Fields = [
+        'h6_r2','h7_r2','h8_r2','h9_r2','h10_r2','h11_r2','h12_r2','h13_r2',
+        'h14_r2','h15_r2','h16_r2','h17_r2','h18_r2','h19_r2','h20_r2','h21_r2',
+        'h22_r2','h23_r2','h0_r2','h1_r2','h2_r2','h3_r2','h4_r2','h5_r2'
     ];
 
     const cellMappings = {
@@ -453,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
         element.classList.remove('oee-color-red','oee-color-orange','oee-color-yellow','oee-color-green');
         if (!value) { element.textContent = ''; return; }
         let num = value.replace(',', '.').replace('%','').trim();
-        if (num === '0' || num === '0.0' || num === '0.00' || num === '') { element.textContent = ''; return; }
+        if (num === '0' || num === '0.0' || num === '0.00' || num === '' || num === '0%') { element.textContent = ''; return; }
         num = parseFloat(num);
         if (isNaN(num)) { element.textContent = value; return; }
         if (num > 0 && num <= 60) {
@@ -466,6 +479,15 @@ document.addEventListener('DOMContentLoaded', function() {
             element.classList.add('oee-color-green');
         }
         element.textContent = value;
+    }
+
+    function hideZeroCell(element, value) {
+        let num = value.replace(',', '.').replace('%','').trim();
+        if (num === '0' || num === '0.0' || num === '0.00' || num === '' || num === '0%') {
+            element.textContent = '';
+        } else {
+            element.textContent = value;
+        }
     }
 
     async function updateDashboard() {
@@ -494,6 +516,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (oeeColorFields.includes(htmlId)) {
                     const element = document.getElementById(htmlId);
                     if (element) colorOeeCell(element, value);
+                } else if (r2Fields.includes(htmlId)) {
+                    const element = document.getElementById(htmlId);
+                    if (element) hideZeroCell(element, value);
                 } else {
                     const element = document.getElementById(htmlId);
                     if (element) element.textContent = value;
