@@ -105,7 +105,7 @@
             font-weight: bold;
         }
         .data-field {
-            font-size: 17px; /* 14 + 3 */
+            font-size: 17px;
             font-weight: 500;
         }
         .time-block {
@@ -148,7 +148,7 @@
             font-weight: normal !important;
         }
         .oee-color-green {
-            background: #7CFC98 !important; /* jaśniejszy zielony */
+            background: #7CFC98 !important;
             color: #222 !important;
             font-weight: normal !important;
         }
@@ -340,7 +340,205 @@
     </div>
 
 <script>
-/* ...Twój JS bez zmian, jak w poprzednich wersjach... */
+document.addEventListener('DOMContentLoaded', function() {
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
+    const sheetSelector = document.getElementById('sheetSelector');
+    const refreshButton = document.getElementById('refreshButton');
+
+    function getGoogleSheetColumnIndex(colLetter) {
+        let colIndex = 0;
+        for (let i = 0; i < colLetter.length; i++) {
+            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+        }
+        return colIndex - 1;
+    }
+
+    function parseCsv(csvString) {
+        const lines = csvString.trim().split('\n');
+        return lines.map(line => {
+            return line.split(',').map(cell => {
+                let cleanedCell = cell.trim();
+                if (cleanedCell.startsWith('"') && cleanedCell.endsWith('"')) {
+                    cleanedCell = cleanedCell.substring(1, cleanedCell.length - 1);
+                }
+                return cleanedCell.replace(/""/g, '"');
+            });
+        });
+    }
+
+    function formatDateIfPossible(value) {
+        if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
+            const datePart = value.split(' ')[0];
+            const [year, month, day] = datePart.split('-');
+            return `${day}.${month}.${year}`;
+        }
+        return value;
+    }
+
+    // Lista ID do kolorowania OEE i godzin _r1 oraz OEE TOTAL
+    const oeeColorFields = [
+        'oeeShift1', 'oeeShift2', 'oeeShift3', 'oeeTotal',
+        'h6_r1','h7_r1','h8_r1','h9_r1','h10_r1','h11_r1','h12_r1','h13_r1',
+        'h14_r1','h15_r1','h16_r1','h17_r1','h18_r1','h19_r1','h20_r1','h21_r1',
+        'h22_r1','h23_r1','h0_r1','h1_r1','h2_r1','h3_r1','h4_r1','h5_r1'
+    ];
+
+    // Lista ID do ukrywania 0 w _r2
+    const r2Fields = [
+        'h6_r2','h7_r2','h8_r2','h9_r2','h10_r2','h11_r2','h12_r2','h13_r2',
+        'h14_r2','h15_r2','h16_r2','h17_r2','h18_r2','h19_r2','h20_r2','h21_r2',
+        'h22_r2','h23_r2','h0_r2','h1_r2','h2_r2','h3_r2','h4_r2','h5_r2'
+    ];
+
+    const cellMappings = {
+        'displayDupaField': { row: 1, col: 'C' },
+        'oeeShift1': { row: 2, col: 'D' },
+        'oeeShift2': { row: 2, col: 'E' },
+        'oeeShift3': { row: 2, col: 'F' },
+        'oeeTotal': { row: 2, col: 'C' },
+        'okShift1': { row: 9, col: 'D' },
+        'okShift2': { row: 9, col: 'E' },
+        'okShift3': { row: 9, col: 'F' },
+        'okTotal': { row: 9, col: 'C' },
+        'nokShift1': { row: 10, col: 'D' },
+        'nokShift2': { row: 10, col: 'E' },
+        'nokShift3': { row: 10, col: 'F' },
+        'nokTotal': { row: 10, col: 'C' },
+        'h6_r1': { row: 19, col: 'E' },
+        'h7_r1': { row: 20, col: 'E' },
+        'h8_r1': { row: 21, col: 'E' },
+        'h9_r1': { row: 22, col: 'E' },
+        'h10_r1': { row: 23, col: 'E' },
+        'h11_r1': { row: 24, col: 'E' },
+        'h12_r1': { row: 25, col: 'E' },
+        'h13_r1': { row: 26, col: 'E' },
+        'h14_r1': { row: 27, col: 'E' },
+        'h15_r1': { row: 28, col: 'E' },
+        'h16_r1': { row: 29, col: 'E' },
+        'h17_r1': { row: 30, col: 'E' },
+        'h18_r1': { row: 31, col: 'E' },
+        'h19_r1': { row: 32, col: 'E' },
+        'h20_r1': { row: 33, col: 'E' },
+        'h21_r1': { row: 34, col: 'E' },
+        'h22_r1': { row: 35, col: 'E' },
+        'h23_r1': { row: 36, col: 'E' },
+        'h0_r1': { row: 37, col: 'E' },
+        'h1_r1': { row: 38, col: 'E' },
+        'h2_r1': { row: 39, col: 'E' },
+        'h3_r1': { row: 40, col: 'E' },
+        'h4_r1': { row: 41, col: 'E' },
+        'h5_r1': { row: 42, col: 'E' },
+        'h6_r2': { row: 19, col: 'C' },
+        'h7_r2': { row: 20, col: 'C' },
+        'h8_r2': { row: 21, col: 'C' },
+        'h9_r2': { row: 22, col: 'C' },
+        'h10_r2': { row: 23, col: 'C' },
+        'h11_r2': { row: 24, col: 'C' },
+        'h12_r2': { row: 25, col: 'C' },
+        'h13_r2': { row: 26, col: 'C' },
+        'h14_r2': { row: 27, col: 'C' },
+        'h15_r2': { row: 28, col: 'C' },
+        'h16_r2': { row: 29, col: 'C' },
+        'h17_r2': { row: 30, col: 'C' },
+        'h18_r2': { row: 31, col: 'C' },
+        'h19_r2': { row: 32, col: 'C' },
+        'h20_r2': { row: 33, col: 'C' },
+        'h21_r2': { row: 34, col: 'C' },
+        'h22_r2': { row: 35, col: 'C' },
+        'h23_r2': { row: 36, col: 'C' },
+        'h0_r2': { row: 37, col: 'C' },
+        'h1_r2': { row: 38, col: 'C' },
+        'h2_r2': { row: 39, col: 'C' },
+        'h3_r2': { row: 40, col: 'C' },
+        'h4_r2': { row: 41, col: 'C' },
+        'h5_r2': { row: 42, col: 'C' }
+    };
+
+    function clearAllDataFields() {
+        const dataFields = document.querySelectorAll('.data-field');
+        dataFields.forEach(field => { field.textContent = ''; field.className = 'data-field'; });
+        const timeCells = document.querySelectorAll('.time-table td');
+        timeCells.forEach(cell => { cell.textContent = ''; cell.className = cell.className; });
+        const displayDupaField = document.getElementById('displayDupaField');
+        if (displayDupaField) displayDupaField.textContent = '';
+    }
+
+    function colorOeeCell(element, value) {
+        element.classList.remove('oee-color-red','oee-color-orange','oee-color-yellow','oee-color-green');
+        if (!value) { element.textContent = ''; return; }
+        let num = value.replace(',', '.').replace('%','').trim();
+        if (num === '0' || num === '0.0' || num === '0.00' || num === '' || num === '0%') { element.textContent = ''; return; }
+        num = parseFloat(num);
+        if (isNaN(num)) { element.textContent = value; return; }
+        if (num > 0 && num <= 60) {
+            element.classList.add('oee-color-red');
+        } else if (num > 60 && num <= 70) {
+            element.classList.add('oee-color-orange');
+        } else if (num > 70 && num <= 80) {
+            element.classList.add('oee-color-yellow');
+        } else if (num > 80) {
+            element.classList.add('oee-color-green');
+        }
+        element.textContent = value;
+    }
+
+    function hideZeroCell(element, value) {
+        let num = value.replace(',', '.').replace('%','').trim();
+        if (num === '0' || num === '0.0' || num === '0.00' || num === '' || num === '0%') {
+            element.textContent = '';
+        } else {
+            element.textContent = value;
+        }
+    }
+
+    async function updateDashboard() {
+        const selectedSheetName = sheetSelector.value;
+        clearAllDataFields();
+        if (!selectedSheetName) return;
+        const range = `A1:M50`;
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
+            const csvText = await response.text();
+            const data = parseCsv(csvText);
+            for (const htmlId in cellMappings) {
+                const map = cellMappings[htmlId];
+                const rowIndexInData = map.row - 1;
+                const colIndexInData = getGoogleSheetColumnIndex(map.col);
+                let value = '';
+                if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
+                    value = data[rowIndexInData][colIndexInData];
+                }
+                if (htmlId === 'displayDupaField') {
+                    value = formatDateIfPossible(value);
+                    const element = document.getElementById(htmlId);
+                    if (element) element.textContent = value;
+                } else if (oeeColorFields.includes(htmlId)) {
+                    const element = document.getElementById(htmlId);
+                    if (element) colorOeeCell(element, value);
+                } else if (r2Fields.includes(htmlId)) {
+                    const element = document.getElementById(htmlId);
+                    if (element) hideZeroCell(element, value);
+                } else {
+                    const element = document.getElementById(htmlId);
+                    if (element) element.textContent = value;
+                }
+            }
+        } catch (error) {
+            console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
+            clearAllDataFields();
+        }
+    }
+
+    sheetSelector.addEventListener('change', updateDashboard);
+    refreshButton.addEventListener('click', updateDashboard);
+    if (sheetSelector.value) {
+        updateDashboard();
+    } else {
+        clearAllDataFields();
+    }
+});
 </script>
 </body>
 </html>
