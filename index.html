@@ -43,7 +43,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        /* displayDupaField - bez ramki, tła, pogrubienia */
         #displayDupaField {
             font-size: 20px;
             font-weight: normal;
@@ -193,9 +192,126 @@
                 <button id="refreshButton">ODŚWIEŻ</button>
             </div>
         </div>
-        <!-- ...reszta Twojego kodu (tabele, time-blocki) zostaje bez zmian... -->
-        <!-- ...skopiuj tutaj całą resztę swojego HTMLa... -->
-        <!-- ...poniżej jest tylko JS, który obsługuje wyświetlanie pola na górze... -->
+
+        <table>
+            <tr>
+                <td><strong>zm</strong></td>
+                <td>I</td>
+                <td>II</td>
+                <td>III</td>
+                <td><strong>TOTAL</strong></td>
+            </tr>
+            <tr>
+                <td><strong>OEE</strong></td>
+                <td id="oeeShift1" class="data-field"></td>
+                <td id="oeeShift2" class="data-field"></td>
+                <td id="oeeShift3" class="data-field"></td>
+                <td id="oeeTotal" class="data-field"></td>
+            </tr>
+            <tr>
+                <td><strong>OK</strong></td>
+                <td id="okShift1" class="data-field"></td>
+                <td id="okShift2" class="data-field"></td>
+                <td id="okShift3" class="data-field"></td>
+                <td id="okTotal" class="data-field"></td>
+            </tr>
+            <tr>
+                <td class="red">NOK</td>
+                <td id="nokShift1" class="data-field"></td>
+                <td id="nokShift2" class="data-field"></td>
+                <td id="nokShift3" class="data-field"></td>
+                <td id="nokTotal" class="data-field"></td>
+            </tr>
+        </table>
+
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
+                    <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
+                </tr>
+                <tr>
+                    <td id="h6_r1"></td>
+                    <td id="h7_r1"></td>
+                    <td id="h8_r1"></td>
+                    <td id="h9_r1"></td>
+                    <td id="h10_r1"></td>
+                    <td id="h11_r1"></td>
+                    <td id="h12_r1"></td>
+                    <td id="h13_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h6_r2"></td>
+                    <td id="h7_r2"></td>
+                    <td id="h8_r2"></td>
+                    <td id="h9_r2"></td>
+                    <td id="h10_r2"></td>
+                    <td id="h11_r2"></td>
+                    <td id="h12_r2"></td>
+                    <td id="h13_r2"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
+                    <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
+                </tr>
+                <tr>
+                    <td id="h14_r1"></td>
+                    <td id="h15_r1"></td>
+                    <td id="h16_r1"></td>
+                    <td id="h17_r1"></td>
+                    <td id="h18_r1"></td>
+                    <td id="h19_r1"></td>
+                    <td id="h20_r1"></td>
+                    <td id="h21_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h14_r2"></td>
+                    <td id="h15_r2"></td>
+                    <td id="h16_r2"></td>
+                    <td id="h17_r2"></td>
+                    <td id="h18_r2"></td>
+                    <td id="h19_r2"></td>
+                    <td id="h20_r2"></td>
+                    <td id="h21_r2"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="time-block">
+            <table class="time-table">
+                <tr class="time-header">
+                    <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
+                    <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
+                </tr>
+                <tr>
+                    <td id="h22_r1"></td>
+                    <td id="h23_r1"></td>
+                    <td id="h0_r1"></td>
+                    <td id="h1_r1"></td>
+                    <td id="h2_r1"></td>
+                    <td id="h3_r1"></td>
+                    <td id="h4_r1"></td>
+                    <td id="h5_r1"></td>
+                </tr>
+                <tr>
+                    <td id="h22_r2"></td>
+                    <td id="h23_r2"></td>
+                    <td id="h0_r2"></td>
+                    <td id="h1_r2"></td>
+                    <td id="h2_r2"></td>
+                    <td id="h3_r2"></td>
+                    <td id="h4_r2"></td>
+                    <td id="h5_r2"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
@@ -224,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function formatDateIfPossible(value) {
-        if (/^\\d{4}-\\d{2}-\\d{2}/.test(value)) {
+        if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
             const datePart = value.split(' ')[0];
             const [year, month, day] = datePart.split('-');
             return `${day}.${month}.${year}`;
@@ -232,10 +348,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return value;
     }
 
-    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
     const cellMappings = {
-        'displayDupaField': { row: 43, col: 'E' },
-        // ...pozostałe mapowania jak w Twoim kodzie...
+        'displayDupaField': { row: 1, col: 'C' },
         'oeeShift1': { row: 2, col: 'D' },
         'oeeShift2': { row: 2, col: 'E' },
         'oeeShift3': { row: 2, col: 'F' },
