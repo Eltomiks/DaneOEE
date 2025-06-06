@@ -46,18 +46,17 @@
             white-space: nowrap;
         }
 
-        /* Nowy styl dla okienka "DUPA" */
         #displayDupaField {
             font-size: 20px;
             font-weight: bold;
             color: #333;
-            text-align: center; /* Wyśrodkowanie tekstu */
-            background-color: #f0f0f0; /* Lekkie tło, aby wyróżnić okienko */
+            text-align: center;
+            background-color: #f0f0f0;
             padding: 5px 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
             flex-shrink: 0;
-            min-width: 140px; /* Minimalna szerokość, aby się ładnie wyświetlało */
+            min-width: 140px;
         }
 
         .select-wrapper {
@@ -155,7 +154,6 @@
                 text-align: center;
                 flex: 1;
             }
-            /* Dostosowanie dla nowego pola "DUPA" na małych ekranach */
             #displayDupaField {
                 font-size: 16px;
                 min-width: 100px;
@@ -186,7 +184,7 @@
 
         <div class="top-bar">
             <div class="top-bar-item" id="displayDupaField">
-                <strong>MASAKRA</strong>
+                <!-- Tutaj pojawi się wartość z E45 -->
             </div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
@@ -330,11 +328,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
     const sheetSelector = document.getElementById('sheetSelector');
     const refreshButton = document.getElementById('refreshButton');
-    // Usunięto mainDisplayField
-    // const mainDisplayField = document.getElementById('mainDisplayField');
 
     // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
@@ -342,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 0; i < colLetter.length; i++) {
             colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
         }
-        return colIndex - 1; // Zwróć indeks 0-bazowy
+        return colIndex - 1;
     }
 
     // Funkcja pomocnicza do parsowania CSV
@@ -359,66 +355,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Ta funkcja nie będzie już używana do displayDupaField
-    function formatGoogleSheetDate(serial) {
-        if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
-            return '';
-        }
-        let adjustedSerial = parseFloat(serial);
-        if (adjustedSerial < 61) {
-            adjustedSerial -= 1;
-        }
-        const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-        const date = new Date(excelEpoch + (adjustedSerial * 86400000));
-
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-
-        return `${day}.${month}.${year}`;
-    }
-
     function setFieldValue(elementId, value, isDate = false) {
         const element = document.getElementById(elementId);
         if (element) {
             let displayValue = '';
             if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
-                if (isDate) {
-                    displayValue = formatGoogleSheetDate(value);
-                } else {
-                    displayValue = value;
-                }
+                displayValue = value;
             }
             element.textContent = displayValue;
-        } else {
-            console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`);
         }
     }
 
     // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
     const cellMappings = {
-        // Usunięto mainDisplayField z mapowania
-        // 'mainDisplayField': { row: 45, col: 'E', isDate: true },
+        'displayDupaField': { row: 45, col: 'E' },
 
-        // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
         'oeeShift1': { row: 2, col: 'D' },
         'oeeShift2': { row: 2, col: 'E' },
         'oeeShift3': { row: 2, col: 'F' },
         'oeeTotal': { row: 2, col: 'C' },
 
-        // OK (przykładowe mapowanie, dostosuj do swojego arkusza)
         'okShift1': { row: 9, col: 'D' },
         'okShift2': { row: 9, col: 'E' },
         'okShift3': { row: 9, col: 'F' },
         'okTotal': { row: 9, col: 'C' },
 
-        // NOK (przykładowe mapowanie, dostosuj do swojego arkusza)
         'nokShift1': { row: 10, col: 'D' },
         'nokShift2': { row: 10, col: 'E' },
         'nokShift3': { row: 10, col: 'F' },
         'nokTotal': { row: 10, col: 'C' },
 
-        // GODZINY - WIERSZ 1 (przykładowe mapowanie, dostosuj do swojego arkusza)
         'h6_r1': { row: 14, col: 'E' },
         'h7_r1': { row: 15, col: 'E' },
         'h8_r1': { row: 16, col: 'E' },
@@ -446,7 +412,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'h4_r1': { row: 36, col: 'E' },
         'h5_r1': { row: 37, col: 'E' },
 
-        // GODZINY - WIERSZ 2 (przykładowe mapowanie, dostosuj do swojego arkusza)
         'h6_r2': { row: 14, col: 'C' },
         'h7_r2': { row: 15, col: 'C' },
         'h8_r2': { row: 16, col: 'C' },
@@ -484,21 +449,19 @@ document.addEventListener('DOMContentLoaded', function() {
         timeCells.forEach(cell => {
             cell.textContent = '';
         });
+        // Czyść także displayDupaField
+        const displayDupaField = document.getElementById('displayDupaField');
+        if (displayDupaField) {
+            displayDupaField.textContent = '';
+        }
     }
 
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
-        // Zmieniono: displayDupaField nie będzie "ładować" ani zależeć od danych z arkusza
-        const displayDupaField = document.getElementById('displayDupaField');
-        if (displayDupaField) {
-            displayDupaField.innerHTML = '<strong>DUPA</strong>'; // Zawsze wyświetlaj "DUPA"
-        }
-        clearAllDataFields(); // Wyczyszczenie reszty danych
+        clearAllDataFields();
 
         if (!selectedSheetName) {
-            // Zmieniono: displayDupaField nie jest polem do wyboru linii
-            // mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
-            return; // Nic nie rób, jeśli nie wybrano linii, bo nie ma danych do pobrania
+            return;
         }
 
         const range = `A1:M50`;
@@ -526,8 +489,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            // Zmieniono: displayDupaField nie pokazuje błędu ładowania danych
-            // mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
             clearAllDataFields();
         }
     }
@@ -535,17 +496,10 @@ document.addEventListener('DOMContentLoaded', function() {
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
 
-    // Wywołaj updateDashboard przy starcie, aby od razu wyświetlić "DUPA"
-    const initialDisplayDupaField = document.getElementById('displayDupaField');
-    if (initialDisplayDupaField) {
-        initialDisplayDupaField.innerHTML = '<strong>DUPA</strong>';
-    }
-
     // Po uruchomieniu, jeśli jest już wybrana linia, załaduj dane
     if (sheetSelector.value) {
         updateDashboard();
     } else {
-        // Jeśli nie ma wybranej linii, nic więcej nie rób, "DUPA" już się wyświetla
         clearAllDataFields();
     }
 });
