@@ -46,7 +46,7 @@
             white-space: nowrap;
         }
 
-        /* Styl dla pola głównego, które będzie wyświetlać wybraną wartość */
+        /* Styl dla pola głównego, które ma być puste */
         #mainDisplayField {
             font-size: 20px;
             font-weight: bold;
@@ -54,10 +54,11 @@
             text-align: left;
             flex-shrink: 0;
             min-width: 140px;
-            background-color: #f0f0f0; /* Lekkie tło, aby wyróżnić okienko */
-            padding: 5px 10px;
+            /* Ustawienia, które sprawią, że pole będzie wyglądać na puste, ale zachowa rozmiar */
+            background-color: transparent; /* Przezroczyste tło */
+            border: 1px solid transparent; /* Przezroczysta ramka */
+            padding: 5px 10px; /* Nadal zachowujemy padding, aby element miał wymiary */
             border-radius: 4px;
-            border: 1px solid #ddd;
         }
 
         .select-wrapper {
@@ -181,12 +182,11 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagasaswek Pulpitu OEE">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek Pulpitu OEE">
 
         <div class="top-bar">
             <div class="top-bar-item" id="mainDisplayField">
-                <strong>Ładowanie...</strong>
-            </div>
+                </div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
                     <option value="">Wybierz linię</option>
@@ -335,22 +335,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainDisplayField = document.getElementById('mainDisplayField');
 
     // ====================================================================
-    // === TUTAJ USTAWIASZ, CO MA SIĘ WYŚWIETLAĆ W GŁÓWNYM POLU ==========
+    // === USTAWIENIE TEGO NA `null` SPRAWI, ŻE POLE BĘDZIE PUSTE ========
     // ====================================================================
-    // Wartość dla `mainDisplaySource` może być:
-    // 1. Obiektem { row: numer_wiersza, col: 'litera_kolumny', isDate: true/false }
-    //    Przykład: { row: 45, col: 'E', isDate: true }  // Data z komórki E45 (DD.MM.RRRR)
-    //    Przykład: { row: 10, col: 'C', isDate: false } // Wartość z komórki C10 (np. całkowity NOK)
-    //    Przykład: { row: 2, col: 'C', isDate: false }  // Wartość z komórki C2 (np. całkowite OEE)
-    //
-    // 2. Stałym tekstem jako string.
-    //    Przykład: 'DUPA'                               // Stały tekst "DUPA"
-    //    Przykład: 'Aktualna Data'                      // Stały tekst "Aktualna Data"
-    //
-    // 3. Wartością `null`, jeśli pole ma być puste (lub pokazywać standardowe komunikaty).
-    //    Przykład: null
-    // ====================================================================
-    const mainDisplaySource = { row: 30, col: 'A', isDate: true }; // <--- ZMIEŃ TO!
+    const mainDisplaySource = null; // <--- ZMIENIONE NA `null`
     // ====================================================================
 
 
@@ -377,18 +364,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Funkcja do formatowania daty z numeru seryjnego Google Sheets
+    // Funkcja do formatowania daty z numeru seryjnego Google Sheets (nie będzie używana dla mainDisplayField, ale zostawiona dla innych pól)
     function formatGoogleSheetDate(serial) {
         if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
             return '';
         }
         let adjustedSerial = parseFloat(serial);
-        // Korekta błędu przestępnego Excela z 1900 r.
-        if (adjustedSerial < 61) { // Przed 1 marca 1900
+        if (adjustedSerial < 61) {
             adjustedSerial -= 1;
         }
-        const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime(); // 30 grudnia 1899
-        const date = new Date(excelEpoch + (adjustedSerial * 86400000)); // 86400000 ms = 1 dzień
+        const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
+        const date = new Date(excelEpoch + (adjustedSerial * 86400000));
 
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -397,33 +383,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${day}.${month}.${year}`;
     }
 
-    // Funkcja do ustawiania wartości w głównym polu
+    // Funkcja do ustawiania wartości w głównym polu - teraz po prostu czyści tekst
     function setMainDisplayValue(data = null) {
-        if (!mainDisplaySource) {
-            mainDisplayField.textContent = ''; // Jeśli ustawiono na null, pole jest puste
-            return;
-        }
-
-        if (typeof mainDisplaySource === 'string') {
-            mainDisplayField.textContent = mainDisplaySource; // Wyświetl stały tekst
-        } else if (typeof mainDisplaySource === 'object' && mainDisplaySource !== null) {
-            const map = mainDisplaySource;
-            const rowIndexInData = map.row - 1;
-            const colIndexInData = getGoogleSheetColumnIndex(map.col);
-
-            if (data && data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
-                const value = data[rowIndexInData][colIndexInData];
-                if (map.isDate) {
-                    mainDisplayField.textContent = formatGoogleSheetDate(value);
-                } else {
-                    mainDisplayField.textContent = value;
-                }
-            } else {
-                mainDisplayField.textContent = 'Brak danych'; // Jeśli danych nie ma
-            }
-        } else {
-            mainDisplayField.textContent = 'Konfiguracja błędu!'; // Nieznany typ konfiguracji
-        }
+        mainDisplayField.textContent = ''; // Zawsze ustawia puste pole
     }
 
 
@@ -432,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const element = document.getElementById(elementId);
         if (element) {
             let displayValue = '';
-            // Jeśli wartość jest pusta, null, undefined lub "0", wyświetl pusto
             if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
                 if (isDate) {
                     displayValue = formatGoogleSheetDate(value);
@@ -447,8 +408,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- MAPOWANIE POZOSTAŁYCH PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
-    // Te mapowania służą do wypełniania tabel OEE, OK, NOK i tabel czasowych.
-    // Dostosuj wiersze (row) i kolumny (col) do struktury Twojego Arkusza Google.
     const cellMappings = {
         // OEE (przykładowe mapowanie)
         'oeeShift1': { row: 2, col: 'D' },
@@ -539,20 +498,16 @@ document.addEventListener('DOMContentLoaded', function() {
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
 
-        // Ustawiamy stan początkowy dla mainDisplayField przed pobieraniem danych
-        if (typeof mainDisplaySource === 'string') {
-            mainDisplayField.textContent = mainDisplaySource; // Jeśli to stały tekst
-        } else {
-            mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>'; // Jeśli ma pobierać z arkusza
-        }
+        // Tutaj po prostu czyścimy pole główne
+        mainDisplayField.textContent = '';
         clearAllDataFields();
 
         if (!selectedSheetName) {
-            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>'; // Komunikat, jeśli nie wybrano linii
+            // Jeśli nie wybrano linii, pole pozostaje puste
             return;
         }
 
-        const range = `A1:M50`; // Zakres danych do pobrania z arkusza (może być większy, jeśli potrzeba)
+        const range = `A1:M50`;
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
 
         try {
@@ -563,10 +518,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const csvText = await response.text();
             const data = parseCsv(csvText);
 
-            // Zaktualizuj główne pole wyświetlania na podstawie pobranych danych
-            setMainDisplayValue(data);
+            // Zaktualizuj główne pole wyświetlania (teraz zawsze puste)
+            setMainDisplayValue(data); // `data` jest przekazywane, ale funkcja je zignoruje
 
-            // Zaktualizuj pozostałe pola na podstawie pobranych danych
+            // Zaktualizuj pozostałe pola
             for (const htmlId in cellMappings) {
                 const map = cellMappings[htmlId];
                 const rowIndexInData = map.row - 1;
@@ -575,33 +530,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
                     setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
                 } else {
-                    setFieldValue(htmlId, ''); // Wyczyść pole, jeśli brak danych
+                    setFieldValue(htmlId, '');
                 }
             }
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            mainDisplayField.innerHTML = '<strong>Błąd ładowania!</strong>'; // Komunikat o błędzie ładowania
+            // Nawet w przypadku błędu, pole główne ma być puste
+            mainDisplayField.textContent = '';
             clearAllDataFields();
         }
     }
 
-    // Dodanie nasłuchu zdarzeń dla zmiany wyboru linii i kliknięcia przycisku odświeżania
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
 
-    // Wywołaj updateDashboard przy starcie, aby załadować dane dla domyślnie wybranej linii (jeśli jest)
-    // lub wyświetlić instrukcję/domyślną wartość w mainDisplayField.
+    // Wywołaj updateDashboard przy starcie, aby upewnić się, że pole jest puste od razu
+    mainDisplayField.textContent = '';
+    // Jeśli jest wybrana linia, pobierz dane, w przeciwnym razie wyczyść resztę pól
     if (sheetSelector.value) {
         updateDashboard();
     } else {
-        // Ustawiamy stan początkowy dla mainDisplayField przy pierwszym załadowaniu strony,
-        // jeśli żadna linia nie jest jeszcze wybrana.
-        if (typeof mainDisplaySource === 'string') {
-            mainDisplayField.textContent = mainDisplaySource;
-        } else {
-            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
-        }
         clearAllDataFields();
     }
 });
