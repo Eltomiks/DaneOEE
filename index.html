@@ -11,12 +11,14 @@
             margin: 0;
             padding: 10px;
             color: #333;
+            font-size: 18px;
         }
         .container {
-            max-width: 100%;
+            max-width: 480px;
+            width: 100%;
             margin: auto;
             background: white;
-            padding: 10px;
+            padding: 16px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -44,7 +46,7 @@
             white-space: nowrap;
         }
         #displayDupaField {
-            font-size: 20px;
+            font-size: 28px;
             font-weight: normal;
             color: #333;
             text-align: center;
@@ -60,8 +62,8 @@
             text-align: center;
         }
         select {
-            font-size: 14px;
-            padding: 5px 8px;
+            font-size: 18px;
+            padding: 8px 10px;
             border-radius: 4px;
             border: 1px solid #ccc;
             width: 100%;
@@ -73,8 +75,8 @@
             text-align: center;
         }
         button {
-            padding: 5px 12px;
-            font-size: 14px;
+            padding: 8px 16px;
+            font-size: 18px;
             border-radius: 4px;
             border: 1px solid #007bff;
             background-color: #007bff;
@@ -92,21 +94,22 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            font-size: 12px;
+            font-size: 18px;
             table-layout: fixed;
         }
         th, td {
             border: 1px solid #ccc;
-            padding: 6px;
+            padding: 8px;
             text-align: center;
+            font-weight: normal;
         }
         .red {
             color: red;
             font-weight: bold;
         }
         .data-field {
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 18px;
+            font-weight: normal;
         }
         .time-block {
             margin-bottom: 20px;
@@ -119,50 +122,54 @@
         .time-table th {
             background: #3498db;
             color: white;
-            padding: 6px;
-            font-size: 11px;
+            padding: 8px;
+            font-size: 16px;
         }
         .time-table td {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 8px;
             height: 30px;
             background-color: #fff;
-            font-size: 12px;
+            font-size: 16px;
+            font-weight: normal;
         }
         .time-header th {
             text-align: center;
             font-weight: bold;
         }
-        @media (max-width: 768px) {
-            .top-bar {
-                flex-wrap: nowrap;
+        /* Kolorowanie OEE i _r1 - style nadpisywane inline przez JS */
+        .oee-color-red {
+            background: #e53935 !important;
+            color: #fff !important;
+        }
+        .oee-color-orange {
+            background: #ffb300 !important;
+            color: #222 !important;
+        }
+        .oee-color-yellow {
+            background: #fff176 !important;
+            color: #222 !important;
+        }
+        .oee-color-green {
+            background: #43a047 !important;
+            color: #222 !important;
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 99vw;
+                padding: 12px;
             }
-            .top-bar-item {
-                min-width: unset;
-                width: auto;
-                text-align: center;
-                flex: 1;
+            body {
+                font-size: 20px;
             }
             #displayDupaField {
-                font-size: 16px;
-                min-width: 100px;
-                text-align: center;
+                font-size: 32px;
             }
-            select, button {
-                width: 100%;
-                max-width: none;
-                font-size: 12px;
+            select, button, .data-field, th, td {
+                font-size: 20px !important;
             }
             th, td {
-                padding: 4px;
-                font-size: 10px;
-            }
-            .time-table th, .time-table td {
-                padding: 4px;
-                font-size: 9px;
-            }
-            .data-field {
-                font-size: 11px;
+                padding: 10px;
             }
         }
     </style>
@@ -348,6 +355,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return value;
     }
 
+    // Lista ID do kolorowania OEE i godzin _r1
+    const oeeColorFields = [
+        'oeeShift1', 'oeeShift2', 'oeeShift3',
+        'h6_r1','h7_r1','h8_r1','h9_r1','h10_r1','h11_r1','h12_r1','h13_r1',
+        'h14_r1','h15_r1','h16_r1','h17_r1','h18_r1','h19_r1','h20_r1','h21_r1',
+        'h22_r1','h23_r1','h0_r1','h1_r1','h2_r1','h3_r1','h4_r1','h5_r1'
+    ];
+
     const cellMappings = {
         'displayDupaField': { row: 1, col: 'C' },
         'oeeShift1': { row: 2, col: 'D' },
@@ -414,11 +429,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function clearAllDataFields() {
         const dataFields = document.querySelectorAll('.data-field');
-        dataFields.forEach(field => { field.textContent = ''; });
+        dataFields.forEach(field => { field.textContent = ''; field.className = 'data-field'; });
         const timeCells = document.querySelectorAll('.time-table td');
-        timeCells.forEach(cell => { cell.textContent = ''; });
+        timeCells.forEach(cell => { cell.textContent = ''; cell.className = ''; });
         const displayDupaField = document.getElementById('displayDupaField');
         if (displayDupaField) displayDupaField.textContent = '';
+    }
+
+    function colorOeeCell(element, value) {
+        element.classList.remove('oee-color-red','oee-color-orange','oee-color-yellow','oee-color-green');
+        if (!value) { element.textContent = ''; return; }
+        let num = value.replace(',', '.').replace('%','').trim();
+        if (num === '0' || num === '0.0' || num === '0.00' || num === '') { element.textContent = ''; return; }
+        num = parseFloat(num);
+        if (isNaN(num)) { element.textContent = value; return; }
+        if (num > 0 && num <= 60) {
+            element.classList.add('oee-color-red');
+        } else if (num > 60 && num <= 70) {
+            element.classList.add('oee-color-orange');
+        } else if (num > 70 && num <= 80) {
+            element.classList.add('oee-color-yellow');
+        } else if (num > 80) {
+            element.classList.add('oee-color-green');
+        }
+        element.textContent = value;
     }
 
     async function updateDashboard() {
@@ -440,10 +474,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
                     value = data[rowIndexInData][colIndexInData];
                 }
-                // Formatowanie daty jeśli to możliwe (tylko dla displayDupaField)
-                if (htmlId === 'displayDupaField') value = formatDateIfPossible(value);
-                const element = document.getElementById(htmlId);
-                if (element) element.textContent = value;
+                if (htmlId === 'displayDupaField') {
+                    value = formatDateIfPossible(value);
+                    const element = document.getElementById(htmlId);
+                    if (element) element.textContent = value;
+                } else if (oeeColorFields.includes(htmlId)) {
+                    const element = document.getElementById(htmlId);
+                    if (element) colorOeeCell(element, value);
+                } else {
+                    const element = document.getElementById(htmlId);
+                    if (element) element.textContent = value;
+                }
             }
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
