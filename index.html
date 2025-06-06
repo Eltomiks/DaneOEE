@@ -31,7 +31,7 @@
         .top-bar {
             display: flex;
             flex-wrap: nowrap;
-            justify-content: space-between; /* To zachowa odstępy między elementami */
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
             gap: 10px;
@@ -39,18 +39,29 @@
         }
 
         .top-bar-item {
-            min-width: 100px; /* Nadal dajemy minimalną szerokość, żeby nie były zbyt ściśnięte */
+            flex: 1;
+            min-width: 0;
             text-align: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
-        /* Usunięto style dla #mainDisplayField, bo elementu już nie ma */
+        .input-wrapper {
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            min-width: 0;
+            font-size: 14px;
+            padding: 5px 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
 
         .select-wrapper {
             flex-shrink: 0;
-            min-width: 140px;
+            min-width: 0;
             text-align: center;
         }
 
@@ -65,7 +76,7 @@
 
         .button-wrapper {
             flex-shrink: 0;
-            min-width: 90px;
+            min-width: 0;
             text-align: center;
         }
 
@@ -135,16 +146,17 @@
 
         @media (max-width: 768px) {
             .top-bar {
-                flex-wrap: nowrap;
+                flex-wrap: wrap;
             }
             .top-bar-item {
                 min-width: unset;
-                width: auto;
-                text-align: center;
-                flex: 1;
+                width: 100%;
+                margin-bottom: 5px;
             }
-            /* Usunięto styl dla #mainDisplayField, bo elementu już nie ma */
-            select, button {
+            .input-wrapper {
+                width: 100%;
+            }
+            select, button, input {
                 width: 100%;
                 max-width: none;
                 font-size: 12px;
@@ -168,6 +180,12 @@
         <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek Pulpitu OEE">
 
         <div class="top-bar">
+            <div class="top-bar-item">
+                <div class="input-wrapper">
+                    <input type="text" id="rowInput" placeholder="Wiersz" value="1">
+                    <input type="text" id="colInput" placeholder="Kolumna" value="A">
+                </div>
+            </div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
                     <option value="">Wybierz linię</option>
@@ -187,7 +205,7 @@
             <div class="top-bar-item button-wrapper">
                 <button id="refreshButton">ODŚWIEŻ</button>
             </div>
-            </div>
+        </div>
 
         <table>
             <tr>
@@ -310,11 +328,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
     const sheetSelector = document.getElementById('sheetSelector');
     const refreshButton = document.getElementById('refreshButton');
-
-
+    const rowInput = document.getElementById('rowInput');
+    const colInput = document.getElementById('colInput');
 
     // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
@@ -359,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${day}.${month}.${year}`;
     }
 
-
+    // Funkcja do ustawiania tekstu w danej komórce HTML (dla pozostałych pól danych)
     function setFieldValue(elementId, value, isDate = false) {
         const element = document.getElementById(elementId);
         if (element) {
@@ -467,12 +485,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
+        const customRow = parseInt(rowInput.value) || 1;
+        const customCol = colInput.value.toUpperCase() || 'A';
 
-        // Nie ma już mainDisplayField, więc nie musimy go czyścić tutaj
         clearAllDataFields();
 
         if (!selectedSheetName) {
-            // Jeśli nie wybrano linii, nic się nie dzieje (pole już nie istnieje)
             return;
         }
 
@@ -487,6 +505,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const csvText = await response.text();
             const data = parseCsv(csvText);
 
+            // Pobierz wartość z wybranej komórki
+            const customRowIndex = customRow - 1;
+            const customColIndex = getGoogleSheetColumnIndex(customCol);
+            
+            if (data[customRowIndex] && data[customRowIndex][customColIndex] !== undefined) {
+                console.log(`Wartość z komórki ${customCol}${customRow}:`, data[customRowIndex][customColIndex]);
+                // Tutaj możesz wykorzystać tę wartość według potrzeb
+            }
+
+            // Zaktualizuj pozostałe pola
             for (const htmlId in cellMappings) {
                 const map = cellMappings[htmlId];
                 const rowIndexInData = map.row - 1;
@@ -501,13 +529,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            // Brak mainDisplayField do wyświetlania błędu, więc tylko logujemy
             clearAllDataFields();
         }
     }
 
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
+    rowInput.addEventListener('change', updateDashboard);
+    colInput.addEventListener('change', updateDashboard);
 
     // Wywołaj updateDashboard przy starcie
     if (sheetSelector.value) {
