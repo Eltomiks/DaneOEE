@@ -27,7 +27,6 @@
             margin-bottom: 10px;
             border-radius: 10px;
         }
-
         .top-bar {
             display: flex;
             flex-wrap: nowrap;
@@ -37,7 +36,6 @@
             gap: 10px;
             padding: 5px 0;
         }
-
         .top-bar-item {
             min-width: 100px;
             text-align: center;
@@ -45,26 +43,23 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-
+        /* displayDupaField - bez ramki, tła, pogrubienia */
         #displayDupaField {
             font-size: 20px;
-            font-weight: bold;
+            font-weight: normal;
             color: #333;
             text-align: center;
-            background-color: #f0f0f0;
-            padding: 5px 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            flex-shrink: 0;
+            background: none;
+            border: none;
+            border-radius: 0;
+            padding: 0;
             min-width: 140px;
         }
-
         .select-wrapper {
             flex-shrink: 0;
             min-width: 140px;
             text-align: center;
         }
-
         select {
             font-size: 14px;
             padding: 5px 8px;
@@ -73,13 +68,11 @@
             width: 100%;
             box-sizing: border-box;
         }
-
         .button-wrapper {
             flex-shrink: 0;
             min-width: 90px;
             text-align: center;
         }
-
         button {
             padding: 5px 12px;
             font-size: 14px;
@@ -96,7 +89,6 @@
         button:hover {
             background-color: #0056b3;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -117,7 +109,6 @@
             font-size: 14px;
             font-weight: 500;
         }
-
         .time-block {
             margin-bottom: 20px;
         }
@@ -143,7 +134,6 @@
             text-align: center;
             font-weight: bold;
         }
-
         @media (max-width: 768px) {
             .top-bar {
                 flex-wrap: nowrap;
@@ -180,12 +170,9 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="________Nagłówek Pulpitu OEE">
-
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek Pulpitu OEE">
         <div class="top-bar">
-            <div class="top-bar-item" id="displayDupaField">
-                <!-- Tutaj pojawi się wartość z E45 -->
-            </div>
+            <div class="top-bar-item" id="displayDupaField"></div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
                     <option value="">Wybierz linię</option>
@@ -206,133 +193,15 @@
                 <button id="refreshButton">ODŚWIEŻ</button>
             </div>
         </div>
-
-        <table>
-            <tr>
-                <td><strong>zm</strong></td>
-                <td>I</td>
-                <td>II</td>
-                <td>III</td>
-                <td><strong>TOTAL</strong></td>
-            </tr>
-            <tr>
-                <td><strong>OEE</strong></td>
-                <td id="oeeShift1" class="data-field"></td>
-                <td id="oeeShift2" class="data-field"></td>
-                <td id="oeeShift3" class="data-field"></td>
-                <td id="oeeTotal" class="data-field"></td>
-            </tr>
-            <tr>
-                <td><strong>OK</strong></td>
-                <td id="okShift1" class="data-field"></td>
-                <td id="okShift2" class="data-field"></td>
-                <td id="okShift3" class="data-field"></td>
-                <td id="okTotal" class="data-field"></td>
-            </tr>
-            <tr>
-                <td class="red">NOK</td>
-                <td id="nokShift1" class="data-field"></td>
-                <td id="nokShift2" class="data-field"></td>
-                <td id="nokShift3" class="data-field"></td>
-                <td id="nokTotal" class="data-field"></td>
-            </tr>
-        </table>
-
-        <div class="time-block">
-            <table class="time-table">
-                <tr class="time-header">
-                    <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
-                    <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
-                </tr>
-                <tr>
-                    <td id="h6_r1"></td>
-                    <td id="h7_r1"></td>
-                    <td id="h8_r1"></td>
-                    <td id="h9_r1"></td>
-                    <td id="h10_r1"></td>
-                    <td id="h11_r1"></td>
-                    <td id="h12_r1"></td>
-                    <td id="h13_r1"></td>
-                </tr>
-                <tr>
-                    <td id="h6_r2"></td>
-                    <td id="h7_r2"></td>
-                    <td id="h8_r2"></td>
-                    <td id="h9_r2"></td>
-                    <td id="h10_r2"></td>
-                    <td id="h11_r2"></td>
-                    <td id="h12_r2"></td>
-                    <td id="h13_r2"></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="time-block">
-            <table class="time-table">
-                <tr class="time-header">
-                    <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
-                    <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
-                </tr>
-                <tr>
-                    <td id="h14_r1"></td>
-                    <td id="h15_r1"></td>
-                    <td id="h16_r1"></td>
-                    <td id="h17_r1"></td>
-                    <td id="h18_r1"></td>
-                    <td id="h19_r1"></td>
-                    <td id="h20_r1"></td>
-                    <td id="h21_r1"></td>
-                </tr>
-                <tr>
-                    <td id="h14_r2"></td>
-                    <td id="h15_r2"></td>
-                    <td id="h16_r2"></td>
-                    <td id="h17_r2"></td>
-                    <td id="h18_r2"></td>
-                    <td id="h19_r2"></td>
-                    <td id="h20_r2"></td>
-                    <td id="h21_r2"></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="time-block">
-            <table class="time-table">
-                <tr class="time-header">
-                    <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
-                    <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
-                </tr>
-                <tr>
-                    <td id="h22_r1"></td>
-                    <td id="h23_r1"></td>
-                    <td id="h0_r1"></td>
-                    <td id="h1_r1"></td>
-                    <td id="h2_r1"></td>
-                    <td id="h3_r1"></td>
-                    <td id="h4_r1"></td>
-                    <td id="h5_r1"></td>
-                </tr>
-                <tr>
-                    <td id="h22_r2"></td>
-                    <td id="h23_r2"></td>
-                    <td id="h0_r2"></td>
-                    <td id="h1_r2"></td>
-                    <td id="h2_r2"></td>
-                    <td id="h3_r2"></td>
-                    <td id="h4_r2"></td>
-                    <td id="h5_r2"></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
+        <!-- ...reszta Twojego kodu (tabele, time-blocki) zostaje bez zmian... -->
+        <!-- ...skopiuj tutaj całą resztę swojego HTMLa... -->
+        <!-- ...poniżej jest tylko JS, który obsługuje wyświetlanie pola na górze... -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
     const sheetSelector = document.getElementById('sheetSelector');
     const refreshButton = document.getElementById('refreshButton');
 
-    // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
         let colIndex = 0;
         for (let i = 0; i < colLetter.length; i++) {
@@ -341,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return colIndex - 1;
     }
 
-    // Funkcja pomocnicza do parsowania CSV
     function parseCsv(csvString) {
         const lines = csvString.trim().split('\n');
         return lines.map(line => {
@@ -355,36 +223,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function setFieldValue(elementId, value, isDate = false) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            let displayValue = '';
-            if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
-                displayValue = value;
-            }
-            element.textContent = displayValue;
+    function formatDateIfPossible(value) {
+        if (/^\\d{4}-\\d{2}-\\d{2}/.test(value)) {
+            const datePart = value.split(' ')[0];
+            const [year, month, day] = datePart.split('-');
+            return `${day}.${month}.${year}`;
         }
+        return value;
     }
 
     // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
     const cellMappings = {
-        'displayDupaField': { row: 24, col: 'A' },
-
+        'displayDupaField': { row: 43, col: 'E' },
+        // ...pozostałe mapowania jak w Twoim kodzie...
         'oeeShift1': { row: 2, col: 'D' },
         'oeeShift2': { row: 2, col: 'E' },
         'oeeShift3': { row: 2, col: 'F' },
         'oeeTotal': { row: 2, col: 'C' },
-
         'okShift1': { row: 9, col: 'D' },
         'okShift2': { row: 9, col: 'E' },
         'okShift3': { row: 9, col: 'F' },
         'okTotal': { row: 9, col: 'C' },
-
         'nokShift1': { row: 10, col: 'D' },
         'nokShift2': { row: 10, col: 'E' },
         'nokShift3': { row: 10, col: 'F' },
         'nokTotal': { row: 10, col: 'C' },
-
         'h6_r1': { row: 14, col: 'E' },
         'h7_r1': { row: 15, col: 'E' },
         'h8_r1': { row: 16, col: 'E' },
@@ -393,7 +256,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'h11_r1': { row: 19, col: 'E' },
         'h12_r1': { row: 20, col: 'E' },
         'h13_r1': { row: 21, col: 'E' },
-
         'h14_r1': { row: 22, col: 'E' },
         'h15_r1': { row: 23, col: 'E' },
         'h16_r1': { row: 24, col: 'E' },
@@ -402,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'h19_r1': { row: 27, col: 'E' },
         'h20_r1': { row: 28, col: 'E' },
         'h21_r1': { row: 29, col: 'E' },
-
         'h22_r1': { row: 30, col: 'E' },
         'h23_r1': { row: 31, col: 'E' },
         'h0_r1': { row: 32, col: 'E' },
@@ -411,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'h3_r1': { row: 35, col: 'E' },
         'h4_r1': { row: 36, col: 'E' },
         'h5_r1': { row: 37, col: 'E' },
-
         'h6_r2': { row: 14, col: 'C' },
         'h7_r2': { row: 15, col: 'C' },
         'h8_r2': { row: 16, col: 'C' },
@@ -420,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'h11_r2': { row: 19, col: 'C' },
         'h12_r2': { row: 20, col: 'C' },
         'h13_r2': { row: 21, col: 'C' },
-
         'h14_r2': { row: 22, col: 'C' },
         'h15_r2': { row: 23, col: 'C' },
         'h16_r2': { row: 24, col: 'C' },
@@ -429,7 +288,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'h19_r2': { row: 27, col: 'C' },
         'h20_r2': { row: 28, col: 'C' },
         'h21_r2': { row: 29, col: 'C' },
-
         'h22_r2': { row: 30, col: 'C' },
         'h23_r2': { row: 31, col: 'C' },
         'h0_r2': { row: 32, col: 'C' },
@@ -437,56 +295,42 @@ document.addEventListener('DOMContentLoaded', function() {
         'h2_r2': { row: 34, col: 'C' },
         'h3_r2': { row: 35, col: 'C' },
         'h4_r2': { row: 36, col: 'C' },
-        'h5_r2': { row: 37, col: 'C' },
+        'h5_r2': { row: 37, col: 'C' }
     };
 
     function clearAllDataFields() {
         const dataFields = document.querySelectorAll('.data-field');
-        dataFields.forEach(field => {
-            field.textContent = '';
-        });
+        dataFields.forEach(field => { field.textContent = ''; });
         const timeCells = document.querySelectorAll('.time-table td');
-        timeCells.forEach(cell => {
-            cell.textContent = '';
-        });
-        // Czyść także displayDupaField
+        timeCells.forEach(cell => { cell.textContent = ''; });
         const displayDupaField = document.getElementById('displayDupaField');
-        if (displayDupaField) {
-            displayDupaField.textContent = '';
-        }
+        if (displayDupaField) displayDupaField.textContent = '';
     }
 
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
         clearAllDataFields();
-
-        if (!selectedSheetName) {
-            return;
-        }
-
+        if (!selectedSheetName) return;
         const range = `A1:M50`;
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
-
         try {
             const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
             const csvText = await response.text();
             const data = parseCsv(csvText);
-
             for (const htmlId in cellMappings) {
                 const map = cellMappings[htmlId];
                 const rowIndexInData = map.row - 1;
                 const colIndexInData = getGoogleSheetColumnIndex(map.col);
-
+                let value = '';
                 if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
-                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
-                } else {
-                    setFieldValue(htmlId, '');
+                    value = data[rowIndexInData][colIndexInData];
                 }
+                // Formatowanie daty jeśli to możliwe (tylko dla displayDupaField)
+                if (htmlId === 'displayDupaField') value = formatDateIfPossible(value);
+                const element = document.getElementById(htmlId);
+                if (element) element.textContent = value;
             }
-
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
             clearAllDataFields();
@@ -495,8 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
-
-    // Po uruchomieniu, jeśli jest już wybrana linia, załaduj dane
     if (sheetSelector.value) {
         updateDashboard();
     } else {
