@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard OEE</title>
+    <title>Dashboard OEE - Poprawiony i Uproszczony</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -12,7 +12,6 @@
             padding: 10px;
             color: #333;
         }
-        
         .container {
             max-width: 100%;
             margin: auto;
@@ -21,7 +20,6 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        
         .header-image {
             width: 100%;
             height: auto;
@@ -48,17 +46,18 @@
             white-space: nowrap;
         }
 
-        .display-field {
+        /* Nowy styl dla okienka "DUPA" */
+        #displayDupaField {
             font-size: 20px;
             font-weight: bold;
             color: #333;
-            text-align: center;
-            background-color: #f0f0f0;
+            text-align: center; /* Wyśrodkowanie tekstu */
+            background-color: #f0f0f0; /* Lekkie tło, aby wyróżnić okienko */
             padding: 5px 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
             flex-shrink: 0;
-            min-width: 140px;
+            min-width: 140px; /* Minimalna szerokość, aby się ładnie wyświetlało */
         }
 
         .select-wrapper {
@@ -95,66 +94,57 @@
             width: 100%;
             box-sizing: border-box;
         }
-        
         button:hover {
             background-color: #0056b3;
         }
 
-        /* Tabela główna OEE/OK/NOK */
-        .main-table {
+        table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
             font-size: 12px;
             table-layout: fixed;
         }
-        
-        .main-table th, .main-table td {
+        th, td {
             border: 1px solid #ccc;
             padding: 6px;
             text-align: center;
         }
-        
-        .main-table .red {
+        .red {
             color: red;
             font-weight: bold;
         }
-        
         .data-field {
             font-size: 14px;
             font-weight: 500;
         }
 
-        /* Tabele godzinowe */
         .time-block {
             margin-bottom: 20px;
         }
-        
         .time-table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
         }
-        
         .time-table th {
             background: #3498db;
             color: white;
             padding: 6px;
             font-size: 11px;
-            text-align: center;
-            font-weight: bold;
         }
-        
         .time-table td {
             border: 1px solid #ccc;
             padding: 10px;
             height: 30px;
             background-color: #fff;
             font-size: 12px;
+        }
+        .time-header th {
             text-align: center;
+            font-weight: bold;
         }
 
-        /* Responsywność */
         @media (max-width: 768px) {
             .top-bar {
                 flex-wrap: nowrap;
@@ -165,16 +155,18 @@
                 text-align: center;
                 flex: 1;
             }
-            .display-field {
+            /* Dostosowanie dla nowego pola "DUPA" na małych ekranach */
+            #displayDupaField {
                 font-size: 16px;
                 min-width: 100px;
+                text-align: center;
             }
             select, button {
                 width: 100%;
                 max-width: none;
                 font-size: 12px;
             }
-            .main-table th, .main-table td {
+            th, td {
                 padding: 4px;
                 font-size: 10px;
             }
@@ -190,14 +182,11 @@
 </head>
 <body>
     <div class="container">
-        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Dashboard+OEE" alt="_________Head Dashboard OEE">
+        <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek Pulpitu OEE">
 
-        <!-- Górny pasek z wyborem linii -->
         <div class="top-bar">
-            <div class="top-bar-item">
-                <div id="mainDisplayField" class="display-field">
-                    <strong>Wybierz linię</strong>
-                </div>
+            <div class="top-bar-item" id="displayDupaField">
+                <strong>MASAKRA</strong>
             </div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
@@ -220,8 +209,7 @@
             </div>
         </div>
 
-        <!-- Tabela główna z OEE/OK/NOK -->
-        <table class="main-table">
+        <table>
             <tr>
                 <td><strong>zm</strong></td>
                 <td>I</td>
@@ -252,93 +240,89 @@
             </tr>
         </table>
 
-        <!-- Tabele godzinowe -->
-        <!-- Blok 1: Godziny 6-14 -->
         <div class="time-block">
             <table class="time-table">
-                <tr>
+                <tr class="time-header">
                     <th>6–7</th><th>7–8</th><th>8–9</th><th>9–10</th>
                     <th>10–11</th><th>11–12</th><th>12–13</th><th>13–14</th>
                 </tr>
                 <tr>
-                    <td id="hour_6_7_row1"></td>
-                    <td id="hour_7_8_row1"></td>
-                    <td id="hour_8_9_row1"></td>
-                    <td id="hour_9_10_row1"></td>
-                    <td id="hour_10_11_row1"></td>
-                    <td id="hour_11_12_row1"></td>
-                    <td id="hour_12_13_row1"></td>
-                    <td id="hour_13_14_row1"></td>
+                    <td id="h6_r1"></td>
+                    <td id="h7_r1"></td>
+                    <td id="h8_r1"></td>
+                    <td id="h9_r1"></td>
+                    <td id="h10_r1"></td>
+                    <td id="h11_r1"></td>
+                    <td id="h12_r1"></td>
+                    <td id="h13_r1"></td>
                 </tr>
                 <tr>
-                    <td id="hour_6_7_row2"></td>
-                    <td id="hour_7_8_row2"></td>
-                    <td id="hour_8_9_row2"></td>
-                    <td id="hour_9_10_row2"></td>
-                    <td id="hour_10_11_row2"></td>
-                    <td id="hour_11_12_row2"></td>
-                    <td id="hour_12_13_row2"></td>
-                    <td id="hour_13_14_row2"></td>
+                    <td id="h6_r2"></td>
+                    <td id="h7_r2"></td>
+                    <td id="h8_r2"></td>
+                    <td id="h9_r2"></td>
+                    <td id="h10_r2"></td>
+                    <td id="h11_r2"></td>
+                    <td id="h12_r2"></td>
+                    <td id="h13_r2"></td>
                 </tr>
             </table>
         </div>
 
-        <!-- Blok 2: Godziny 14-22 -->
         <div class="time-block">
             <table class="time-table">
-                <tr>
+                <tr class="time-header">
                     <th>14–15</th><th>15–16</th><th>16–17</th><th>17–18</th>
                     <th>18–19</th><th>19–20</th><th>20–21</th><th>21–22</th>
                 </tr>
                 <tr>
-                    <td id="hour_14_15_row1"></td>
-                    <td id="hour_15_16_row1"></td>
-                    <td id="hour_16_17_row1"></td>
-                    <td id="hour_17_18_row1"></td>
-                    <td id="hour_18_19_row1"></td>
-                    <td id="hour_19_20_row1"></td>
-                    <td id="hour_20_21_row1"></td>
-                    <td id="hour_21_22_row1"></td>
+                    <td id="h14_r1"></td>
+                    <td id="h15_r1"></td>
+                    <td id="h16_r1"></td>
+                    <td id="h17_r1"></td>
+                    <td id="h18_r1"></td>
+                    <td id="h19_r1"></td>
+                    <td id="h20_r1"></td>
+                    <td id="h21_r1"></td>
                 </tr>
                 <tr>
-                    <td id="hour_14_15_row2"></td>
-                    <td id="hour_15_16_row2"></td>
-                    <td id="hour_16_17_row2"></td>
-                    <td id="hour_17_18_row2"></td>
-                    <td id="hour_18_19_row2"></td>
-                    <td id="hour_19_20_row2"></td>
-                    <td id="hour_20_21_row2"></td>
-                    <td id="hour_21_22_row2"></td>
+                    <td id="h14_r2"></td>
+                    <td id="h15_r2"></td>
+                    <td id="h16_r2"></td>
+                    <td id="h17_r2"></td>
+                    <td id="h18_r2"></td>
+                    <td id="h19_r2"></td>
+                    <td id="h20_r2"></td>
+                    <td id="h21_r2"></td>
                 </tr>
             </table>
         </div>
 
-        <!-- Blok 3: Godziny 22-6 -->
         <div class="time-block">
             <table class="time-table">
-                <tr>
+                <tr class="time-header">
                     <th>22–23</th><th>23–00</th><th>00–01</th><th>01–02</th>
                     <th>02–03</th><th>03–04</th><th>04–05</th><th>05–06</th>
                 </tr>
                 <tr>
-                    <td id="hour_22_23_row1"></td>
-                    <td id="hour_23_0_row1"></td>
-                    <td id="hour_0_1_row1"></td>
-                    <td id="hour_1_2_row1"></td>
-                    <td id="hour_2_3_row1"></td>
-                    <td id="hour_3_4_row1"></td>
-                    <td id="hour_4_5_row1"></td>
-                    <td id="hour_5_6_row1"></td>
+                    <td id="h22_r1"></td>
+                    <td id="h23_r1"></td>
+                    <td id="h0_r1"></td>
+                    <td id="h1_r1"></td>
+                    <td id="h2_r1"></td>
+                    <td id="h3_r1"></td>
+                    <td id="h4_r1"></td>
+                    <td id="h5_r1"></td>
                 </tr>
                 <tr>
-                    <td id="hour_22_23_row2"></td>
-                    <td id="hour_23_0_row2"></td>
-                    <td id="hour_0_1_row2"></td>
-                    <td id="hour_1_2_row2"></td>
-                    <td id="hour_2_3_row2"></td>
-                    <td id="hour_3_4_row2"></td>
-                    <td id="hour_4_5_row2"></td>
-                    <td id="hour_5_6_row2"></td>
+                    <td id="h22_r2"></td>
+                    <td id="h23_r2"></td>
+                    <td id="h0_r2"></td>
+                    <td id="h1_r2"></td>
+                    <td id="h2_r2"></td>
+                    <td id="h3_r2"></td>
+                    <td id="h4_r2"></td>
+                    <td id="h5_r2"></td>
                 </tr>
             </table>
         </div>
@@ -346,124 +330,24 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // ========================================
-    // KONFIGURACJA - ZMIEŃ TUTAJ SWOJE DANE
-    // ========================================
-    
-    // ID Twojego arkusza Google (znajdziesz w URL)
-    const GOOGLE_SHEET_ID = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc';
-    
-    // ========================================
-    // MAPOWANIE KOMÓREK - ZMIEŃ TUTAJ!
-    // ========================================
-    // Format: 'id_pola_na_stronie': { row: numer_wiersza, col: 'litera_kolumny' }
-    
-    const CELL_MAPPING = {
-        // Główne pole wyświetlania (opcjonalne - może być datą lub tekstem)
-        'mainDisplayField': { row: 1, col: 'A' }, // Przykład: komórka A1
-        
-        // OEE - zmień wiersze i kolumny według swojego arkusza
-        'oeeShift1': { row: 4, col: 'D' },    // Przykład: komórka D3
-        'oeeShift2': { row: 4, col: 'E' },    // Przykład: komórka E3
-        'oeeShift3': { row: 4, col: 'F' },    // Przykład: komórka F3
-        'oeeTotal': { row: 4, col: 'C' },     // Przykład: komórka C3
-        
-        // OK - zmień wiersze i kolumny według swojego arkusza
-        'okShift1': { row: 11, col: 'D' },     // Przykład: komórka D4
-        'okShift2': { row: 11, col: 'E' },     // Przykład: komórka E4
-        'okShift3': { row: 11, col: 'F' },     // Przykład: komórka F4
-        'okTotal': { row: 11, col: 'C' },      // Przykład: komórka C4
-        
-        // NOK - zmień wiersze i kolumny według swojego arkusza
-        'nokShift1': { row: 12, col: 'D' },    // Przykład: komórka D5
-        'nokShift2': { row: 12, col: 'E' },    // Przykład: komórka E5
-        'nokShift3': { row: 12, col: 'F' },    // Przykład: komórka F5
-        'nokTotal': { row: 12, col: 'C' },     // Przykład: komórka C5
-        
-        // ========================================
-        // GODZINY - PIERWSZY WIERSZ
-        // Zmień wszystkie według swojego arkusza
-        // ========================================
-        'hour_6_7_row1': { row: 21, col: 'E' },      // Przykład: 6-7 w E21
-        'hour_7_8_row1': { row: 22, col: 'E' },      // Przykład: 7-8 w E22
-        'hour_8_9_row1': { row: 23, col: 'E' },      // itd...
-        'hour_9_10_row1': { row: 24, col: 'E' },
-        'hour_10_11_row1': { row: 25, col: 'E' },
-        'hour_11_12_row1': { row: 26, col: 'E' },
-        'hour_12_13_row1': { row: 27, col: 'E' },
-        'hour_13_14_row1': { row: 28, col: 'E' },
-        
-        'hour_14_15_row1': { row: 29, col: 'E' },
-        'hour_15_16_row1': { row: 30, col: 'E' },
-        'hour_16_17_row1': { row: 31, col: 'E' },
-        'hour_17_18_row1': { row: 32, col: 'E' },
-        'hour_18_19_row1': { row: 33, col: 'E' },
-        'hour_19_20_row1': { row: 34, col: 'E' },
-        'hour_20_21_row1': { row: 35, col: 'E' },
-        'hour_21_22_row1': { row: 36, col: 'E' },
-        
-        'hour_22_23_row1': { row: 37, col: 'E' },
-        'hour_23_0_row1': { row: 38, col: 'E' },
-        'hour_0_1_row1': { row: 39, col: 'E' },
-        'hour_1_2_row1': { row: 40, col: 'E' },
-        'hour_2_3_row1': { row: 41, col: 'E' },
-        'hour_3_4_row1': { row: 42, col: 'E' },
-        'hour_4_5_row1': { row: 43, col: 'E' },
-        'hour_5_6_row1': { row: 44, col: 'E' },
-        
-        // ========================================
-        // GODZINY - DRUGI WIERSZ
-        // Zmień wszystkie według swojego arkusza
-        // ========================================
-        'hour_6_7_row2': { row: 21, col: 'D' },      // Przykład: 6-7 w D21
-        'hour_7_8_row2': { row: 22, col: 'D' },      // Przykład: 7-8 w D22
-        'hour_8_9_row2': { row: 23, col: 'D' },      // itd...
-        'hour_9_10_row2': { row: 24, col: 'D' },
-        'hour_10_11_row2': { row: 25, col: 'D' },
-        'hour_11_12_row2': { row: 26, col: 'D' },
-        'hour_12_13_row2': { row: 27, col: 'D' },
-        'hour_13_14_row2': { row: 28, col: 'D' },
-        
-        'hour_14_15_row2': { row: 29, col: 'D' },
-        'hour_15_16_row2': { row: 30, col: 'D' },
-        'hour_16_17_row2': { row: 31, col: 'D' },
-        'hour_17_18_row2': { row: 32, col: 'D' },
-        'hour_18_19_row2': { row: 33, col: 'D' },
-        'hour_19_20_row2': { row: 34, col: 'D' },
-        'hour_20_21_row2': { row: 35, col: 'D' },
-        'hour_21_22_row2': { row: 36, col: 'D' },
-        
-        'hour_22_23_row2': { row: 37, col: 'D' },
-        'hour_23_0_row2': { row: 38, col: 'D' },
-        'hour_0_1_row2': { row: 39, col: 'D' },
-        'hour_1_2_row2': { row: 40, col: 'D' },
-        'hour_2_3_row2': { row: 41, col: 'D' },
-        'hour_3_4_row2': { row: 42, col: 'D' },
-        'hour_4_5_row2': { row: 43, col: 'D' },
-        'hour_5_6_row2': { row: 44, col: 'D' }
-    };
-    
-    // ========================================
-    // KOD FUNKCJONALNY - NIE ZMIENIAJ
-    // ========================================
-    
+    const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
     const sheetSelector = document.getElementById('sheetSelector');
     const refreshButton = document.getElementById('refreshButton');
-    const mainDisplayField = document.getElementById('mainDisplayField');
+    // Usunięto mainDisplayField
+    // const mainDisplayField = document.getElementById('mainDisplayField');
 
-    // Funkcja do konwersji litery kolumny na indeks liczbowy
-    function columnLetterToIndex(letter) {
-        let result = 0;
-        for (let i = 0; i < letter.length; i++) {
-            result = result * 26 + (letter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+    // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
+    function getGoogleSheetColumnIndex(colLetter) {
+        let colIndex = 0;
+        for (let i = 0; i < colLetter.length; i++) {
+            colIndex = colIndex * 26 + (colLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
         }
-        return result - 1;
+        return colIndex - 1; // Zwróć indeks 0-bazowy
     }
 
-    // Funkcja do parsowania CSV
-    function parseCSV(csvText) {
-        const lines = csvText.trim().split('\n');
+    // Funkcja pomocnicza do parsowania CSV
+    function parseCsv(csvString) {
+        const lines = csvString.trim().split('\n');
         return lines.map(line => {
             return line.split(',').map(cell => {
                 let cleanedCell = cell.trim();
@@ -475,17 +359,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Funkcja do formatowania daty z Google Sheets
-    function formatDate(serialNumber) {
-        if (!serialNumber || isNaN(serialNumber) || parseFloat(serialNumber) === 0) {
+    // Ta funkcja nie będzie już używana do displayDupaField
+    function formatGoogleSheetDate(serial) {
+        if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
             return '';
         }
-        
-        let adjustedSerial = parseFloat(serialNumber);
+        let adjustedSerial = parseFloat(serial);
         if (adjustedSerial < 61) {
             adjustedSerial -= 1;
         }
-        
         const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
         const date = new Date(excelEpoch + (adjustedSerial * 86400000));
 
@@ -496,88 +378,176 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${day}.${month}.${year}`;
     }
 
-    // Funkcja do ustawiania wartości w polu
     function setFieldValue(elementId, value, isDate = false) {
         const element = document.getElementById(elementId);
         if (element) {
             let displayValue = '';
             if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
                 if (isDate) {
-                    displayValue = formatDate(value);
+                    displayValue = formatGoogleSheetDate(value);
                 } else {
                     displayValue = value;
                 }
             }
             element.textContent = displayValue;
         } else {
-            console.warn(`Element o ID "${elementId}" nie został znaleziony.`);
+            console.warn(`Element o ID "${elementId}" nie został znaleziony w HTML.`);
         }
     }
 
-    // Funkcja do czyszczenia wszystkich pól
-    function clearAllFields() {
-        Object.keys(CELL_MAPPING).forEach(fieldId => {
-            const element = document.getElementById(fieldId);
-            if (element) {
-                element.textContent = '';
-            }
+    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
+    const cellMappings = {
+        // Usunięto mainDisplayField z mapowania
+        // 'mainDisplayField': { row: 45, col: 'E', isDate: true },
+
+        // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'oeeShift1': { row: 2, col: 'D' },
+        'oeeShift2': { row: 2, col: 'E' },
+        'oeeShift3': { row: 2, col: 'F' },
+        'oeeTotal': { row: 2, col: 'C' },
+
+        // OK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'okShift1': { row: 9, col: 'D' },
+        'okShift2': { row: 9, col: 'E' },
+        'okShift3': { row: 9, col: 'F' },
+        'okTotal': { row: 9, col: 'C' },
+
+        // NOK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'nokShift1': { row: 10, col: 'D' },
+        'nokShift2': { row: 10, col: 'E' },
+        'nokShift3': { row: 10, col: 'F' },
+        'nokTotal': { row: 10, col: 'C' },
+
+        // GODZINY - WIERSZ 1 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'h6_r1': { row: 14, col: 'E' },
+        'h7_r1': { row: 15, col: 'E' },
+        'h8_r1': { row: 16, col: 'E' },
+        'h9_r1': { row: 17, col: 'E' },
+        'h10_r1': { row: 18, col: 'E' },
+        'h11_r1': { row: 19, col: 'E' },
+        'h12_r1': { row: 20, col: 'E' },
+        'h13_r1': { row: 21, col: 'E' },
+
+        'h14_r1': { row: 22, col: 'E' },
+        'h15_r1': { row: 23, col: 'E' },
+        'h16_r1': { row: 24, col: 'E' },
+        'h17_r1': { row: 25, col: 'E' },
+        'h18_r1': { row: 26, col: 'E' },
+        'h19_r1': { row: 27, col: 'E' },
+        'h20_r1': { row: 28, col: 'E' },
+        'h21_r1': { row: 29, col: 'E' },
+
+        'h22_r1': { row: 30, col: 'E' },
+        'h23_r1': { row: 31, col: 'E' },
+        'h0_r1': { row: 32, col: 'E' },
+        'h1_r1': { row: 33, col: 'E' },
+        'h2_r1': { row: 34, col: 'E' },
+        'h3_r1': { row: 35, col: 'E' },
+        'h4_r1': { row: 36, col: 'E' },
+        'h5_r1': { row: 37, col: 'E' },
+
+        // GODZINY - WIERSZ 2 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        'h6_r2': { row: 14, col: 'C' },
+        'h7_r2': { row: 15, col: 'C' },
+        'h8_r2': { row: 16, col: 'C' },
+        'h9_r2': { row: 17, col: 'C' },
+        'h10_r2': { row: 18, col: 'C' },
+        'h11_r2': { row: 19, col: 'C' },
+        'h12_r2': { row: 20, col: 'C' },
+        'h13_r2': { row: 21, col: 'C' },
+
+        'h14_r2': { row: 22, col: 'C' },
+        'h15_r2': { row: 23, col: 'C' },
+        'h16_r2': { row: 24, col: 'C' },
+        'h17_r2': { row: 25, col: 'C' },
+        'h18_r2': { row: 26, col: 'C' },
+        'h19_r2': { row: 27, col: 'C' },
+        'h20_r2': { row: 28, col: 'C' },
+        'h21_r2': { row: 29, col: 'C' },
+
+        'h22_r2': { row: 30, col: 'C' },
+        'h23_r2': { row: 31, col: 'C' },
+        'h0_r2': { row: 32, col: 'C' },
+        'h1_r2': { row: 33, col: 'C' },
+        'h2_r2': { row: 34, col: 'C' },
+        'h3_r2': { row: 35, col: 'C' },
+        'h4_r2': { row: 36, col: 'C' },
+        'h5_r2': { row: 37, col: 'C' },
+    };
+
+    function clearAllDataFields() {
+        const dataFields = document.querySelectorAll('.data-field');
+        dataFields.forEach(field => {
+            field.textContent = '';
+        });
+        const timeCells = document.querySelectorAll('.time-table td');
+        timeCells.forEach(cell => {
+            cell.textContent = '';
         });
     }
 
-    // Główna funkcja aktualizacji dashboardu
     async function updateDashboard() {
-        const selectedSheet = sheetSelector.value;
-        
-        if (!selectedSheet) {
-            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
-            clearAllFields();
-            return;
+        const selectedSheetName = sheetSelector.value;
+        // Zmieniono: displayDupaField nie będzie "ładować" ani zależeć od danych z arkusza
+        const displayDupaField = document.getElementById('displayDupaField');
+        if (displayDupaField) {
+            displayDupaField.innerHTML = '<strong>DUPA</strong>'; // Zawsze wyświetlaj "DUPA"
+        }
+        clearAllDataFields(); // Wyczyszczenie reszty danych
+
+        if (!selectedSheetName) {
+            // Zmieniono: displayDupaField nie jest polem do wyboru linii
+            // mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+            return; // Nic nie rób, jeśli nie wybrano linii, bo nie ma danych do pobrania
         }
 
-        mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>';
-        clearAllFields();
-
-        const range = 'A1:Z100'; // Pobierz większy zakres, żeby mieć pewność
-        const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheet)}&range=${encodeURIComponent(range)}`;
+        const range = `A1:M50`;
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
 
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Błąd pobierania danych: ${response.status}`);
+                throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
             }
-
             const csvText = await response.text();
-            const data = parseCSV(csvText);
+            const data = parseCsv(csvText);
 
-            // Aktualizuj wszystkie pola według mapowania
-            for (const [fieldId, mapping] of Object.entries(CELL_MAPPING)) {
-                const rowIndex = mapping.row - 1; // Konwersja na indeks 0-bazowy
-                const colIndex = columnLetterToIndex(mapping.col);
+            for (const htmlId in cellMappings) {
+                const map = cellMappings[htmlId];
+                const rowIndexInData = map.row - 1;
+                const colIndexInData = getGoogleSheetColumnIndex(map.col);
 
-                if (data[rowIndex] && data[rowIndex][colIndex] !== undefined) {
-                    const isDateField = fieldId === 'mainDisplayField'; // Można dodać więcej pól dat
-                    setFieldValue(fieldId, data[rowIndex][colIndex], isDateField);
+                if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
+                    setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
                 } else {
-                    setFieldValue(fieldId, '');
+                    setFieldValue(htmlId, '');
                 }
             }
 
-            // Aktualizuj główne pole wyświetlania
-            mainDisplayField.innerHTML = `<strong>${selectedSheet}</strong>`;
-
         } catch (error) {
-            console.error('Błąd:', error);
-            mainDisplayField.innerHTML = '<strong>Błąd ładowania!</strong>';
-            clearAllFields();
+            console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
+            // Zmieniono: displayDupaField nie pokazuje błędu ładowania danych
+            // mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
+            clearAllDataFields();
         }
     }
 
-    // Event listenery
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
 
-    // Inicjalizacja
-    mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+    // Wywołaj updateDashboard przy starcie, aby od razu wyświetlić "DUPA"
+    const initialDisplayDupaField = document.getElementById('displayDupaField');
+    if (initialDisplayDupaField) {
+        initialDisplayDupaField.innerHTML = '<strong>DUPA</strong>';
+    }
+
+    // Po uruchomieniu, jeśli jest już wybrana linia, załaduj dane
+    if (sheetSelector.value) {
+        updateDashboard();
+    } else {
+        // Jeśli nie ma wybranej linii, nic więcej nie rób, "DUPA" już się wyświetla
+        clearAllDataFields();
+    }
 });
 </script>
 </body>
