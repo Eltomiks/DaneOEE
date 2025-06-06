@@ -46,18 +46,18 @@
             white-space: nowrap;
         }
 
-        /* Nowy styl dla okienka "DUPA" */
-        #displayDupaField {
+        /* Styl dla pola głównego, które będzie wyświetlać wybraną wartość */
+        #mainDisplayField {
             font-size: 20px;
             font-weight: bold;
             color: #333;
-            text-align: center; /* Wyśrodkowanie tekstu */
+            text-align: left;
+            flex-shrink: 0;
+            min-width: 140px;
             background-color: #f0f0f0; /* Lekkie tło, aby wyróżnić okienko */
             padding: 5px 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
-            flex-shrink: 0;
-            min-width: 140px; /* Minimalna szerokość, aby się ładnie wyświetlało */
         }
 
         .select-wrapper {
@@ -155,8 +155,7 @@
                 text-align: center;
                 flex: 1;
             }
-            /* Dostosowanie dla nowego pola "DUPA" na małych ekranach */
-            #displayDupaField {
+            #mainDisplayField {
                 font-size: 16px;
                 min-width: 100px;
                 text-align: center;
@@ -185,8 +184,8 @@
         <img class="header-image" src="https://via.placeholder.com/1200x100.png?text=Nagłówek+Pulpitu+OEE" alt="Nagłówek Pulpitu OEE">
 
         <div class="top-bar">
-            <div class="top-bar-item" id="displayDupaField">
-                <strong>DUPA</strong>
+            <div class="top-bar-item" id="mainDisplayField">
+                <strong>Ładowanie...</strong>
             </div>
             <div class="top-bar-item select-wrapper">
                 <select id="sheetSelector">
@@ -333,8 +332,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const sheetId = '1gcWHcIZv7OMuU1bNNQ5P7XFLNpLoBsabXbG9hJImGpc'; // <-- ID Twojego Arkusza Google
     const sheetSelector = document.getElementById('sheetSelector');
     const refreshButton = document.getElementById('refreshButton');
-    // Usunięto mainDisplayField
-    // const mainDisplayField = document.getElementById('mainDisplayField');
+    const mainDisplayField = document.getElementById('mainDisplayField');
+
+    // ====================================================================
+    // === TUTAJ USTAWIASZ, CO MA SIĘ WYŚWIETLAĆ W GŁÓWNYM POLU ==========
+    // ====================================================================
+    // Wartość dla `mainDisplaySource` może być:
+    // 1. Obiektem { row: numer_wiersza, col: 'litera_kolumny', isDate: true/false }
+    //    Przykład: { row: 45, col: 'E', isDate: true }  // Data z komórki E45 (DD.MM.RRRR)
+    //    Przykład: { row: 10, col: 'C', isDate: false } // Wartość z komórki C10 (np. całkowity NOK)
+    //    Przykład: { row: 2, col: 'C', isDate: false }  // Wartość z komórki C2 (np. całkowite OEE)
+    //
+    // 2. Stałym tekstem jako string.
+    //    Przykład: 'DUPA'                               // Stały tekst "DUPA"
+    //    Przykład: 'Aktualna Data'                      // Stały tekst "Aktualna Data"
+    //
+    // 3. Wartością `null`, jeśli pole ma być puste (lub pokazywać standardowe komunikaty).
+    //    Przykład: null
+    // ====================================================================
+    const mainDisplaySource = { row: 45, col: 'E', isDate: true }; // <--- ZMIEŃ TO!
+    // ====================================================================
+
 
     // Funkcja do konwersji litery kolumny na indeks liczbowy (0-indexed)
     function getGoogleSheetColumnIndex(colLetter) {
@@ -359,17 +377,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Ta funkcja nie będzie już używana do displayDupaField
+    // Funkcja do formatowania daty z numeru seryjnego Google Sheets
     function formatGoogleSheetDate(serial) {
         if (!serial || isNaN(serial) || parseFloat(serial) === 0) {
             return '';
         }
         let adjustedSerial = parseFloat(serial);
-        if (adjustedSerial < 61) {
+        // Korekta błędu przestępnego Excela z 1900 r.
+        if (adjustedSerial < 61) { // Przed 1 marca 1900
             adjustedSerial -= 1;
         }
-        const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime();
-        const date = new Date(excelEpoch + (adjustedSerial * 86400000));
+        const excelEpoch = new Date(Date.UTC(1899, 11, 30)).getTime(); // 30 grudnia 1899
+        const date = new Date(excelEpoch + (adjustedSerial * 86400000)); // 86400000 ms = 1 dzień
 
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -378,10 +397,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${day}.${month}.${year}`;
     }
 
+    // Funkcja do ustawiania wartości w głównym polu
+    function setMainDisplayValue(data = null) {
+        if (!mainDisplaySource) {
+            mainDisplayField.textContent = ''; // Jeśli ustawiono na null, pole jest puste
+            return;
+        }
+
+        if (typeof mainDisplaySource === 'string') {
+            mainDisplayField.textContent = mainDisplaySource; // Wyświetl stały tekst
+        } else if (typeof mainDisplaySource === 'object' && mainDisplaySource !== null) {
+            const map = mainDisplaySource;
+            const rowIndexInData = map.row - 1;
+            const colIndexInData = getGoogleSheetColumnIndex(map.col);
+
+            if (data && data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
+                const value = data[rowIndexInData][colIndexInData];
+                if (map.isDate) {
+                    mainDisplayField.textContent = formatGoogleSheetDate(value);
+                } else {
+                    mainDisplayField.textContent = value;
+                }
+            } else {
+                mainDisplayField.textContent = 'Brak danych'; // Jeśli danych nie ma
+            }
+        } else {
+            mainDisplayField.textContent = 'Konfiguracja błędu!'; // Nieznany typ konfiguracji
+        }
+    }
+
+
+    // Funkcja do ustawiania tekstu w danej komórce HTML (dla pozostałych pól danych)
     function setFieldValue(elementId, value, isDate = false) {
         const element = document.getElementById(elementId);
         if (element) {
             let displayValue = '';
+            // Jeśli wartość jest pusta, null, undefined lub "0", wyświetl pusto
             if (value !== '' && value !== null && value !== undefined && String(value).trim() !== '0') {
                 if (isDate) {
                     displayValue = formatGoogleSheetDate(value);
@@ -395,30 +446,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- MAPOWANIE PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
+    // --- MAPOWANIE POZOSTAŁYCH PÓL HTML DO KOMÓREK W ARKUSZU GOOGLE ---
+    // Te mapowania służą do wypełniania tabel OEE, OK, NOK i tabel czasowych.
+    // Dostosuj wiersze (row) i kolumny (col) do struktury Twojego Arkusza Google.
     const cellMappings = {
-        // Usunięto mainDisplayField z mapowania
-        // 'mainDisplayField': { row: 45, col: 'E', isDate: true },
-
-        // OEE (przykładowe mapowanie, dostosuj do swojego arkusza)
+        // OEE (przykładowe mapowanie)
         'oeeShift1': { row: 2, col: 'D' },
         'oeeShift2': { row: 2, col: 'E' },
         'oeeShift3': { row: 2, col: 'F' },
         'oeeTotal': { row: 2, col: 'C' },
 
-        // OK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        // OK (przykładowe mapowanie)
         'okShift1': { row: 9, col: 'D' },
         'okShift2': { row: 9, col: 'E' },
         'okShift3': { row: 9, col: 'F' },
         'okTotal': { row: 9, col: 'C' },
 
-        // NOK (przykładowe mapowanie, dostosuj do swojego arkusza)
+        // NOK (przykładowe mapowanie)
         'nokShift1': { row: 10, col: 'D' },
         'nokShift2': { row: 10, col: 'E' },
         'nokShift3': { row: 10, col: 'F' },
         'nokTotal': { row: 10, col: 'C' },
 
-        // GODZINY - WIERSZ 1 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        // GODZINY - WIERSZ 1 (przykładowe mapowanie)
         'h6_r1': { row: 14, col: 'E' },
         'h7_r1': { row: 15, col: 'E' },
         'h8_r1': { row: 16, col: 'E' },
@@ -446,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'h4_r1': { row: 36, col: 'E' },
         'h5_r1': { row: 37, col: 'E' },
 
-        // GODZINY - WIERSZ 2 (przykładowe mapowanie, dostosuj do swojego arkusza)
+        // GODZINY - WIERSZ 2 (przykładowe mapowanie)
         'h6_r2': { row: 14, col: 'C' },
         'h7_r2': { row: 15, col: 'C' },
         'h8_r2': { row: 16, col: 'C' },
@@ -488,20 +538,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function updateDashboard() {
         const selectedSheetName = sheetSelector.value;
-        // Zmieniono: displayDupaField nie będzie "ładować" ani zależeć od danych z arkusza
-        const displayDupaField = document.getElementById('displayDupaField');
-        if (displayDupaField) {
-            displayDupaField.innerHTML = '<strong>DUPA</strong>'; // Zawsze wyświetlaj "DUPA"
+
+        // Ustawiamy stan początkowy dla mainDisplayField przed pobieraniem danych
+        if (typeof mainDisplaySource === 'string') {
+            mainDisplayField.textContent = mainDisplaySource; // Jeśli to stały tekst
+        } else {
+            mainDisplayField.innerHTML = '<strong>Ładowanie...</strong>'; // Jeśli ma pobierać z arkusza
         }
-        clearAllDataFields(); // Wyczyszczenie reszty danych
+        clearAllDataFields();
 
         if (!selectedSheetName) {
-            // Zmieniono: displayDupaField nie jest polem do wyboru linii
-            // mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
-            return; // Nic nie rób, jeśli nie wybrano linii, bo nie ma danych do pobrania
+            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>'; // Komunikat, jeśli nie wybrano linii
+            return;
         }
 
-        const range = `A1:M50`;
+        const range = `A1:M50`; // Zakres danych do pobrania z arkusza (może być większy, jeśli potrzeba)
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
 
         try {
@@ -512,6 +563,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const csvText = await response.text();
             const data = parseCsv(csvText);
 
+            // Zaktualizuj główne pole wyświetlania na podstawie pobranych danych
+            setMainDisplayValue(data);
+
+            // Zaktualizuj pozostałe pola na podstawie pobranych danych
             for (const htmlId in cellMappings) {
                 const map = cellMappings[htmlId];
                 const rowIndexInData = map.row - 1;
@@ -520,32 +575,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
                     setFieldValue(htmlId, data[rowIndexInData][colIndexInData], map.isDate);
                 } else {
-                    setFieldValue(htmlId, '');
+                    setFieldValue(htmlId, ''); // Wyczyść pole, jeśli brak danych
                 }
             }
 
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            // Zmieniono: displayDupaField nie pokazuje błędu ładowania danych
-            // mainDisplayField.innerHTML = '<strong>Błąd ładowania danych!</strong>';
+            mainDisplayField.innerHTML = '<strong>Błąd ładowania!</strong>'; // Komunikat o błędzie ładowania
             clearAllDataFields();
         }
     }
 
+    // Dodanie nasłuchu zdarzeń dla zmiany wyboru linii i kliknięcia przycisku odświeżania
     sheetSelector.addEventListener('change', updateDashboard);
     refreshButton.addEventListener('click', updateDashboard);
 
-    // Wywołaj updateDashboard przy starcie, aby od razu wyświetlić "DUPA"
-    const initialDisplayDupaField = document.getElementById('displayDupaField');
-    if (initialDisplayDupaField) {
-        initialDisplayDupaField.innerHTML = '<strong>DUPA</strong>';
-    }
-
-    // Po uruchomieniu, jeśli jest już wybrana linia, załaduj dane
+    // Wywołaj updateDashboard przy starcie, aby załadować dane dla domyślnie wybranej linii (jeśli jest)
+    // lub wyświetlić instrukcję/domyślną wartość w mainDisplayField.
     if (sheetSelector.value) {
         updateDashboard();
     } else {
-        // Jeśli nie ma wybranej linii, nic więcej nie rób, "DUPA" już się wyświetla
+        // Ustawiamy stan początkowy dla mainDisplayField przy pierwszym załadowaniu strony,
+        // jeśli żadna linia nie jest jeszcze wybrana.
+        if (typeof mainDisplaySource === 'string') {
+            mainDisplayField.textContent = mainDisplaySource;
+        } else {
+            mainDisplayField.innerHTML = '<strong>Wybierz linię</strong>';
+        }
         clearAllDataFields();
     }
 });
