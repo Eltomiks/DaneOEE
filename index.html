@@ -491,69 +491,59 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function updateDashboard() {
-        const selectedSheetName = sheetSelector.value;
-        clearAllDataFields();
-        if (!selectedSheetName) return;
-        const range = `A1:M50`;
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
-            const csvText = await response.text();
-            const data = parseCsv(csvText);
-            for (const htmlId in cellMappings) {
-                const map = cellMappings[htmlId];
-                const rowIndexInData = map.row - 1;
-                const colIndexInData = getGoogleSheetColumnIndex(map.col);
-                let value = '';
-                if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
-                    value = data[rowIndexInData][colIndexInData];
-                }
-                if (htmlId === 'displayDupaField') {
-                    value = formatDateIfPossible(value);
-                    const element = document.getElementById(htmlId);
-                    if (element) element.textContent = value;
-                } else if (oeeColorFields.includes(htmlId)) {
-                    const element = document.getElementById(htmlId);
-                    if (element) colorOeeCell(element, value);
-                } else if (r2Fields.includes(htmlId)) {
-                    const element = document.getElementById(htmlId);
-                    if (element) hideZeroCell(element, value);
-                } else {
-                   const okFields = ['okShift1', 'okShift2', 'okShift3', 'okTotal'];
-const nokFields = ['nokShift1', 'nokShift2', 'nokShift3', 'nokTotal'];
+  async function updateDashboard() {
+    const okFields = ['okShift1', 'okShift2', 'okShift3', 'okTotal'];
+    const nokFields = ['nokShift1', 'nokShift2', 'nokShift3', 'nokTotal'];
 
-else if (okFields.includes(htmlId)) {
-    // OK: jeśli 0 lub '0' to puste pole
-    const element = document.getElementById(htmlId);
-    if (element) element.textContent = (value == 0 || value === '0') ? '' : value;
-} else if (nokFields.includes(htmlId)) {
-    // NOK: pokaż tylko jeśli odpowiadające OK > 0
-    const element = document.getElementById(htmlId);
-    const okId = htmlId.replace('nok', 'ok');
-    const okMap = cellMappings[okId];
-    const okValue = data[okMap.row - 1]?.[getGoogleSheetColumnIndex(okMap.col)] ?? '';
-    if (element) element.textContent = (okValue > 0) ? value : '';
-} else {
-    const element = document.getElementById(htmlId);
-    if (element) element.textContent = value;
-}
+    const selectedSheetName = sheetSelector.value;
+    clearAllDataFields();
+    if (!selectedSheetName) return;
+    const range = `A1:M50`;
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(selectedSheetName)}&range=${encodeURIComponent(range)}`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Błąd sieci lub nie można uzyskać dostępu do arkusza (${selectedSheetName}). Status: ${response.status}`);
+        const csvText = await response.text();
+        const data = parseCsv(csvText);
+        for (const htmlId in cellMappings) {
+            const map = cellMappings[htmlId];
+            const rowIndexInData = map.row - 1;
+            const colIndexInData = getGoogleSheetColumnIndex(map.col);
+            let value = '';
+            if (data[rowIndexInData] && data[rowIndexInData][colIndexInData] !== undefined) {
+                value = data[rowIndexInData][colIndexInData];
             }
-        } catch (error) {
-            console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
-            clearAllDataFields();
+            if (htmlId === 'displayDupaField') {
+                value = formatDateIfPossible(value);
+                const element = document.getElementById(htmlId);
+                if (element) element.textContent = value;
+            } else if (oeeColorFields.includes(htmlId)) {
+                const element = document.getElementById(htmlId);
+                if (element) colorOeeCell(element, value);
+            } else if (r2Fields.includes(htmlId)) {
+                const element = document.getElementById(htmlId);
+                if (element) hideZeroCell(element, value);
+            } else if (okFields.includes(htmlId)) {
+                // OK: jeśli 0 lub '0' to puste pole
+                const element = document.getElementById(htmlId);
+                if (element) element.textContent = (value == 0 || value === '0') ? '' : value;
+            } else if (nokFields.includes(htmlId)) {
+                // NOK: pokaż tylko jeśli odpowiadające OK > 0
+                const element = document.getElementById(htmlId);
+                const okId = htmlId.replace('nok', 'ok');
+                const okMap = cellMappings[okId];
+                const okValue = data[okMap.row - 1]?.[getGoogleSheetColumnIndex(okMap.col)] ?? '';
+                if (element) element.textContent = (parseFloat(okValue) > 0) ? value : '';
+            } else {
+                const element = document.getElementById(htmlId);
+                if (element) element.textContent = value;
+            }
         }
-    }
-
-    sheetSelector.addEventListener('change', updateDashboard);
-    refreshButton.addEventListener('click', updateDashboard);
-    if (sheetSelector.value) {
-        updateDashboard();
-    } else {
+    } catch (error) {
+        console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
         clearAllDataFields();
     }
-});
+}
 </script>
 </body>
 </html>
