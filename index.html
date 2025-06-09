@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 if (htmlId === 'displayDupaField') {
                     value = formatDateIfPossible(value);
-                    const element = document.getElementById(htmlId);
+                    
                     if (element) element.textContent = value;
                 } else if (oeeColorFields.includes(htmlId)) {
                     const element = document.getElementById(htmlId);
@@ -520,10 +520,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (r2Fields.includes(htmlId)) {
                     const element = document.getElementById(htmlId);
                     if (element) hideZeroCell(element, value);
-                } else {
-                    const element = document.getElementById(htmlId);
-                    if (element) element.textContent = value;
-                }
+                 } else if (okFields.includes(htmlId)) {
+            // OK: jeśli 0 lub '0' to puste pole
+            const element = document.getElementById(htmlId);
+            if (element) element.textContent = (value == 0 || value === '0') ? '' : value;
+        } else {
+            const element = document.getElementById(htmlId);
+            if (element) element.textContent = value;
+        }
             }
         } catch (error) {
             console.error('Błąd podczas pobierania lub przetwarzania danych:', error);
